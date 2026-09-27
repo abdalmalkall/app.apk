@@ -164,7 +164,7 @@ class TransactionRepositoryImpl(
             customerDao.update(
                 existing.copy(
                     name = name,
-                    phone = transaction.customerPhone?.trim()?.takeIf(String::isNotEmpty) ?: existing.phone,
+                    phone = transaction.customerPhone?.trim()?.takeIf(String::isNotEmpty),
                     updatedOn = now,
                 ),
             )

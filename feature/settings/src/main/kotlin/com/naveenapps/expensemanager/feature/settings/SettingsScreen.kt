@@ -1,5 +1,8 @@
 package com.naveenapps.expensemanager.feature.settings
 
+import android.app.Activity
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -63,6 +66,7 @@ import com.naveenapps.expensemanager.core.designsystem.ui.components.SettingTogg
 import com.naveenapps.expensemanager.core.designsystem.ui.components.SettingsSection
 import com.naveenapps.expensemanager.core.designsystem.utils.ObserveAsEvents
 import com.naveenapps.expensemanager.core.model.Currency
+import com.naveenapps.expensemanager.core.model.Resource
 import com.naveenapps.expensemanager.core.repository.BackupRepository
 import com.naveenapps.expensemanager.core.repository.ShareRepository
 import com.naveenapps.expensemanager.feature.language.LanguageDialogView
@@ -77,6 +81,21 @@ fun SettingsScreen(
 ) {
 
     val state by viewModel.state.collectAsState()
+    var pendingBackupAction by remember { mutableStateOf<SettingEvent?>(null) }
+    val googleSignInLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.StartActivityForResult(),
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK &&
+            backupRepository.handleGoogleDriveSignInResult(result.data) is Resource.Success
+        ) {
+            when (pendingBackupAction) {
+                SettingEvent.Backup -> backupRepository.backupData(null)
+                SettingEvent.Restore -> backupRepository.restoreData(null)
+                null -> Unit
+            }
+        }
+        pendingBackupAction = null
+    }
 
     ObserveAsEvents(viewModel.event) {
         when (it) {
@@ -85,11 +104,21 @@ fun SettingsScreen(
             }
 
             SettingEvent.Backup -> {
-                backupRepository.backupData(null)
+                if (backupRepository.isGoogleDriveSignedIn()) {
+                    backupRepository.backupData(null)
+                } else {
+                    pendingBackupAction = SettingEvent.Backup
+                    backupRepository.requestGoogleDriveSignIn()?.let(googleSignInLauncher::launch)
+                }
             }
 
             SettingEvent.Restore -> {
-                backupRepository.restoreData(null)
+                if (backupRepository.isGoogleDriveSignedIn()) {
+                    backupRepository.restoreData(null)
+                } else {
+                    pendingBackupAction = SettingEvent.Restore
+                    backupRepository.requestGoogleDriveSignIn()?.let(googleSignInLauncher::launch)
+                }
             }
         }
     }

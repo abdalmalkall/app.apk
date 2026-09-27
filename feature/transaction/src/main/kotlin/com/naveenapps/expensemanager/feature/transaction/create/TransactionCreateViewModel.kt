@@ -308,15 +308,27 @@ class TransactionCreateViewModel(
             createdOn = state.dateTime,
             updatedOn = Calendar.getInstance().time,
             attachments = state.attachments,
-            customerId = editingTransaction?.customerId,
-            invoiceNumber = editingTransaction?.invoiceNumber,
-            quantity = numberFormatRepository.parseToDouble(state.quantity.value)?.takeIf { it > 0.0 },
-            unit = state.unit.value.trim().takeIf(String::isNotEmpty),
-            unitPrice = numberFormatRepository.parseToDouble(state.unitPrice.value)?.takeIf { it > 0.0 },
-            deliveryLocation = state.deliveryLocation.value.trim().takeIf(String::isNotEmpty),
-            deliveryNotes = state.deliveryNotes.value.trim().takeIf(String::isNotEmpty),
-            driverName = state.driverName.value.trim().takeIf(String::isNotEmpty),
-            vehicleNumber = state.vehicleNumber.value.trim().takeIf(String::isNotEmpty),
+            customerId = if (state.transactionType == TransactionType.DEBT) editingTransaction?.customerId else null,
+            invoiceNumber = if (state.transactionType == TransactionType.DEBT) editingTransaction?.invoiceNumber else null,
+            quantity = if (state.transactionType == TransactionType.DEBT) {
+                numberFormatRepository.parseToDouble(state.quantity.value)?.takeIf { it > 0.0 }
+            } else {
+                null
+            },
+            unit = if (state.transactionType == TransactionType.DEBT) {
+                state.unit.value.trim().takeIf(String::isNotEmpty)
+            } else {
+                null
+            },
+            unitPrice = if (state.transactionType == TransactionType.DEBT) {
+                numberFormatRepository.parseToDouble(state.unitPrice.value)?.takeIf { it > 0.0 }
+            } else {
+                null
+            },
+            deliveryLocation = if (state.transactionType == TransactionType.DEBT) state.deliveryLocation.value.trim().takeIf(String::isNotEmpty) else null,
+            deliveryNotes = if (state.transactionType == TransactionType.DEBT) state.deliveryNotes.value.trim().takeIf(String::isNotEmpty) else null,
+            driverName = if (state.transactionType == TransactionType.DEBT) state.driverName.value.trim().takeIf(String::isNotEmpty) else null,
+            vehicleNumber = if (state.transactionType == TransactionType.DEBT) state.vehicleNumber.value.trim().takeIf(String::isNotEmpty) else null,
         )
     }
 
