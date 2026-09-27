@@ -165,6 +165,7 @@ class PdfExportStrategy(context: Context) : BaseExportStrategy(context) {
             transactions.filter { it.type == TransactionType.INCOME }.sumOf { it.amount.amount }
         val totalExpense =
             transactions.filter { it.type == TransactionType.EXPENSE }.sumOf { it.amount.amount }
+        val totalDebt = transactions.filter { it.type == TransactionType.DEBT }.sumOf { it.amount.amount }
         val now = Date()
 
         val document = PdfDocument()
@@ -196,7 +197,7 @@ class PdfExportStrategy(context: Context) : BaseExportStrategy(context) {
         summaryRow(context.getString(R.string.total_expense), totalExpense.toTrimAmount())
         summaryRow(
             context.getString(R.string.net_balance),
-            (totalIncome - totalExpense).toTrimAmount()
+            (totalIncome - totalExpense + totalDebt).toTrimAmount()
         )
 
         y += 4f

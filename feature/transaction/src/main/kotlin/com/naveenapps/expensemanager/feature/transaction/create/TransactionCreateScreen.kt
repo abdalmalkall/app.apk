@@ -404,6 +404,40 @@ private fun TransactionCreateContent(
                         )
                     }
 
+                    if (state.transactionType == TransactionType.DEBT) {
+                        OutlinedTextField(
+                            modifier = Modifier.fillMaxWidth(),
+                            value = state.customerName.value,
+                            singleLine = true,
+                            leadingIcon = {
+                                Icon(
+                                    imageVector = Icons.AutoMirrored.Filled.Notes,
+                                    contentDescription = null,
+                                )
+                            },
+                            placeholder = {
+                                Text(text = stringResource(id = R.string.debt_customer_name_hint))
+                            },
+                            label = {
+                                Text(text = stringResource(id = R.string.debt_customer_name))
+                            },
+                            isError = state.customerName.valueError,
+                            supportingText = {
+                                if (state.customerName.valueError) {
+                                    Text(text = stringResource(id = R.string.debt_customer_name_required))
+                                }
+                            },
+                            onValueChange = {
+                                state.customerName.onValueChange?.invoke(it)
+                            },
+                            keyboardActions = KeyboardActions(
+                                onDone = {
+                                    focusManager.clearFocus(force = true)
+                                },
+                            ),
+                        )
+                    }
+
                     OutlinedTextField(
                         modifier = Modifier.fillMaxWidth(),
                         value = state.notes.value,
@@ -596,6 +630,7 @@ private fun getTransactionState(
     TransactionCreateState(
         amount = amountField,
         currency = Currency(symbol = "$", name = ""),
+        customerName = TextFieldValue(value = "", valueError = false, onValueChange = null),
         dateTime = Date(),
         notes = amountField,
         selectedCategory = Category(

@@ -51,10 +51,10 @@ class TransactionRepositoryImpl(
             return@withContext try {
                 val response = transactionDao.insertTransaction(
                     transaction.toEntityModel(),
-                    if (transaction.type == TransactionType.INCOME) {
-                        transaction.amount.amount
-                    } else {
-                        transaction.amount.amount * -1
+                    when (transaction.type) {
+                        TransactionType.INCOME -> transaction.amount.amount
+                        TransactionType.DEBT -> 0.0
+                        else -> transaction.amount.amount * -1
                     },
                     transaction.type.isTransfer(),
                     transaction.attachments,
@@ -72,10 +72,10 @@ class TransactionRepositoryImpl(
                 transactionDao.removePreviousEnteredAmount(transactionEntity)
                 transactionDao.updateTransaction(
                     transactionEntity,
-                    if (transaction.type.isIncome()) {
-                        transaction.amount.amount
-                    } else {
-                        transaction.amount.amount * -1
+                    when (transaction.type) {
+                        TransactionType.INCOME -> transaction.amount.amount
+                        TransactionType.DEBT -> 0.0
+                        else -> transaction.amount.amount * -1
                     },
                     transaction.type.isTransfer(),
                     transaction.attachments,

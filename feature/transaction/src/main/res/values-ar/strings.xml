@@ -28,6 +28,7 @@
     <string name="expense">المصروف</string>
     <string name="income">الدخل</string>
     <string name="transfer">تحويل</string>
+    <string name="debt">ذمم</string>
 
     <string name="select_different_account">اختر حسابًا مختلفًا. يجب ألا يكون حساب المصدر والوجهة متطابقين.</string>
     <string name="amount_error_message">يرجى إدخال مبلغ صالح</string>
@@ -40,6 +41,9 @@
     <string name="select_time">اختيار الوقت</string>
 
     <string name="transaction">المعاملة</string>
+    <string name="debt_customer_name">اسم صاحب الذمة</string>
+    <string name="debt_customer_name_hint">أدخل اسم العميل</string>
+    <string name="debt_customer_name_required">اسم صاحب الذمة مطلوب في معاملة الذمم</string>
     <string name="clear">مسح</string>
     <string name="cancel">إلغاء</string>
     <string name="ok">موافق</string>
@@ -55,6 +59,10 @@
     <string name="save">حفظ</string>
     <string name="transaction_type">نوع المعاملة</string>
     <string name="details">التفاصيل</string>
+    <string name="debt_customer_ledger">أصحاب الذمم</string>
+    <string name="search_customer">ابحث عن العميل</string>
+    <string name="no_debt_customers_found">لا توجد ذمم مسجلة</string>
+    <string name="customer_transaction_count">%d معاملة</string>
 
     <string name="done">تم</string>
     <string name="backspace">رجوع للخلف</string>

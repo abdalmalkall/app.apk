@@ -28,6 +28,7 @@
     <string name="expense">Expense</string>
     <string name="income">Income</string>
     <string name="transfer">Transfer</string>
+    <string name="debt">Debt</string>
 
     <string name="select_different_account">Select different account. From and To account shouldn\'t be the same.</string>
     <string name="amount_error_message">Please enter a valid amount</string>
@@ -40,6 +41,9 @@
     <string name="select_time">Select Time</string>
 
     <string name="transaction">Transaction</string>
+    <string name="debt_customer_name">Customer name</string>
+    <string name="debt_customer_name_hint">Enter customer name</string>
+    <string name="debt_customer_name_required">Customer name is required for debt transactions</string>
     <string name="clear">Clear</string>
     <string name="cancel">Cancel</string>
     <string name="ok">OK</string>
@@ -55,6 +59,10 @@
     <string name="save">Save</string>
     <string name="transaction_type">Transaction Type</string>
     <string name="details">Details</string>
+    <string name="debt_customer_ledger">Debt customers</string>
+    <string name="search_customer">Search customer</string>
+    <string name="no_debt_customers_found">No debt customers found</string>
+    <string name="customer_transaction_count">%d transactions</string>
 
     <string name="done">Done</string>
     <string name="backspace">Backspace</string>

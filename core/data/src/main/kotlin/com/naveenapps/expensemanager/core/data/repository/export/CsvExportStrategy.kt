@@ -30,6 +30,9 @@ class CsvExportStrategy(context: Context) : BaseExportStrategy(context) {
                 val totalExpense = transactions
                     .filter { it.type == TransactionType.EXPENSE }
                     .sumOf { it.amount.amount }
+                val totalDebt = transactions
+                    .filter { it.type == TransactionType.DEBT }
+                    .sumOf { it.amount.amount }
                 val now = Date()
 
                 data.add(
@@ -59,7 +62,7 @@ class CsvExportStrategy(context: Context) : BaseExportStrategy(context) {
                 data.add(
                     arrayOf(
                         context.getString(R.string.net_balance),
-                        (totalIncome - totalExpense).toTrimAmount()
+                        (totalIncome - totalExpense + totalDebt).toTrimAmount()
                     )
                 )
                 data.add(arrayOf())

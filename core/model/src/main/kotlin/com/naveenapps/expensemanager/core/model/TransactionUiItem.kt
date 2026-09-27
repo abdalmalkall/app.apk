@@ -26,6 +26,7 @@ data class TransactionUiItem(
     val toAccountName: String? = null,
     val toAccountIcon: StoredIcon? = null,
     val categoryTitleResId: Int? = null,
+    val customerName: String? = null,
 )
 
 fun Transaction.toTransactionUIModel(amount: Amount): TransactionUiItem {
@@ -42,5 +43,6 @@ fun Transaction.toTransactionUIModel(amount: Amount): TransactionUiItem {
         toAccountName = this.toAccount?.name,
         toAccountIcon = this.toAccount?.storedIcon,
         categoryTitleResId = this.category.titleResId,
+        customerName = this.customerName,
     )
 }

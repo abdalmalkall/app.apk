@@ -25,6 +25,9 @@ sealed class ExpenseManagerScreens {
     data object TransactionList : ExpenseManagerScreens()
 
     @Serializable
+    data object CustomerLedger : ExpenseManagerScreens()
+
+    @Serializable
     data object Settings : ExpenseManagerScreens()
 
     @Serializable

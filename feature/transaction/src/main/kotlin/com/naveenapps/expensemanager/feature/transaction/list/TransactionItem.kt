@@ -241,7 +241,7 @@ fun TransactionItem(
                     TransactionType.EXPENSE -> "−" to colorResource(
                         id = com.naveenapps.expensemanager.core.common.R.color.red_500,
                     )
-                    TransactionType.INCOME -> "+" to colorResource(
+                    TransactionType.INCOME, TransactionType.DEBT -> "+" to colorResource(
                         id = com.naveenapps.expensemanager.core.common.R.color.green_500,
                     )
                     else -> "" to Color.Unspecified

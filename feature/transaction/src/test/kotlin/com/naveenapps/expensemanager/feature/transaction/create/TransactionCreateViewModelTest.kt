@@ -121,9 +121,11 @@ class TransactionCreateViewModelTest : BaseCoroutineTest() {
         selectedCategory: Category = fakeCategory,
         selectedFromAccount: AccountUiModel = fakeFromAccount,
         selectedToAccount: AccountUiModel = fakeToAccount,
+        customerName: String = "",
     ) = TransactionCreateState(
         amount = TextFieldValue(value = "100.00", valueError = false, onValueChange = null),
         notes = TextFieldValue(value = notes, valueError = false, onValueChange = null),
+        customerName = TextFieldValue(value = customerName, valueError = false, onValueChange = null),
         dateTime = dateTime,
         transactionType = transactionType,
         currency = fakeCurrency,
@@ -183,6 +185,18 @@ class TransactionCreateViewModelTest : BaseCoroutineTest() {
         )
 
         assertThat(result.toAccountId).isEqualTo(fakeToAccount.id)
+    }
+
+    @Test
+    fun `debt transaction preserves its type and amount without a destination account`() {
+        val result = viewModel.buildTransactionFromState(
+            buildState(transactionType = TransactionType.DEBT),
+            amountValue = 100.0,
+        )
+
+        assertThat(result.type).isEqualTo(TransactionType.DEBT)
+        assertThat(result.amount.amount).isEqualTo(100.0)
+        assertThat(result.toAccountId).isNull()
     }
 
     // endregion
@@ -257,6 +271,16 @@ class TransactionCreateViewModelTest : BaseCoroutineTest() {
 
             assertThat(result.type).isEqualTo(type)
         }
+    }
+
+    @Test
+    fun `maps customer name for debt transaction from state`() {
+        val result = viewModel.buildTransactionFromState(
+            buildState(transactionType = TransactionType.DEBT, customerName = "Ahmed"),
+            amountValue = 100.0,
+        )
+
+        assertThat(result.customerName).isEqualTo("Ahmed")
     }
 
     @Test

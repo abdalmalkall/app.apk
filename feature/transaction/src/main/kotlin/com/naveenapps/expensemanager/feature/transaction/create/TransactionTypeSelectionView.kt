@@ -62,6 +62,14 @@ fun TransactionTypeSelectionView(
                 activeContentColor = { MaterialTheme.colorScheme.onTertiaryContainer },
                 activeBorderColor = { MaterialTheme.colorScheme.tertiary },
             ),
+            TransactionTypeUi(
+                type = TransactionType.DEBT,
+                labelRes = R.string.debt,
+                icon = Icons.Rounded.SwapHoriz,
+                activeContainerColor = { MaterialTheme.colorScheme.secondaryContainer },
+                activeContentColor = { MaterialTheme.colorScheme.onSecondaryContainer },
+                activeBorderColor = { MaterialTheme.colorScheme.secondary },
+            ),
         )
     }
 

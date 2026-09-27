@@ -45,6 +45,8 @@ data class TransactionEntity(
     var fromAccountId: String,
     @ColumnInfo(name = "type")
     var type: TransactionType,
+    @ColumnInfo(name = "customer_name")
+    var customerName: String? = null,
     @ColumnInfo(name = "amount")
     var amount: Double,
     @ColumnInfo(name = "image_path")

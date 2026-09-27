@@ -1,6 +1,7 @@
 package com.naveenapps.expensemanager.feature.transaction.di
 
 import com.naveenapps.expensemanager.feature.transaction.create.TransactionCreateViewModel
+import com.naveenapps.expensemanager.feature.transaction.customer.CustomerLedgerViewModel
 import com.naveenapps.expensemanager.feature.transaction.list.TransactionListViewModel
 import com.naveenapps.expensemanager.feature.transaction.numberpad.NumberPadViewModel
 import org.koin.core.module.dsl.viewModel
@@ -33,6 +34,15 @@ val TransactionViewModelModule = module {
             getTransactionWithFilterUseCase = get(),
             appCoroutineDispatchers = get(),
             appComposeNavigator = get()
+        )
+    }
+    viewModel {
+        CustomerLedgerViewModel(
+            getCurrencyUseCase = get(),
+            getFormattedAmountUseCase = get(),
+            getTransactionWithFilterUseCase = get(),
+            appCoroutineDispatchers = get(),
+            appComposeNavigator = get(),
         )
     }
     viewModel { NumberPadViewModel() }

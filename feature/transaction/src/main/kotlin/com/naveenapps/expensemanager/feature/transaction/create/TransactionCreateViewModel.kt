@@ -98,6 +98,11 @@ class TransactionCreateViewModel(
                 valueError = false,
                 onValueChange = this::setNotes
             ),
+            customerName = TextFieldValue(
+                value = "",
+                valueError = false,
+                onValueChange = this::setCustomerName
+            ),
             dateTime = Date(),
             transactionType = TransactionType.EXPENSE,
             currency = getDefaultCurrencyUseCase.invoke(),
@@ -168,6 +173,7 @@ class TransactionCreateViewModel(
                 TransactionType.INCOME -> defaultIncomeCategory
                 TransactionType.EXPENSE -> defaultExpenseCategory
                 TransactionType.TRANSFER -> null
+                TransactionType.DEBT -> defaultExpenseCategory
             }
             val matchedCategory = filteredCategories.find { it.id == preferredCategoryId }
 
@@ -210,6 +216,7 @@ class TransactionCreateViewModel(
                             value = numberFormatRepository.formatForEditing(transaction.amount.amount)
                         ),
                         transactionType = transaction.type,
+                        customerName = current.customerName.copy(value = transaction.customerName.orEmpty()),
                         dateTime = transaction.createdOn,
                         notes = current.notes.copy(value = transaction.notes),
                         selectedCategory = transaction.category,
@@ -249,6 +256,13 @@ class TransactionCreateViewModel(
             return
         }
 
+        if (currentState.transactionType == TransactionType.DEBT &&
+            currentState.customerName.value.trim().isBlank()
+        ) {
+            _state.update { it.copy(customerName = it.customerName.copy(valueError = true)) }
+            return
+        }
+
         if (currentState.transactionType.isTransfer() &&
             currentState.selectedFromAccount.id == currentState.selectedToAccount.id
         ) return
@@ -268,6 +282,7 @@ class TransactionCreateViewModel(
             fromAccountId = state.selectedFromAccount.id,
             toAccountId = if (state.transactionType.isTransfer()) state.selectedToAccount.id else null,
             type = state.transactionType,
+            customerName = if (state.transactionType == TransactionType.DEBT) state.customerName.value.trim() else null,
             amount = Amount(amountValue),
             imagePath = "",
             createdOn = state.dateTime,
@@ -387,6 +402,10 @@ class TransactionCreateViewModel(
 
     private fun setNotes(notes: String) {
         _state.update { it.copy(notes = it.notes.copy(value = notes)) }
+    }
+
+    private fun setCustomerName(customerName: String) {
+        _state.update { it.copy(customerName = it.customerName.copy(value = customerName, valueError = false)) }
     }
 
     private fun changeTransactionType(type: TransactionType) {

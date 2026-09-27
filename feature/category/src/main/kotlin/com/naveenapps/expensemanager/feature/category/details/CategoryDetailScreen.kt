@@ -287,7 +287,7 @@ fun TransactionItem(
                 style = MaterialTheme.typography.titleMedium,
                 color = when (transactionType) {
                     TransactionType.EXPENSE -> colorResource(id = com.naveenapps.expensemanager.core.common.R.color.red_500)
-                    TransactionType.INCOME -> colorResource(id = com.naveenapps.expensemanager.core.common.R.color.green_500)
+                    TransactionType.INCOME, TransactionType.DEBT -> colorResource(id = com.naveenapps.expensemanager.core.common.R.color.green_500)
                     else -> Color.Unspecified
                 },
             )

@@ -7,6 +7,8 @@ enum class TransactionType {
     INCOME,
     EXPENSE,
     TRANSFER,
+    // Keep appended: Room stores transaction types by ordinal.
+    DEBT,
 }
 
 fun TransactionType.isTransfer(): Boolean {

@@ -11,6 +11,7 @@ data class Transaction(
     val amount: Amount,
     val imagePath: String,
     val type: TransactionType,
+    val customerName: String? = null,
     val createdOn: Date,
     val updatedOn: Date,
     var category: Category = Category(

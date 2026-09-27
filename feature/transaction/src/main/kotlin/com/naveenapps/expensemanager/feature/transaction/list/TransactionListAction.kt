@@ -6,5 +6,7 @@ sealed class TransactionListAction {
 
     data object OpenCreateTransaction : TransactionListAction()
 
+    data object OpenCustomerLedger : TransactionListAction()
+
     data class OpenEdiTransaction(val transactionId: String) : TransactionListAction()
 }

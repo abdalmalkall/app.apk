@@ -132,10 +132,10 @@ interface TransactionDao : BaseDao<TransactionEntity> {
         val previousTransaction = findById(transactionEntity.id)
 
         if (previousTransaction != null) {
-            val previousAmountToDetect = if (previousTransaction.type == TransactionType.INCOME) {
-                previousTransaction.amount * -1
-            } else {
-                previousTransaction.amount
+            val previousAmountToDetect = when (previousTransaction.type) {
+                TransactionType.INCOME -> previousTransaction.amount * -1
+                TransactionType.DEBT -> 0.0
+                else -> previousTransaction.amount
             }
             val previousSelectedFromAccount = findAccountById(previousTransaction.fromAccountId)
             if (previousSelectedFromAccount != null) {

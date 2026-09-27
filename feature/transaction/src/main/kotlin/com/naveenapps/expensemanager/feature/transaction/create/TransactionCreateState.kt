@@ -12,6 +12,7 @@ import java.util.Date
 data class TransactionCreateState(
     val amount: TextFieldValue<String>,
     val notes: TextFieldValue<String>,
+    val customerName: TextFieldValue<String>,
     val dateTime: Date,
     val transactionType: TransactionType,
     val currency: Currency,

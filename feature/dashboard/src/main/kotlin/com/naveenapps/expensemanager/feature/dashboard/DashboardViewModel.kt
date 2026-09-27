@@ -108,6 +108,9 @@ class DashboardViewModel(
             val expenseValue = transactions?.filter { it.type == TransactionType.EXPENSE }?.sumOf {
                 it.amount.amount
             } ?: 0.0
+            val debtValue = transactions?.filter { it.type == TransactionType.DEBT }?.sumOf {
+                it.amount.amount
+            } ?: 0.0
 
 
             _state.update {
@@ -122,7 +125,7 @@ class DashboardViewModel(
                             currency,
                         ).amountString.orEmpty(),
                         balance = getFormattedAmountUseCase.invoke(
-                            (incomeValue - expenseValue),
+                            (incomeValue - expenseValue + debtValue),
                             currency,
                         ).amountString.orEmpty(),
                     ),
