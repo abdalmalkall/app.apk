@@ -33,6 +33,8 @@ dependencies {
     implementation(libs.androidx.dataStore.preference)
     implementation(libs.backup.restore)
     implementation(libs.google.android.play.review)
+    implementation(libs.google.play.services.auth)
+    implementation(libs.google.play.services.drive)
     implementation(libs.androidx.exifinterface)
 
     androidTestImplementation(project(":core:testing"))

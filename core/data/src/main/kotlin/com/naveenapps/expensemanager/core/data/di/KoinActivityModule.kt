@@ -16,6 +16,7 @@ val ActivityModule = module {
         scoped { RoomBackup(context = get<Activity>()) }
         scoped<BackupRepository> {
             BackupRepositoryImpl(
+                context = get<Activity>(),
                 roomBackup = get<RoomBackup>(),
                 database = get<ExpenseManagerDatabase>()
             )
