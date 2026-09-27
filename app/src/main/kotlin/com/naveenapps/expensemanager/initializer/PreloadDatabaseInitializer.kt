@@ -3,7 +3,9 @@ package com.naveenapps.expensemanager.initializer
 import android.content.Context
 import androidx.startup.Initializer
 import com.naveenapps.expensemanager.core.domain.usecase.account.AddAccountUseCase
+import com.naveenapps.expensemanager.core.domain.usecase.account.GetAllAccountsUseCase
 import com.naveenapps.expensemanager.core.domain.usecase.category.AddCategoryUseCase
+import com.naveenapps.expensemanager.core.domain.usecase.category.GetAllCategoryUseCase
 import com.naveenapps.expensemanager.core.domain.usecase.settings.onboarding.GetPreloadStatusUseCase
 import com.naveenapps.expensemanager.core.domain.usecase.settings.onboarding.SetPreloadStatusUseCase
 import com.naveenapps.expensemanager.core.data.R as CategoryStringsR
@@ -15,10 +17,23 @@ import com.naveenapps.expensemanager.core.model.StoredIcon
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import org.koin.core.context.GlobalContext
 import java.util.Calendar
 import java.util.Date
+
+private val RAML_SWEILEH_CATEGORY = Category(
+    id = com.naveenapps.expensemanager.core.model.RAML_SWEILEH_CATEGORY_ID,
+    name = com.naveenapps.expensemanager.core.model.RAML_SWEILEH_CATEGORY_NAME,
+    type = CategoryType.EXPENSE,
+    storedIcon = StoredIcon(
+        name = "shopping_cart",
+        backgroundColor = "#795548",
+    ),
+    createdOn = Date(),
+    updatedOn = Date(),
+)
 
 val BASE_CATEGORY_LIST = listOf(
     Category(
@@ -191,6 +206,18 @@ val BASE_ACCOUNT_LIST = listOf(
     ),
 )
 
+private val LIMITED_LIABILITY_ACCOUNT = Account(
+    id = "limited-liability-company",
+    name = "ذ.م.م",
+    type = AccountType.REGULAR,
+    storedIcon = StoredIcon(
+        name = "account_balance",
+        backgroundColor = "#2E7D32",
+    ),
+    createdOn = Date(),
+    updatedOn = Date(),
+)
+
 class PreloadDatabaseInitializer : Initializer<Unit> {
 
     override fun create(context: Context) {
@@ -199,6 +226,8 @@ class PreloadDatabaseInitializer : Initializer<Unit> {
         val setPreloadStatusUseCase: SetPreloadStatusUseCase =  GlobalContext.get().get()
         val addAccountUseCase: AddAccountUseCase =  GlobalContext.get().get()
         val addCategoryUseCase: AddCategoryUseCase =  GlobalContext.get().get()
+        val getAllAccountsUseCase: GetAllAccountsUseCase = GlobalContext.get().get()
+        val getAllCategoryUseCase: GetAllCategoryUseCase = GlobalContext.get().get()
 
         CoroutineScope(SupervisorJob() + Dispatchers.Main).launch {
             val isPreloaded = getPreloadStatusUseCase.invoke()
@@ -214,13 +243,26 @@ class PreloadDatabaseInitializer : Initializer<Unit> {
 
                 setPreloadStatusUseCase.invoke(true)
             }
+
+            val hasRamlSweilehCategory = getAllCategoryUseCase.invoke().first().any {
+                it.id == RAML_SWEILEH_CATEGORY.id
+            }
+            if (!hasRamlSweilehCategory) {
+                addCategoryUseCase.invoke(RAML_SWEILEH_CATEGORY)
+            }
+
+            val hasLimitedLiabilityAccount = getAllAccountsUseCase.invoke().first().any {
+                it.id == LIMITED_LIABILITY_ACCOUNT.id
+            }
+            if (!hasLimitedLiabilityAccount) {
+                addAccountUseCase.invoke(LIMITED_LIABILITY_ACCOUNT)
+            }
         }
     }
 
     override fun dependencies(): List<Class<out Initializer<*>>> {
         return listOf(
-            KoinInitializer::class.java,
-            WorkManagerInitializer::class.java
+            KoinInitializer::class.java
         )
     }
 }

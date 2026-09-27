@@ -13,6 +13,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -110,17 +111,46 @@ private fun CustomerLedgerContent(
                                 verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.SpaceBetween,
                             ) {
-                                Text(
-                                    text = customer.customerName,
-                                    style = MaterialTheme.typography.titleMedium,
-                                    fontWeight = FontWeight.SemiBold,
-                                )
-                                Text(
-                                    text = customer.totalAmount.amountString ?: "",
-                                    style = MaterialTheme.typography.titleMedium,
-                                    color = MaterialTheme.colorScheme.primary,
-                                    fontWeight = FontWeight.Bold,
-                                )
+                                Column {
+                                    Text(
+                                        text = customer.customerName,
+                                        style = MaterialTheme.typography.titleMedium,
+                                        fontWeight = FontWeight.SemiBold,
+                                    )
+                                    Text(
+                                        text = "Invoice: ${customer.invoiceNumber}",
+                                        style = MaterialTheme.typography.bodySmall,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                        modifier = Modifier.padding(top = 2.dp),
+                                    )
+                                }
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    Text(
+                                        text = customer.totalAmount.amountString ?: "",
+                                        style = MaterialTheme.typography.titleMedium,
+                                        color = MaterialTheme.colorScheme.primary,
+                                        fontWeight = FontWeight.Bold,
+                                    )
+                                    IconButton(
+                                        onClick = {
+                                            onAction(
+                                                CustomerLedgerAction.ShareInvoice(
+                                                    customerName = customer.customerName,
+                                                    invoiceNumber = customer.invoiceNumber,
+                                                    totalAmount = customer.totalAmount.amountString ?: "",
+                                                    transactions = customer.transactions.map {
+                                                        "${it.date} - ${it.amount.amountString ?: ""} - ${it.categoryName}"
+                                                    },
+                                                ),
+                                            )
+                                        },
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Default.Share,
+                                            contentDescription = "Share invoice",
+                                        )
+                                    }
+                                }
                             }
 
                             Text(

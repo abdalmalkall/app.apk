@@ -268,9 +268,6 @@ private fun CategorySelectionView(
         CategorySelectionScreen(
             categories = state.categories,
             selectedCategory = state.selectedCategory,
-            createNewCallback = {
-                onAction.invoke(TransactionCreateAction.OpenCategoryCreate(null))
-            },
             onItemSelection = {
                 onAction.invoke(TransactionCreateAction.SelectCategory(it))
             },

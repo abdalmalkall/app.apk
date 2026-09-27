@@ -2,6 +2,8 @@ package com.naveenapps.expensemanager.core.data.repository
 
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
+import androidx.core.net.toUri
 import com.google.android.play.core.ktx.launchReview
 import com.google.android.play.core.ktx.requestReview
 import com.google.android.play.core.review.ReviewManagerFactory
@@ -33,6 +35,31 @@ class ShareRepositoryImpl(
         file?.let {
             context.openShareOption(it)
         }
+    }
+
+    override fun shareInvoice(
+        customerName: String,
+        invoiceNumber: String,
+        totalAmount: String,
+        transactions: List<String>,
+    ) {
+        val body = buildString {
+            appendLine("Invoice Number: $invoiceNumber")
+            appendLine("Customer Name: $customerName")
+            appendLine("Total Amount: $totalAmount")
+            appendLine()
+            appendLine("Transactions:")
+            transactions.forEach { appendLine("- $it") }
+        }
+
+        val shareIntent = Intent(Intent.ACTION_SEND).apply {
+            type = "text/plain"
+            putExtra(Intent.EXTRA_SUBJECT, "Invoice $invoiceNumber")
+            putExtra(Intent.EXTRA_TEXT, body)
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        }
+
+        context.startActivity(Intent.createChooser(shareIntent, "Send invoice"))
     }
 
     override fun print(file: File?) {

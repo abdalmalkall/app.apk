@@ -8,6 +8,8 @@ interface ShareRepository {
 
     fun share(file: File?)
 
+    fun shareInvoice(customerName: String, invoiceNumber: String, totalAmount: String, transactions: List<String>)
+
     fun print(file: File?)
 
     fun openRateUs()

@@ -43,6 +43,7 @@ val TransactionViewModelModule = module {
             getTransactionWithFilterUseCase = get(),
             appCoroutineDispatchers = get(),
             appComposeNavigator = get(),
+            shareRepository = get(),
         )
     }
     viewModel { NumberPadViewModel() }

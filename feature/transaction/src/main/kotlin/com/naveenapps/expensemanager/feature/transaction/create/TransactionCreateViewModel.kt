@@ -20,6 +20,7 @@ import com.naveenapps.expensemanager.core.model.AccountUiModel
 import com.naveenapps.expensemanager.core.model.Amount
 import com.naveenapps.expensemanager.core.model.Category
 import com.naveenapps.expensemanager.core.model.CategoryType
+import com.naveenapps.expensemanager.core.model.RAML_SWEILEH_CATEGORY_ID
 import com.naveenapps.expensemanager.core.model.Currency
 import com.naveenapps.expensemanager.core.model.Resource
 import com.naveenapps.expensemanager.core.model.StoredIcon
@@ -167,7 +168,8 @@ class TransactionCreateViewModel(
             settingsRepository.getDefaultExpenseCategory()
         ) { type, categories, defaultIncomeCategory, defaultExpenseCategory ->
             val filteredCategories = categories.filter { category ->
-                if (type.isIncome()) category.type.isIncome() else category.type.isExpense()
+                category.id == RAML_SWEILEH_CATEGORY_ID &&
+                    if (type.isIncome()) category.type.isIncome() else category.type.isExpense()
             }
             val preferredCategoryId = when (type) {
                 TransactionType.INCOME -> defaultIncomeCategory

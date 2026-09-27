@@ -147,6 +147,8 @@ android {
 
     defaultConfig {
         applicationId = "com.naveenapps.expensemanager"
+        versionCode = 1
+        versionName = "0.1"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 

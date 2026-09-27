@@ -10,6 +10,7 @@ import com.naveenapps.expensemanager.core.model.Amount
 import com.naveenapps.expensemanager.core.model.Currency
 import com.naveenapps.expensemanager.core.model.Transaction
 import com.naveenapps.expensemanager.core.model.TransactionType
+import com.naveenapps.expensemanager.core.repository.ShareRepository
 import com.naveenapps.expensemanager.core.model.toTransactionUIModel
 import com.naveenapps.expensemanager.core.navigation.AppComposeNavigator
 import com.naveenapps.expensemanager.core.navigation.ExpenseManagerScreens
@@ -26,6 +27,7 @@ class CustomerLedgerViewModel(
     getTransactionWithFilterUseCase: GetTransactionWithFilterUseCase,
     appCoroutineDispatchers: AppCoroutineDispatchers,
     private val appComposeNavigator: AppComposeNavigator,
+    private val shareRepository: ShareRepository,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(CustomerLedgerState())
@@ -47,11 +49,18 @@ class CustomerLedgerViewModel(
 
         val customers = debtTransactions
             .groupBy { it.customerName!!.trim() }
-            .map { (customerName, items) ->
+            .entries
+            .toList()
+            .mapIndexed { index, entry ->
+                val customerName = entry.key
+                val items = entry.value
                 val total = items.sumOf { it.amount.amount }
                 val formattedTotal = getFormattedAmountUseCase.invoke(total, currency)
+                val normalizedName = customerName.filter { it.isLetterOrDigit() }.ifBlank { "CUSTOMER" }
+                val invoiceNumber = "INV-${normalizedName.uppercase().take(6)}-${(index + 1).toString().padStart(3, '0')}"
                 CustomerLedgerItem(
                     customerName = customerName,
+                    invoiceNumber = invoiceNumber,
                     totalAmount = Amount(
                         amount = total,
                         amountString = formattedTotal.amountString,
@@ -95,6 +104,14 @@ class CustomerLedgerViewModel(
             is CustomerLedgerAction.OpenTransactionEdit -> appComposeNavigator.navigate(
                 ExpenseManagerScreens.TransactionCreate(action.transactionId),
             )
+            is CustomerLedgerAction.ShareInvoice -> {
+                shareRepository.shareInvoice(
+                    customerName = action.customerName,
+                    invoiceNumber = action.invoiceNumber,
+                    totalAmount = action.totalAmount,
+                    transactions = action.transactions,
+                )
+            }
         }
     }
 }

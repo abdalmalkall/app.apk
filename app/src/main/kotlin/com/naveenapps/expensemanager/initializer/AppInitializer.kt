@@ -28,8 +28,7 @@ class AppInitializer : Initializer<Unit> {
 
     override fun dependencies(): List<Class<out Initializer<*>>> {
         return listOf(
-            KoinInitializer::class.java,
-            WorkManagerInitializer::class.java
+            KoinInitializer::class.java
         )
     }
 }

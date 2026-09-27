@@ -14,6 +14,7 @@ data class CustomerLedgerState(
 @Stable
 data class CustomerLedgerItem(
     val customerName: String,
+    val invoiceNumber: String,
     val totalAmount: Amount,
     val transactionCount: Int,
     val transactions: List<TransactionUiItem>,

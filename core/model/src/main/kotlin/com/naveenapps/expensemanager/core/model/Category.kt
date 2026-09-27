@@ -3,6 +3,9 @@ package com.naveenapps.expensemanager.core.model
 import androidx.compose.runtime.Stable
 import java.util.Date
 
+const val RAML_SWEILEH_CATEGORY_ID = "raml-sweileh"
+const val RAML_SWEILEH_CATEGORY_NAME = "رمل صويلح"
+
 @Stable
 data class Category(
     val id: String,
