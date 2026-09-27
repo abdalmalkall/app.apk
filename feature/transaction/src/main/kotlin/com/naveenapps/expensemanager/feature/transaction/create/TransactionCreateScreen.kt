@@ -433,6 +433,80 @@ private fun TransactionCreateContent(
                                 },
                             ),
                         )
+
+                        OutlinedTextField(
+                            modifier = Modifier.fillMaxWidth(),
+                            value = state.customerPhone.value,
+                            singleLine = true,
+                            placeholder = { Text(text = stringResource(R.string.customer_phone_hint)) },
+                            label = { Text(text = stringResource(R.string.customer_phone)) },
+                            onValueChange = { state.customerPhone.onValueChange?.invoke(it) },
+                        )
+
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(12.dp),
+                        ) {
+                            OutlinedTextField(
+                                modifier = Modifier.weight(1f),
+                                value = state.quantity.value,
+                                singleLine = true,
+                                label = { Text(text = stringResource(R.string.quantity)) },
+                                onValueChange = { state.quantity.onValueChange?.invoke(it) },
+                            )
+                            OutlinedTextField(
+                                modifier = Modifier.weight(1f),
+                                value = state.unit.value,
+                                singleLine = true,
+                                label = { Text(text = stringResource(R.string.unit)) },
+                                onValueChange = { state.unit.onValueChange?.invoke(it) },
+                            )
+                        }
+
+                        OutlinedTextField(
+                            modifier = Modifier.fillMaxWidth(),
+                            value = state.unitPrice.value,
+                            singleLine = true,
+                            label = { Text(text = stringResource(R.string.unit_price)) },
+                            onValueChange = { state.unitPrice.onValueChange?.invoke(it) },
+                        )
+
+                        OutlinedTextField(
+                            modifier = Modifier.fillMaxWidth(),
+                            value = state.deliveryLocation.value,
+                            singleLine = true,
+                            label = { Text(text = stringResource(R.string.delivery_location)) },
+                            onValueChange = { state.deliveryLocation.onValueChange?.invoke(it) },
+                        )
+
+                        OutlinedTextField(
+                            modifier = Modifier.fillMaxWidth(),
+                            value = state.deliveryNotes.value,
+                            singleLine = false,
+                            maxLines = 2,
+                            label = { Text(text = stringResource(R.string.delivery_notes)) },
+                            onValueChange = { state.deliveryNotes.onValueChange?.invoke(it) },
+                        )
+
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(12.dp),
+                        ) {
+                            OutlinedTextField(
+                                modifier = Modifier.weight(1f),
+                                value = state.driverName.value,
+                                singleLine = true,
+                                label = { Text(text = stringResource(R.string.driver_name)) },
+                                onValueChange = { state.driverName.onValueChange?.invoke(it) },
+                            )
+                            OutlinedTextField(
+                                modifier = Modifier.weight(1f),
+                                value = state.vehicleNumber.value,
+                                singleLine = true,
+                                label = { Text(text = stringResource(R.string.vehicle_number)) },
+                                onValueChange = { state.vehicleNumber.onValueChange?.invoke(it) },
+                            )
+                        }
                     }
 
                     OutlinedTextField(

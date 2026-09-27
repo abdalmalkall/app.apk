@@ -17,6 +17,15 @@ fun Transaction.toEntityModel(): TransactionEntity {
         imagePath = imagePath,
         createdOn = createdOn,
         updatedOn = updatedOn,
+        customerId = customerId,
+        invoiceNumber = invoiceNumber,
+        quantity = quantity,
+        unit = unit,
+        unitPrice = unitPrice,
+        deliveryLocation = deliveryLocation,
+        deliveryNotes = deliveryNotes,
+        driverName = driverName,
+        vehicleNumber = vehicleNumber,
     )
 }
 
@@ -33,5 +42,14 @@ fun TransactionEntity.toDomainModel(): Transaction {
         imagePath = imagePath,
         createdOn = createdOn,
         updatedOn = updatedOn,
+        customerId = customerId,
+        invoiceNumber = invoiceNumber,
+        quantity = quantity,
+        unit = unit,
+        unitPrice = unitPrice,
+        deliveryLocation = deliveryLocation,
+        deliveryNotes = deliveryNotes,
+        driverName = driverName,
+        vehicleNumber = vehicleNumber,
     )
 }

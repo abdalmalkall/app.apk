@@ -27,6 +27,15 @@ data class TransactionUiItem(
     val toAccountIcon: StoredIcon? = null,
     val categoryTitleResId: Int? = null,
     val customerName: String? = null,
+    val customerPhone: String? = null,
+    val invoiceNumber: String? = null,
+    val quantity: Double? = null,
+    val unit: String? = null,
+    val unitPrice: Double? = null,
+    val deliveryLocation: String? = null,
+    val deliveryNotes: String? = null,
+    val driverName: String? = null,
+    val vehicleNumber: String? = null,
 )
 
 fun Transaction.toTransactionUIModel(amount: Amount): TransactionUiItem {
@@ -44,5 +53,14 @@ fun Transaction.toTransactionUIModel(amount: Amount): TransactionUiItem {
         toAccountIcon = this.toAccount?.storedIcon,
         categoryTitleResId = this.category.titleResId,
         customerName = this.customerName,
+        customerPhone = this.customerPhone,
+        invoiceNumber = this.invoiceNumber,
+        quantity = this.quantity,
+        unit = this.unit,
+        unitPrice = this.unitPrice,
+        deliveryLocation = this.deliveryLocation,
+        deliveryNotes = this.deliveryNotes,
+        driverName = this.driverName,
+        vehicleNumber = this.vehicleNumber,
     )
 }

@@ -63,6 +63,27 @@
     <string name="search_customer">ابحث عن العميل</string>
     <string name="no_debt_customers_found">لا توجد ذمم مسجلة</string>
     <string name="customer_transaction_count">%d معاملة</string>
+    <string name="share_customer_statement">إرسال كشف حساب العميل</string>
+    <string name="invoice_number">رقم الفاتورة</string>
+    <string name="total_sales">إجمالي المبيعات</string>
+    <string name="total_paid">إجمالي المدفوع</string>
+    <string name="remaining_amount">المتبقي</string>
+    <string name="payment_amount">مبلغ السداد</string>
+    <string name="record_customer_payment">تسجيل دفعة</string>
+    <string name="invalid_payment_message">أدخل مبلغًا لا يتجاوز الرصيد المتبقي</string>
+    <string name="delete_payment">حذف الدفعة</string>
+    <string name="payment_unpaid">غير مدفوعة</string>
+    <string name="payment_partial">مدفوعة جزئيًا</string>
+    <string name="payment_paid">مدفوعة بالكامل</string>
+    <string name="customer_phone">رقم الهاتف (اختياري)</string>
+    <string name="customer_phone_hint">أدخل رقم هاتف العميل</string>
+    <string name="quantity">الكمية</string>
+    <string name="unit">الوحدة</string>
+    <string name="unit_price">سعر الوحدة</string>
+    <string name="delivery_location">موقع التوصيل (اختياري)</string>
+    <string name="delivery_notes">ملاحظات التوصيل (اختياري)</string>
+    <string name="driver_name">اسم السائق (اختياري)</string>
+    <string name="vehicle_number">رقم القلاب أو المركبة (اختياري)</string>
 
     <string name="done">تم</string>
     <string name="backspace">رجوع للخلف</string>

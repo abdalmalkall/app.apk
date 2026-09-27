@@ -42,6 +42,8 @@ sealed class TransactionCreateAction {
 
     data class ChangeTransactionType(val type: TransactionType) : TransactionCreateAction()
 
+    data class UpdateInvoiceField(val field: InvoiceField, val value: String) : TransactionCreateAction()
+
     data class SelectDate(val date: Date) : TransactionCreateAction()
 
     data object ShowDateSelection : TransactionCreateAction()
@@ -57,4 +59,15 @@ sealed class TransactionCreateAction {
     data class AttachmentPicked(val uri: Uri) : TransactionCreateAction()
 
     data class RemoveAttachment(val path: String) : TransactionCreateAction()
+}
+
+enum class InvoiceField {
+    CUSTOMER_PHONE,
+    QUANTITY,
+    UNIT,
+    UNIT_PRICE,
+    DELIVERY_LOCATION,
+    DELIVERY_NOTES,
+    DRIVER_NAME,
+    VEHICLE_NUMBER,
 }

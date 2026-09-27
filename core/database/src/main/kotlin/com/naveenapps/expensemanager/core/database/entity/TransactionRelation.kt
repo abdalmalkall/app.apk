@@ -25,4 +25,9 @@ data class TransactionRelation(
         entityColumn = "transaction_id",
     )
     val attachmentEntities: List<TransactionAttachmentEntity>,
+    @Relation(
+        parentColumn = "customer_id",
+        entityColumn = "id",
+    )
+    val customerEntity: CustomerEntity?,
 )

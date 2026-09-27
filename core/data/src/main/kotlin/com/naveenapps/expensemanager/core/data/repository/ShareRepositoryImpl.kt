@@ -39,6 +39,7 @@ class ShareRepositoryImpl(
 
     override fun shareInvoice(
         customerName: String,
+        phone: String?,
         invoiceNumber: String,
         totalAmount: String,
         transactions: List<String>,
@@ -46,9 +47,10 @@ class ShareRepositoryImpl(
         val body = buildString {
             appendLine("Invoice Number: $invoiceNumber")
             appendLine("Customer Name: $customerName")
+            phone?.takeIf(String::isNotBlank)?.let { appendLine("Phone: $it") }
             appendLine("Total Amount: $totalAmount")
             appendLine()
-            appendLine("Transactions:")
+            appendLine("Details:")
             transactions.forEach { appendLine("- $it") }
         }
 
@@ -60,6 +62,30 @@ class ShareRepositoryImpl(
         }
 
         context.startActivity(Intent.createChooser(shareIntent, "Send invoice"))
+    }
+
+    override fun shareCustomerStatement(
+        customerName: String,
+        phone: String?,
+        totalAmount: String,
+        transactions: List<String>,
+    ) {
+        val body = buildString {
+            appendLine("Customer Statement")
+            appendLine("Customer Name: $customerName")
+            phone?.takeIf(String::isNotBlank)?.let { appendLine("Phone: $it") }
+            appendLine()
+            transactions.forEach { appendLine(it) }
+            appendLine()
+            appendLine("Outstanding Balance: $totalAmount")
+        }
+        val shareIntent = Intent(Intent.ACTION_SEND).apply {
+            type = "text/plain"
+            putExtra(Intent.EXTRA_SUBJECT, "Statement for $customerName")
+            putExtra(Intent.EXTRA_TEXT, body)
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        }
+        context.startActivity(Intent.createChooser(shareIntent, "Share customer statement"))
     }
 
     override fun print(file: File?) {

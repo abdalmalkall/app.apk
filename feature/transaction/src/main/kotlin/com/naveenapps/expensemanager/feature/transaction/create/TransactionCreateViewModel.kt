@@ -104,6 +104,14 @@ class TransactionCreateViewModel(
                 valueError = false,
                 onValueChange = this::setCustomerName
             ),
+            customerPhone = TextFieldValue("", onValueChange = { updateInvoiceField(InvoiceField.CUSTOMER_PHONE, it) }),
+            quantity = TextFieldValue("", onValueChange = { updateInvoiceField(InvoiceField.QUANTITY, it) }),
+            unit = TextFieldValue("", onValueChange = { updateInvoiceField(InvoiceField.UNIT, it) }),
+            unitPrice = TextFieldValue("", onValueChange = { updateInvoiceField(InvoiceField.UNIT_PRICE, it) }),
+            deliveryLocation = TextFieldValue("", onValueChange = { updateInvoiceField(InvoiceField.DELIVERY_LOCATION, it) }),
+            deliveryNotes = TextFieldValue("", onValueChange = { updateInvoiceField(InvoiceField.DELIVERY_NOTES, it) }),
+            driverName = TextFieldValue("", onValueChange = { updateInvoiceField(InvoiceField.DRIVER_NAME, it) }),
+            vehicleNumber = TextFieldValue("", onValueChange = { updateInvoiceField(InvoiceField.VEHICLE_NUMBER, it) }),
             dateTime = Date(),
             transactionType = TransactionType.EXPENSE,
             currency = getDefaultCurrencyUseCase.invoke(),
@@ -219,6 +227,14 @@ class TransactionCreateViewModel(
                         ),
                         transactionType = transaction.type,
                         customerName = current.customerName.copy(value = transaction.customerName.orEmpty()),
+                        customerPhone = current.customerPhone.copy(value = transaction.customerPhone.orEmpty()),
+                        quantity = current.quantity.copy(value = transaction.quantity?.let(numberFormatRepository::formatForEditing).orEmpty()),
+                        unit = current.unit.copy(value = transaction.unit.orEmpty()),
+                        unitPrice = current.unitPrice.copy(value = transaction.unitPrice?.let(numberFormatRepository::formatForEditing).orEmpty()),
+                        deliveryLocation = current.deliveryLocation.copy(value = transaction.deliveryLocation.orEmpty()),
+                        deliveryNotes = current.deliveryNotes.copy(value = transaction.deliveryNotes.orEmpty()),
+                        driverName = current.driverName.copy(value = transaction.driverName.orEmpty()),
+                        vehicleNumber = current.vehicleNumber.copy(value = transaction.vehicleNumber.orEmpty()),
                         dateTime = transaction.createdOn,
                         notes = current.notes.copy(value = transaction.notes),
                         selectedCategory = transaction.category,
@@ -251,9 +267,10 @@ class TransactionCreateViewModel(
     private fun save() {
         val currentState = _state.value
         val amountText = currentState.amount.value
-        val amountValue = numberFormatRepository.parseToDouble(amountText)
+        val amountValue = calculateInvoiceTotal(currentState)
+            ?: numberFormatRepository.parseToDouble(amountText)
 
-        if (amountText.isBlank() || amountValue == null || amountValue <= 0.0) {
+        if (amountValue == null || amountValue <= 0.0) {
             _state.update { it.copy(amount = it.amount.copy(valueError = true)) }
             return
         }
@@ -285,12 +302,47 @@ class TransactionCreateViewModel(
             toAccountId = if (state.transactionType.isTransfer()) state.selectedToAccount.id else null,
             type = state.transactionType,
             customerName = if (state.transactionType == TransactionType.DEBT) state.customerName.value.trim() else null,
+            customerPhone = if (state.transactionType == TransactionType.DEBT) state.customerPhone.value.trim().takeIf(String::isNotEmpty) else null,
             amount = Amount(amountValue),
             imagePath = "",
             createdOn = state.dateTime,
             updatedOn = Calendar.getInstance().time,
             attachments = state.attachments,
+            customerId = editingTransaction?.customerId,
+            invoiceNumber = editingTransaction?.invoiceNumber,
+            quantity = numberFormatRepository.parseToDouble(state.quantity.value)?.takeIf { it > 0.0 },
+            unit = state.unit.value.trim().takeIf(String::isNotEmpty),
+            unitPrice = numberFormatRepository.parseToDouble(state.unitPrice.value)?.takeIf { it > 0.0 },
+            deliveryLocation = state.deliveryLocation.value.trim().takeIf(String::isNotEmpty),
+            deliveryNotes = state.deliveryNotes.value.trim().takeIf(String::isNotEmpty),
+            driverName = state.driverName.value.trim().takeIf(String::isNotEmpty),
+            vehicleNumber = state.vehicleNumber.value.trim().takeIf(String::isNotEmpty),
         )
+    }
+
+    private fun calculateInvoiceTotal(state: TransactionCreateState): Double? {
+        if (state.transactionType != TransactionType.DEBT) return null
+        val quantity = numberFormatRepository.parseToDouble(state.quantity.value) ?: return null
+        val unitPrice = numberFormatRepository.parseToDouble(state.unitPrice.value) ?: return null
+        return (quantity * unitPrice).takeIf { quantity > 0.0 && unitPrice > 0.0 }
+    }
+
+    private fun updateInvoiceField(field: InvoiceField, value: String) {
+        _state.update { current ->
+            val updated = when (field) {
+                InvoiceField.CUSTOMER_PHONE -> current.copy(customerPhone = current.customerPhone.copy(value = value))
+                InvoiceField.QUANTITY -> current.copy(quantity = current.quantity.copy(value = value))
+                InvoiceField.UNIT -> current.copy(unit = current.unit.copy(value = value))
+                InvoiceField.UNIT_PRICE -> current.copy(unitPrice = current.unitPrice.copy(value = value))
+                InvoiceField.DELIVERY_LOCATION -> current.copy(deliveryLocation = current.deliveryLocation.copy(value = value))
+                InvoiceField.DELIVERY_NOTES -> current.copy(deliveryNotes = current.deliveryNotes.copy(value = value))
+                InvoiceField.DRIVER_NAME -> current.copy(driverName = current.driverName.copy(value = value))
+                InvoiceField.VEHICLE_NUMBER -> current.copy(vehicleNumber = current.vehicleNumber.copy(value = value))
+            }
+            calculateInvoiceTotal(updated)?.let { total ->
+                updated.copy(amount = updated.amount.copy(value = numberFormatRepository.formatForEditing(total)))
+            } ?: updated
+        }
     }
 
     private fun persistTransaction(transaction: Transaction) {
@@ -449,6 +501,7 @@ class TransactionCreateViewModel(
             is TransactionCreateAction.OpenCategoryCreate -> openCategoryCreate()
 
             is TransactionCreateAction.ChangeTransactionType -> changeTransactionType(action.type)
+            is TransactionCreateAction.UpdateInvoiceField -> updateInvoiceField(action.field, action.value)
 
             is TransactionCreateAction.SetNumberPadValue -> action.amount?.let {
                 setAmountOnChange(

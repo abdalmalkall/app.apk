@@ -125,3 +125,68 @@ internal val MIGRATION_7_8 = object : Migration(7, 8) {
         )
     }
 }
+
+internal val MIGRATION_8_9 = object : Migration(8, 9) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL(
+            "CREATE TABLE IF NOT EXISTS `customer` (" +
+                "`id` TEXT NOT NULL, " +
+                "`name` TEXT NOT NULL, " +
+                "`normalized_name` TEXT NOT NULL, " +
+                "`phone` TEXT, " +
+                "`created_on` INTEGER NOT NULL, " +
+                "`updated_on` INTEGER NOT NULL, " +
+                "PRIMARY KEY(`id`))",
+        )
+        db.execSQL("CREATE UNIQUE INDEX IF NOT EXISTS `index_customer_normalized_name` ON `customer` (`normalized_name`)")
+        db.execSQL(
+            "INSERT OR IGNORE INTO `customer` (`id`, `name`, `normalized_name`, `phone`, `created_on`, `updated_on`) " +
+                "SELECT 'legacy-' || lower(trim(`customer_name`)), trim(`customer_name`), " +
+                "lower(trim(`customer_name`)), NULL, MIN(`created_on`), MAX(`updated_on`) " +
+                "FROM `transaction` WHERE `customer_name` IS NOT NULL AND trim(`customer_name`) != '' " +
+                "GROUP BY lower(trim(`customer_name`))",
+        )
+        db.execSQL("ALTER TABLE `transaction` ADD COLUMN `customer_id` TEXT DEFAULT NULL REFERENCES `customer`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL")
+        db.execSQL("UPDATE `transaction` SET `customer_id` = 'legacy-' || lower(trim(`customer_name`)) WHERE `customer_name` IS NOT NULL AND trim(`customer_name`) != ''")
+        db.execSQL("ALTER TABLE `transaction` ADD COLUMN `invoice_number` TEXT DEFAULT NULL")
+        db.execSQL("ALTER TABLE `transaction` ADD COLUMN `quantity` REAL DEFAULT NULL")
+        db.execSQL("ALTER TABLE `transaction` ADD COLUMN `unit` TEXT DEFAULT NULL")
+        db.execSQL("ALTER TABLE `transaction` ADD COLUMN `unit_price` REAL DEFAULT NULL")
+        db.execSQL("ALTER TABLE `transaction` ADD COLUMN `delivery_location` TEXT DEFAULT NULL")
+        db.execSQL("ALTER TABLE `transaction` ADD COLUMN `delivery_notes` TEXT DEFAULT NULL")
+        db.execSQL("ALTER TABLE `transaction` ADD COLUMN `driver_name` TEXT DEFAULT NULL")
+        db.execSQL("ALTER TABLE `transaction` ADD COLUMN `vehicle_number` TEXT DEFAULT NULL")
+        db.execSQL("CREATE UNIQUE INDEX IF NOT EXISTS `index_transaction_invoice_number` ON `transaction` (`invoice_number`)")
+        db.execSQL("CREATE INDEX IF NOT EXISTS `index_transaction_customer_id` ON `transaction` (`customer_id`)")
+    }
+}
+
+internal val MIGRATION_9_10 = object : Migration(9, 10) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL(
+            "CREATE TABLE IF NOT EXISTS `customer_payment` (" +
+                "`id` TEXT NOT NULL, " +
+                "`customer_id` TEXT NOT NULL, " +
+                "`invoice_transaction_id` TEXT NOT NULL, " +
+                "`account_id` TEXT NOT NULL, " +
+                "`amount` REAL NOT NULL, " +
+                "`notes` TEXT NOT NULL, " +
+                "`paid_on` INTEGER NOT NULL, " +
+                "PRIMARY KEY(`id`), " +
+                "FOREIGN KEY(`customer_id`) REFERENCES `customer`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE, " +
+                "FOREIGN KEY(`invoice_transaction_id`) REFERENCES `transaction`(`id`) ON UPDATE NO ACTION ON DELETE RESTRICT, " +
+                "FOREIGN KEY(`account_id`) REFERENCES `account`(`id`) ON UPDATE NO ACTION ON DELETE RESTRICT)",
+        )
+        db.execSQL("CREATE INDEX IF NOT EXISTS `index_customer_payment_customer_id` ON `customer_payment` (`customer_id`)")
+        db.execSQL("CREATE INDEX IF NOT EXISTS `index_customer_payment_invoice_transaction_id` ON `customer_payment` (`invoice_transaction_id`)")
+        db.execSQL("CREATE INDEX IF NOT EXISTS `index_customer_payment_account_id` ON `customer_payment` (`account_id`)")
+        db.execSQL(
+            "CREATE TABLE IF NOT EXISTS `invoice_sequence` (`id` INTEGER NOT NULL, `next_value` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        )
+        db.execSQL(
+            "INSERT INTO `invoice_sequence` (`id`, `next_value`) " +
+                "SELECT 1, COALESCE(MAX(CAST(SUBSTR(`invoice_number`, 5) AS INTEGER)), 0) + 1 " +
+                "FROM `transaction` WHERE `invoice_number` GLOB 'INV-[0-9]*'",
+        )
+    }
+}

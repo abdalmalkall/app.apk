@@ -3,6 +3,7 @@ package com.naveenapps.expensemanager.core.database.entity
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.naveenapps.expensemanager.core.model.TransactionType
 import java.util.Date
@@ -31,6 +32,17 @@ import java.util.Date
             onUpdate = ForeignKey.NO_ACTION,
             onDelete = ForeignKey.CASCADE,
         ),
+        ForeignKey(
+            entity = CustomerEntity::class,
+            parentColumns = arrayOf("id"),
+            childColumns = arrayOf("customer_id"),
+            onUpdate = ForeignKey.NO_ACTION,
+            onDelete = ForeignKey.SET_NULL,
+        ),
+    ],
+    indices = [
+        Index(value = ["invoice_number"], unique = true),
+        Index(value = ["customer_id"]),
     ],
 )
 data class TransactionEntity(
@@ -57,4 +69,22 @@ data class TransactionEntity(
     var updatedOn: Date,
     @ColumnInfo(name = "to_account_id")
     var toAccountId: String?,
+    @ColumnInfo(name = "customer_id", defaultValue = "NULL")
+    var customerId: String? = null,
+    @ColumnInfo(name = "invoice_number", defaultValue = "NULL")
+    var invoiceNumber: String? = null,
+    @ColumnInfo(name = "quantity", defaultValue = "NULL")
+    var quantity: Double? = null,
+    @ColumnInfo(name = "unit", defaultValue = "NULL")
+    var unit: String? = null,
+    @ColumnInfo(name = "unit_price", defaultValue = "NULL")
+    var unitPrice: Double? = null,
+    @ColumnInfo(name = "delivery_location", defaultValue = "NULL")
+    var deliveryLocation: String? = null,
+    @ColumnInfo(name = "delivery_notes", defaultValue = "NULL")
+    var deliveryNotes: String? = null,
+    @ColumnInfo(name = "driver_name", defaultValue = "NULL")
+    var driverName: String? = null,
+    @ColumnInfo(name = "vehicle_number", defaultValue = "NULL")
+    var vehicleNumber: String? = null,
 )

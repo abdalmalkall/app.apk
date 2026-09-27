@@ -3,14 +3,21 @@ package com.naveenapps.expensemanager.feature.transaction.customer
 import androidx.lifecycle.ViewModel
 import com.google.common.truth.Truth.assertThat
 import com.naveenapps.expensemanager.core.common.utils.AppCoroutineDispatchers
+import com.naveenapps.expensemanager.core.domain.usecase.account.GetAllAccountsUseCase
+import com.naveenapps.expensemanager.core.domain.usecase.customer.AddCustomerPaymentUseCase
+import com.naveenapps.expensemanager.core.domain.usecase.customer.DeleteCustomerPaymentUseCase
+import com.naveenapps.expensemanager.core.domain.usecase.customer.GetAllCustomerPaymentsUseCase
 import com.naveenapps.expensemanager.core.domain.usecase.settings.currency.GetCurrencyUseCase
 import com.naveenapps.expensemanager.core.domain.usecase.settings.currency.GetFormattedAmountUseCase
-import com.naveenapps.expensemanager.core.domain.usecase.transaction.GetTransactionWithFilterUseCase
+import com.naveenapps.expensemanager.core.domain.usecase.transaction.GetAllTransactionsUseCase
 import com.naveenapps.expensemanager.core.model.Amount
 import com.naveenapps.expensemanager.core.model.Currency
 import com.naveenapps.expensemanager.core.model.Transaction
 import com.naveenapps.expensemanager.core.model.TransactionType
 import com.naveenapps.expensemanager.core.navigation.AppComposeNavigator
+import com.naveenapps.expensemanager.core.repository.ShareRepository
+import com.naveenapps.expensemanager.core.repository.SettingsRepository
+import com.naveenapps.expensemanager.core.settings.domain.repository.NumberFormatRepository
 import com.naveenapps.expensemanager.core.testing.BaseCoroutineTest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
@@ -26,8 +33,15 @@ class CustomerLedgerViewModelTest : BaseCoroutineTest() {
 
     private val getCurrencyUseCase: GetCurrencyUseCase = mock()
     private val getFormattedAmountUseCase: GetFormattedAmountUseCase = mock()
-    private val getTransactionWithFilterUseCase: GetTransactionWithFilterUseCase = mock()
+    private val getAllTransactionsUseCase: GetAllTransactionsUseCase = mock()
+    private val getAllCustomerPaymentsUseCase: GetAllCustomerPaymentsUseCase = mock()
+    private val addCustomerPaymentUseCase: AddCustomerPaymentUseCase = mock()
+    private val deleteCustomerPaymentUseCase: DeleteCustomerPaymentUseCase = mock()
+    private val getAllAccountsUseCase: GetAllAccountsUseCase = mock()
+    private val settingsRepository: SettingsRepository = mock()
+    private val numberFormatRepository: NumberFormatRepository = mock()
     private val appComposeNavigator: AppComposeNavigator = mock()
+    private val shareRepository: ShareRepository = mock()
 
     @Test
     fun `groups debt transactions by customer and totals them`() = runTest {
@@ -84,14 +98,26 @@ class CustomerLedgerViewModelTest : BaseCoroutineTest() {
             updatedOn = Date(),
         )
 
-        whenever(getTransactionWithFilterUseCase.invoke()).thenReturn(flowOf(listOf(customerA, customerB, customerC)))
+        whenever(getAllTransactionsUseCase.invoke()).thenReturn(flowOf(listOf(customerA, customerB, customerC)))
+        whenever(getAllCustomerPaymentsUseCase.invoke()).thenReturn(flowOf(emptyList()))
+        listOf(0.0, 100.0, 250.0, 350.0).forEach { amount ->
+            whenever(getFormattedAmountUseCase.invoke(amount, Currency(symbol = "SAR", name = "SAR")))
+                .thenReturn(Amount(amount, amount.toString(), Currency(symbol = "SAR", name = "SAR")))
+        }
 
         val viewModel = CustomerLedgerViewModel(
             getCurrencyUseCase = getCurrencyUseCase,
             getFormattedAmountUseCase = getFormattedAmountUseCase,
-            getTransactionWithFilterUseCase = getTransactionWithFilterUseCase,
+            getAllTransactionsUseCase = getAllTransactionsUseCase,
+            getAllCustomerPaymentsUseCase = getAllCustomerPaymentsUseCase,
+            addCustomerPaymentUseCase = addCustomerPaymentUseCase,
+            deleteCustomerPaymentUseCase = deleteCustomerPaymentUseCase,
+            getAllAccountsUseCase = getAllAccountsUseCase,
+            settingsRepository = settingsRepository,
+            numberFormatRepository = numberFormatRepository,
             appCoroutineDispatchers = dispatchers,
             appComposeNavigator = appComposeNavigator,
+            shareRepository = shareRepository,
         )
 
         advanceUntilIdle()

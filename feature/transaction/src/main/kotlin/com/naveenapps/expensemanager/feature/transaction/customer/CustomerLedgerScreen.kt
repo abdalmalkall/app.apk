@@ -12,14 +12,18 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Share
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -31,6 +35,7 @@ import androidx.compose.ui.unit.dp
 import com.naveenapps.expensemanager.core.designsystem.components.EmptyItem
 import com.naveenapps.expensemanager.core.designsystem.ui.components.AppCardView
 import com.naveenapps.expensemanager.core.designsystem.ui.components.ExpenseManagerTopAppBar
+import com.naveenapps.expensemanager.core.common.utils.toCompleteDateWithDate
 import com.naveenapps.expensemanager.feature.transaction.R
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -45,6 +50,39 @@ private fun CustomerLedgerContent(
     state: CustomerLedgerState,
     onAction: (CustomerLedgerAction) -> Unit,
 ) {
+    state.paymentDraft?.let { draft ->
+        AlertDialog(
+            onDismissRequest = { onAction(CustomerLedgerAction.DismissPayment) },
+            title = { Text(stringResource(R.string.record_customer_payment)) },
+            text = {
+                Column {
+                    Text("${stringResource(R.string.invoice_number)}: ${draft.invoiceNumber}")
+                    Text("${stringResource(R.string.remaining_amount)}: ${draft.remainingAmount.amountString.orEmpty()}")
+                    OutlinedTextField(
+                        value = draft.amount,
+                        onValueChange = { onAction(CustomerLedgerAction.UpdatePaymentAmount(it)) },
+                        label = { Text(stringResource(R.string.payment_amount)) },
+                        isError = draft.error,
+                        supportingText = {
+                            if (draft.error) Text(stringResource(R.string.invalid_payment_message))
+                        },
+                        singleLine = true,
+                    )
+                }
+            },
+            confirmButton = {
+                TextButton(onClick = { onAction(CustomerLedgerAction.SavePayment) }) {
+                    Text(stringResource(R.string.save))
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { onAction(CustomerLedgerAction.DismissPayment) }) {
+                    Text(stringResource(R.string.cancel))
+                }
+            },
+        )
+    }
+
     Scaffold(
         topBar = {
             ExpenseManagerTopAppBar(
@@ -91,19 +129,16 @@ private fun CustomerLedgerContent(
             ) {
                 items(
                     items = state.filteredCustomers,
-                    key = { it.customerName },
+                    key = { it.id },
                 ) { customer ->
+                    val invoiceUnavailable = stringResource(R.string.invoice_not_assigned)
+                    val isExpanded = state.expandedCustomerId == customer.id
                     AppCardView(
                         modifier = Modifier.fillMaxWidth(),
                     ) {
                         Column(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .clickable {
-                                    if (customer.transactions.isNotEmpty()) {
-                                        onAction(CustomerLedgerAction.OpenTransactionEdit(customer.transactions.first().id))
-                                    }
-                                }
                                 .padding(16.dp),
                         ) {
                             Row(
@@ -111,14 +146,20 @@ private fun CustomerLedgerContent(
                                 verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.SpaceBetween,
                             ) {
-                                Column {
+                                Column(
+                                    modifier = Modifier
+                                        .weight(1f)
+                                        .clickable {
+                                            onAction(CustomerLedgerAction.ToggleCustomerDetails(customer.id))
+                                        },
+                                ) {
                                     Text(
                                         text = customer.customerName,
                                         style = MaterialTheme.typography.titleMedium,
                                         fontWeight = FontWeight.SemiBold,
                                     )
                                     Text(
-                                        text = "Invoice: ${customer.invoiceNumber}",
+                                        text = customer.phone ?: stringResource(R.string.customer_phone_missing),
                                         style = MaterialTheme.typography.bodySmall,
                                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                                         modifier = Modifier.padding(top = 2.dp),
@@ -134,12 +175,13 @@ private fun CustomerLedgerContent(
                                     IconButton(
                                         onClick = {
                                             onAction(
-                                                CustomerLedgerAction.ShareInvoice(
+                                                CustomerLedgerAction.ShareCustomerStatement(
                                                     customerName = customer.customerName,
-                                                    invoiceNumber = customer.invoiceNumber,
+                                                    phone = customer.phone,
                                                     totalAmount = customer.totalAmount.amountString ?: "",
                                                     transactions = customer.transactions.map {
-                                                        "${it.date} - ${it.amount.amountString ?: ""} - ${it.categoryName}"
+                                                        val transaction = it.transaction
+                                                        "${transaction.invoiceNumber ?: invoiceUnavailable} | ${transaction.date} | ${transaction.amount.amountString.orEmpty()} | ${it.paidAmount.amountString.orEmpty()} | ${it.remainingAmount.amountString.orEmpty()}"
                                                     },
                                                 ),
                                             )
@@ -147,7 +189,7 @@ private fun CustomerLedgerContent(
                                     ) {
                                         Icon(
                                             imageVector = Icons.Default.Share,
-                                            contentDescription = "Share invoice",
+                                            contentDescription = stringResource(R.string.share_customer_statement),
                                         )
                                     }
                                 }
@@ -163,13 +205,96 @@ private fun CustomerLedgerContent(
                                 modifier = Modifier.padding(top = 6.dp),
                             )
 
-                            customer.transactions.take(3).forEach { transaction ->
-                                Text(
-                                    text = "• ${transaction.date} • ${transaction.amount.amountString ?: ""}",
-                                    style = MaterialTheme.typography.bodySmall,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                    modifier = Modifier.padding(top = 8.dp),
-                                )
+                            Text(
+                                text = "${stringResource(R.string.total_sales)}: ${customer.totalSales.amountString.orEmpty()}   " +
+                                    "${stringResource(R.string.total_paid)}: ${customer.totalPaid.amountString.orEmpty()}",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                modifier = Modifier.padding(top = 4.dp),
+                            )
+
+                            if (isExpanded) {
+                                customer.transactions.forEach { invoice ->
+                                    val transaction = invoice.transaction
+                                    Column(modifier = Modifier.padding(top = 12.dp)) {
+                                        Row(
+                                            modifier = Modifier.fillMaxWidth(),
+                                            verticalAlignment = Alignment.CenterVertically,
+                                        ) {
+                                            Column(
+                                                modifier = Modifier
+                                                    .weight(1f)
+                                                    .clickable {
+                                                        onAction(CustomerLedgerAction.OpenTransactionEdit(transaction.id))
+                                                    },
+                                            ) {
+                                                Text(
+                                                    text = "${transaction.invoiceNumber ?: invoiceUnavailable} • ${transaction.date}",
+                                                    style = MaterialTheme.typography.titleSmall,
+                                                    fontWeight = FontWeight.SemiBold,
+                                                )
+                                                Text(
+                                                    text = "${transaction.categoryName} • ${transaction.quantity ?: ""} ${transaction.unit.orEmpty()} • ${transaction.amount.amountString.orEmpty()}",
+                                                    style = MaterialTheme.typography.bodySmall,
+                                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                                )
+                                            }
+                                            IconButton(
+                                                onClick = {
+                                                    onAction(
+                                                        CustomerLedgerAction.ShareInvoice(
+                                                            customerName = customer.customerName,
+                                                            phone = customer.phone,
+                                                            invoiceNumber = transaction.invoiceNumber.orEmpty(),
+                                                            totalAmount = transaction.amount.amountString.orEmpty(),
+                                                            transactions = listOf(
+                                                                "${transaction.categoryName} | ${transaction.quantity ?: ""} ${transaction.unit.orEmpty()} | ${transaction.unitPrice ?: ""} | ${transaction.amount.amountString.orEmpty()}",
+                                                            ),
+                                                        ),
+                                                    )
+                                                },
+                                            ) {
+                                                Icon(
+                                                    imageVector = Icons.Default.Share,
+                                                    contentDescription = stringResource(R.string.share_invoice),
+                                                )
+                                            }
+                                        }
+                                        Text(
+                                            text = "${stringResource(R.string.total_paid)}: ${invoice.paidAmount.amountString.orEmpty()} • " +
+                                                "${stringResource(R.string.remaining_amount)}: ${invoice.remainingAmount.amountString.orEmpty()} • " +
+                                                stringResource(invoice.paymentStatus.label),
+                                            style = MaterialTheme.typography.bodySmall,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                        )
+                                        invoice.payments.forEach { payment ->
+                                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                                Text(
+                                                    text = "${payment.paidOn.toCompleteDateWithDate()}: ${payment.amount}",
+                                                    style = MaterialTheme.typography.bodySmall,
+                                                    modifier = Modifier.weight(1f),
+                                                )
+                                                IconButton(onClick = {
+                                                    onAction(CustomerLedgerAction.DeletePayment(payment.id))
+                                                }) {
+                                                    Icon(
+                                                        imageVector = Icons.Outlined.Delete,
+                                                        contentDescription = stringResource(R.string.delete_payment),
+                                                    )
+                                                }
+                                            }
+                                        }
+                                        if (invoice.remainingAmount.amount > 0.0) {
+                                            Button(
+                                                onClick = {
+                                                    onAction(CustomerLedgerAction.StartPayment(customer.id, invoice))
+                                                },
+                                            ) {
+                                                Text(stringResource(R.string.record_customer_payment))
+                                            }
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
@@ -178,3 +303,10 @@ private fun CustomerLedgerContent(
         }
     }
 }
+
+private val CustomerPaymentStatus.label: Int
+    get() = when (this) {
+        CustomerPaymentStatus.UNPAID -> R.string.payment_unpaid
+        CustomerPaymentStatus.PARTIALLY_PAID -> R.string.payment_partial
+        CustomerPaymentStatus.PAID -> R.string.payment_paid
+    }

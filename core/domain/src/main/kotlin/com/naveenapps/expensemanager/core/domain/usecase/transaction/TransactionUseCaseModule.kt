@@ -49,6 +49,7 @@ val TransactionUseCaseModule = module {
     }
     single { GetExpenseAmountUseCase(getTransactionWithFilterUseCase = get()) }
     single { GetTransactionByNameUseCase(repository = get()) }
+    single { GetAllTransactionsUseCase(repository = get()) }
     single {
         GetTransactionGroupByCategoryUseCase(
             getAllCategoryUseCase = get(),
