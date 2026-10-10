@@ -1,17 +1,30 @@
 package com.naveenapps.expensemanager.core.repository
 
-import android.content.Intent
 import com.naveenapps.expensemanager.core.model.Resource
+
+class DriveApiException(
+    val statusCode: Int,
+    message: String,
+) : Exception(message)
+
+data class DriveBackupItem(
+    val id: String,
+    val name: String,
+    val modifiedAtEpochMs: Long,
+    val sizeBytes: Long,
+    val legacy: Boolean = false,
+)
 
 interface BackupRepository {
 
-    suspend fun backupData(uri: String?): Resource<Boolean>
+    suspend fun backupData(uri: String?, passphrase: String, accessToken: String): Resource<Boolean>
 
-    suspend fun restoreData(uri: String?): Resource<Boolean>
+    suspend fun restoreData(
+        uri: String?,
+        passphrase: String,
+        accessToken: String,
+        backupFileId: String? = null,
+    ): Resource<Boolean>
 
-    fun isGoogleDriveSignedIn(): Boolean
-
-    fun requestGoogleDriveSignIn(): Intent?
-
-    fun handleGoogleDriveSignInResult(data: Intent?): Resource<Boolean>
+    suspend fun listDriveBackups(accessToken: String): Resource<List<DriveBackupItem>>
 }

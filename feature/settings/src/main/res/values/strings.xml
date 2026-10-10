@@ -35,6 +35,18 @@
     <string name="restore_message">Restore your data to retrieve your data back into devices.</string>
     <string name="backup_operation_failed">Backup operation failed. Check your connection and try again.</string>
     <string name="google_drive_sign_in_failed">Google Drive sign-in failed. Please try again.</string>
+    <string name="backup_passphrase">Backup passphrase</string>
+    <string name="backup_list_empty">No visible cloud backups were found.</string>
+    <string name="backup_legacy_label">Older backup · %1$s</string>
+    <string name="backup_count">Available backups: %1$d</string>
+    <string name="backup_loading">Loading backups</string>
+    <string name="backup_working">Working with backup</string>
+    <string name="backup_completed">Encrypted backup uploaded to Google Drive.</string>
+    <string name="restore_restart_required">Restore completed. Close and reopen the app to reload restored settings.</string>
+    <string name="restore_select_backup">Choose the backup to restore.</string>
+    <string name="backup_passphrase_portability_note">Use the same passphrase when restoring on another device. It is not saved by the app.</string>
+    <string name="backup_passphrase_minimum_error">Enter at least 12 characters.</string>
+    <string name="cancel">Cancel</string>
     <string name="defaults">Defaults</string>
     <string name="others">Other Settings</string>
 

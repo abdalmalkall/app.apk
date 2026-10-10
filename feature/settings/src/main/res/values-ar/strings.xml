@@ -35,6 +35,18 @@
     <string name="restore_message">استعد بياناتك لاسترجاعها إلى الأجهزة.</string>
     <string name="backup_operation_failed">فشلت عملية النسخ الاحتياطي. تحقق من الاتصال وحاول مرة أخرى.</string>
     <string name="google_drive_sign_in_failed">فشل تسجيل الدخول إلى Google Drive. حاول مرة أخرى.</string>
+    <string name="backup_passphrase">عبارة مرور النسخة الاحتياطية</string>
+    <string name="backup_list_empty">لم يتم العثور على نسخ سحابية ظاهرة.</string>
+    <string name="backup_legacy_label">نسخة أقدم · %1$s</string>
+    <string name="backup_count">النسخ المتاحة: %1$d</string>
+    <string name="backup_loading">جارٍ تحميل النسخ</string>
+    <string name="backup_working">جارٍ تنفيذ عملية النسخ الاحتياطي</string>
+    <string name="backup_completed">تم رفع النسخة المشفرة إلى Google Drive.</string>
+    <string name="restore_restart_required">اكتملت الاستعادة. أغلق التطبيق وافتحه مجدداً لتحميل الإعدادات المستعادة.</string>
+    <string name="restore_select_backup">اختر النسخة التي تريد استعادتها.</string>
+    <string name="backup_passphrase_portability_note">استخدم العبارة نفسها عند الاستعادة على جهاز آخر. لا يحفظها التطبيق.</string>
+    <string name="backup_passphrase_minimum_error">أدخل 12 محرفًا على الأقل.</string>
+    <string name="cancel">إلغاء</string>
     <string name="defaults">الإعدادات الافتراضية</string>
     <string name="others">إعدادات أخرى</string>
 

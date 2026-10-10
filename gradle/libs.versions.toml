@@ -35,8 +35,7 @@ firebasePerfPlugin = "2.0.2"
 firebaseDistribution = "5.2.1"
 googleOss = "17.4.0"
 review = "2.0.2"
-googleAuth = "21.3.0"
-googleDrive = "17.0.0"
+googleAuth = "22.0.0"
 googleOssPlugin = "0.10.10"
 spotless = "8.2.1"
 jacoco = "0.8.14"
@@ -134,7 +133,6 @@ firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashly
 firebase-performance = { group = "com.google.firebase", name = "firebase-perf" }
 google-android-play-review = { group = "com.google.android.play", name = "review-ktx", version.ref = "review" }
 google-play-services-auth = { group = "com.google.android.gms", name = "play-services-auth", version.ref = "googleAuth" }
-google-play-services-drive = { group = "com.google.android.gms", name = "play-services-drive", version.ref = "googleDrive" }
 google-oss-licenses = { group = "com.google.android.gms", name = "play-services-oss-licenses", version.ref = "googleOss" }
 google-oss-licenses-plugin = { group = "com.google.android.gms", name = "oss-licenses-plugin", version.ref = "googleOssPlugin" }
 lottie-compose = { module = "com.airbnb.android:lottie-compose", version.ref = "lottieCompose" }
