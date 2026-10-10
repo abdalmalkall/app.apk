@@ -8,6 +8,8 @@ import com.naveenapps.expensemanager.core.database.dao.BudgetDao
 import com.naveenapps.expensemanager.core.database.dao.CategoryDao
 import com.naveenapps.expensemanager.core.database.dao.CustomerDao
 import com.naveenapps.expensemanager.core.database.dao.CustomerPaymentDao
+import com.naveenapps.expensemanager.core.database.dao.SupplierDao
+import com.naveenapps.expensemanager.core.database.dao.SupplierPaymentDao
 import com.naveenapps.expensemanager.core.database.dao.TransactionDao
 import com.naveenapps.expensemanager.core.database.entity.AccountEntity
 import com.naveenapps.expensemanager.core.database.entity.BudgetAccountEntity
@@ -16,6 +18,8 @@ import com.naveenapps.expensemanager.core.database.entity.BudgetEntity
 import com.naveenapps.expensemanager.core.database.entity.CategoryEntity
 import com.naveenapps.expensemanager.core.database.entity.CustomerEntity
 import com.naveenapps.expensemanager.core.database.entity.CustomerPaymentEntity
+import com.naveenapps.expensemanager.core.database.entity.SupplierEntity
+import com.naveenapps.expensemanager.core.database.entity.SupplierPaymentEntity
 import com.naveenapps.expensemanager.core.database.entity.InvoiceSequenceEntity
 import com.naveenapps.expensemanager.core.database.entity.TransactionAttachmentEntity
 import com.naveenapps.expensemanager.core.database.entity.TransactionEntity
@@ -38,9 +42,11 @@ import com.naveenapps.expensemanager.core.database.utils.TransactionTypeConverte
         TransactionAttachmentEntity::class,
         CustomerEntity::class,
         CustomerPaymentEntity::class,
+        SupplierEntity::class,
+        SupplierPaymentEntity::class,
         InvoiceSequenceEntity::class,
     ],
-    version = 10,
+    version = 11,
     exportSchema = true,
 )
 @TypeConverters(
@@ -58,6 +64,10 @@ abstract class ExpenseManagerDatabase : RoomDatabase() {
     abstract fun customerDao(): CustomerDao
 
     abstract fun customerPaymentDao(): CustomerPaymentDao
+
+    abstract fun supplierDao(): SupplierDao
+
+    abstract fun supplierPaymentDao(): SupplierPaymentDao
 
     abstract fun accountDao(): AccountDao
 

@@ -39,10 +39,18 @@ import java.util.Date
             onUpdate = ForeignKey.NO_ACTION,
             onDelete = ForeignKey.SET_NULL,
         ),
+        ForeignKey(
+            entity = SupplierEntity::class,
+            parentColumns = arrayOf("id"),
+            childColumns = arrayOf("supplier_id"),
+            onUpdate = ForeignKey.NO_ACTION,
+            onDelete = ForeignKey.SET_NULL,
+        ),
     ],
     indices = [
         Index(value = ["invoice_number"], unique = true),
         Index(value = ["customer_id"]),
+        Index(value = ["supplier_id"]),
     ],
 )
 data class TransactionEntity(
@@ -87,4 +95,8 @@ data class TransactionEntity(
     var driverName: String? = null,
     @ColumnInfo(name = "vehicle_number", defaultValue = "NULL")
     var vehicleNumber: String? = null,
+    @ColumnInfo(name = "supplier_id", defaultValue = "NULL")
+    var supplierId: String? = null,
+    @ColumnInfo(name = "supplier_name", defaultValue = "NULL")
+    var supplierName: String? = null,
 )

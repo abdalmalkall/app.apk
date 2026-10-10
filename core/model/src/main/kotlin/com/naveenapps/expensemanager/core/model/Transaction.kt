@@ -42,4 +42,6 @@ data class Transaction(
     val deliveryNotes: String? = null,
     val driverName: String? = null,
     val vehicleNumber: String? = null,
+    val supplierId: String? = null,
+    val supplierName: String? = null,
 )

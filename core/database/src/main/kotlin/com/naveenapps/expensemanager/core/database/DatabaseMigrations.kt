@@ -190,3 +190,42 @@ internal val MIGRATION_9_10 = object : Migration(9, 10) {
         )
     }
 }
+
+internal val MIGRATION_10_11 = object : Migration(10, 11) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL(
+            "CREATE TABLE IF NOT EXISTS `supplier` (" +
+                "`id` TEXT NOT NULL, " +
+                "`name` TEXT NOT NULL, " +
+                "`normalized_name` TEXT NOT NULL, " +
+                "`phone` TEXT, " +
+                "`created_on` INTEGER NOT NULL, " +
+                "`updated_on` INTEGER NOT NULL, " +
+                "PRIMARY KEY(`id`))",
+        )
+        db.execSQL("CREATE UNIQUE INDEX IF NOT EXISTS `index_supplier_normalized_name` ON `supplier` (`normalized_name`)")
+        db.execSQL(
+            "CREATE TABLE IF NOT EXISTS `supplier_payment` (" +
+                "`id` TEXT NOT NULL, " +
+                "`supplier_id` TEXT NOT NULL, " +
+                "`invoice_transaction_id` TEXT NOT NULL, " +
+                "`account_id` TEXT NOT NULL, " +
+                "`amount` REAL NOT NULL, " +
+                "`notes` TEXT NOT NULL, " +
+                "`paid_on` INTEGER NOT NULL, " +
+                "PRIMARY KEY(`id`), " +
+                "FOREIGN KEY(`supplier_id`) REFERENCES `supplier`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE, " +
+                "FOREIGN KEY(`invoice_transaction_id`) REFERENCES `transaction`(`id`) ON UPDATE NO ACTION ON DELETE RESTRICT, " +
+                "FOREIGN KEY(`account_id`) REFERENCES `account`(`id`) ON UPDATE NO ACTION ON DELETE RESTRICT)",
+        )
+        db.execSQL("CREATE INDEX IF NOT EXISTS `index_supplier_payment_supplier_id` ON `supplier_payment` (`supplier_id`)")
+        db.execSQL("CREATE INDEX IF NOT EXISTS `index_supplier_payment_invoice_transaction_id` ON `supplier_payment` (`invoice_transaction_id`)")
+        db.execSQL("CREATE INDEX IF NOT EXISTS `index_supplier_payment_account_id` ON `supplier_payment` (`account_id`)")
+        db.execSQL(
+            "ALTER TABLE `transaction` ADD COLUMN `supplier_id` TEXT DEFAULT NULL " +
+                "REFERENCES `supplier`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL",
+        )
+        db.execSQL("ALTER TABLE `transaction` ADD COLUMN `supplier_name` TEXT DEFAULT NULL")
+        db.execSQL("CREATE INDEX IF NOT EXISTS `index_transaction_supplier_id` ON `transaction` (`supplier_id`)")
+    }
+}

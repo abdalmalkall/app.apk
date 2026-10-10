@@ -8,6 +8,7 @@ import com.naveenapps.expensemanager.core.database.dao.AccountDao
 import com.naveenapps.expensemanager.core.database.dao.CategoryDao
 import com.naveenapps.expensemanager.core.database.dao.CustomerDao
 import com.naveenapps.expensemanager.core.database.dao.TransactionDao
+import com.naveenapps.expensemanager.core.database.dao.SupplierDao
 import com.naveenapps.expensemanager.core.database.entity.TransactionEntity
 import com.naveenapps.expensemanager.core.database.entity.TransactionRelation
 import com.naveenapps.expensemanager.core.model.Resource
@@ -25,6 +26,7 @@ class TransactionRepositoryImpl(
     private val accountDao: AccountDao,
     private val categoryDao: CategoryDao,
     private val customerDao: CustomerDao,
+    private val supplierDao: SupplierDao,
     private val dispatchers: AppCoroutineDispatchers,
 ) : TransactionRepository {
 
@@ -52,7 +54,9 @@ class TransactionRepositoryImpl(
         withContext(dispatchers.io) {
             return@withContext try {
                 val response = transactionDao.insertTransaction(
-                    transaction.toEntityModel().withCustomer(customerDao, transaction),
+                    transaction.toEntityModel()
+                        .withCustomer(customerDao, transaction)
+                        .withSupplier(supplierDao, transaction),
                     when (transaction.type) {
                         TransactionType.INCOME -> transaction.amount.amount
                         TransactionType.DEBT -> 0.0
@@ -71,7 +75,9 @@ class TransactionRepositoryImpl(
         withContext(dispatchers.io) {
             return@withContext try {
                 val transactionEntity = transaction.toEntityModel()
-                val entityWithCustomer = transactionEntity.withCustomer(customerDao, transaction)
+                val entityWithCustomer = transactionEntity
+                    .withCustomer(customerDao, transaction)
+                    .withSupplier(supplierDao, transaction)
                 transactionDao.removePreviousEnteredAmount(transactionEntity)
                 transactionDao.updateTransaction(
                     entityWithCustomer,
@@ -184,6 +190,41 @@ class TransactionRepositoryImpl(
             customerDao.findByNormalizedName(normalizedName)?.id ?: newId
         }
         return copy(customerId = customerId, customerName = name)
+    }
+
+    private suspend fun TransactionEntity.withSupplier(
+        supplierDao: SupplierDao,
+        transaction: Transaction,
+    ): TransactionEntity {
+        val name = transaction.supplierName?.trim().orEmpty()
+        if (name.isBlank()) return copy(supplierId = null, supplierName = null)
+        val normalizedName = name.lowercase()
+        val now = transaction.updatedOn
+        val existing = transaction.supplierId?.let { supplierDao.findById(it) }
+            ?: supplierDao.findByNormalizedName(normalizedName)
+        val supplierId = if (existing != null) {
+            supplierDao.update(
+                existing.copy(
+                    name = name,
+                    normalizedName = normalizedName,
+                    updatedOn = now,
+                ),
+            )
+            existing.id
+        } else {
+            val newId = java.util.UUID.randomUUID().toString()
+            supplierDao.insertIfMissing(
+                com.naveenapps.expensemanager.core.database.entity.SupplierEntity(
+                    id = newId,
+                    name = name,
+                    normalizedName = normalizedName,
+                    createdOn = transaction.createdOn,
+                    updatedOn = now,
+                ),
+            )
+            supplierDao.findByNormalizedName(normalizedName)?.id ?: newId
+        }
+        return copy(supplierId = supplierId, supplierName = name)
     }
 
     override fun getAllFilteredTransaction(

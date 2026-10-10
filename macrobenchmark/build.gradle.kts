@@ -3,6 +3,12 @@ plugins {
     id("org.jetbrains.kotlin.android")
 }
 
+kotlin {
+    compilerOptions {
+        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_19)
+    }
+}
+
 android {
     namespace = "com.naveenapps.expensemanager.benchmark"
 

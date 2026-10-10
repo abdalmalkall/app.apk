@@ -199,6 +199,11 @@ android {
 }
 
 dependencies {
+    constraints {
+        implementation(libs.androidx.concurrent.futures)
+        implementation(libs.androidx.concurrent.futures.ktx)
+    }
+
     implementation(project(":core:common"))
     implementation(project(":core:model"))
     implementation(project(":core:designsystem"))

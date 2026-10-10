@@ -5,6 +5,8 @@ import com.naveenapps.expensemanager.core.data.repository.AnalyticsRepositoryImp
 import com.naveenapps.expensemanager.core.data.repository.BudgetRepositoryImpl
 import com.naveenapps.expensemanager.core.data.repository.CategoryRepositoryImpl
 import com.naveenapps.expensemanager.core.data.repository.CustomerPaymentRepositoryImpl
+import com.naveenapps.expensemanager.core.data.repository.SupplierRepositoryImpl
+import com.naveenapps.expensemanager.core.data.repository.SupplierPaymentRepositoryImpl
 import com.naveenapps.expensemanager.core.data.repository.CountryRepositoryImpl
 import com.naveenapps.expensemanager.core.data.repository.CurrencyRepositoryImpl
 import com.naveenapps.expensemanager.core.data.repository.DateRangeFilterRepositoryImpl
@@ -28,6 +30,8 @@ import com.naveenapps.expensemanager.core.repository.AnalyticsRepository
 import com.naveenapps.expensemanager.core.repository.BudgetRepository
 import com.naveenapps.expensemanager.core.repository.CategoryRepository
 import com.naveenapps.expensemanager.core.repository.CustomerPaymentRepository
+import com.naveenapps.expensemanager.core.repository.SupplierRepository
+import com.naveenapps.expensemanager.core.repository.SupplierPaymentRepository
 import com.naveenapps.expensemanager.core.repository.CountryRepository
 import com.naveenapps.expensemanager.core.repository.CurrencyRepository
 import com.naveenapps.expensemanager.core.repository.DateRangeFilterRepository
@@ -151,6 +155,7 @@ val RepositoryModule = module {
             accountDao = get(),
             categoryDao = get(),
             customerDao = get(),
+            supplierDao = get(),
             dispatchers = get()
         )
     }
@@ -163,6 +168,18 @@ val RepositoryModule = module {
     single<CustomerPaymentRepository> {
         CustomerPaymentRepositoryImpl(
             customerPaymentDao = get(),
+            dispatchers = get(),
+        )
+    }
+    single<SupplierRepository> {
+        SupplierRepositoryImpl(
+            supplierDao = get(),
+            dispatchers = get(),
+        )
+    }
+    single<SupplierPaymentRepository> {
+        SupplierPaymentRepositoryImpl(
+            supplierPaymentDao = get(),
             dispatchers = get(),
         )
     }

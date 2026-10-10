@@ -102,7 +102,12 @@ interface TransactionDao : BaseDao<TransactionEntity> {
         isTransfer: Boolean,
         attachmentPaths: List<String> = emptyList(),
     ): Long {
-        val entityToInsert = if (transactionEntity.type == TransactionType.DEBT && transactionEntity.invoiceNumber == null) {
+        val entityToInsert = if (
+            transactionEntity.type == TransactionType.DEBT &&
+            transactionEntity.customerName?.isNotBlank() == true &&
+            transactionEntity.supplierId == null &&
+            transactionEntity.invoiceNumber == null
+        ) {
             insertInvoiceSequenceIfMissing(InvoiceSequenceEntity(nextValue = 1))
             val sequence = getNextInvoiceSequence() ?: 1
             advanceInvoiceSequence()

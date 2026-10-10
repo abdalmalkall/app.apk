@@ -57,6 +57,7 @@ class TransactionRepositoryImplTest : BaseCoroutineTest() {
             accountDao = accountDao,
             categoryDao = categoryDao,
             customerDao = database.customerDao(),
+            supplierDao = database.supplierDao(),
             dispatchers = AppCoroutineDispatchers(
                 testCoroutineDispatcher.dispatcher,
                 testCoroutineDispatcher.dispatcher,

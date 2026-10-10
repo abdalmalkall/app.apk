@@ -26,6 +26,8 @@ fun Transaction.toEntityModel(): TransactionEntity {
         deliveryNotes = deliveryNotes,
         driverName = driverName,
         vehicleNumber = vehicleNumber,
+        supplierId = supplierId,
+        supplierName = supplierName,
     )
 }
 
@@ -51,5 +53,7 @@ fun TransactionEntity.toDomainModel(): Transaction {
         deliveryNotes = deliveryNotes,
         driverName = driverName,
         vehicleNumber = vehicleNumber,
+        supplierId = supplierId,
+        supplierName = supplierName,
     )
 }
