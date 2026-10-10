@@ -11,8 +11,11 @@ import com.naveenapps.expensemanager.core.domain.usecase.settings.currency.GetCu
 import com.naveenapps.expensemanager.core.domain.usecase.settings.currency.GetFormattedAmountUseCase
 import com.naveenapps.expensemanager.core.domain.usecase.transaction.GetAllTransactionsUseCase
 import com.naveenapps.expensemanager.core.model.Amount
+import com.naveenapps.expensemanager.core.model.Account
 import com.naveenapps.expensemanager.core.model.Currency
 import com.naveenapps.expensemanager.core.model.Transaction
+import com.naveenapps.expensemanager.core.model.Resource
+import com.naveenapps.expensemanager.core.model.TransactionUiItem
 import com.naveenapps.expensemanager.core.model.TransactionType
 import com.naveenapps.expensemanager.core.navigation.AppComposeNavigator
 import com.naveenapps.expensemanager.core.repository.ShareRepository
@@ -130,5 +133,65 @@ class CustomerLedgerViewModelTest : BaseCoroutineTest() {
         assertThat(customers.first().transactionCount).isEqualTo(2)
         assertThat(customers[1].customerName).isEqualTo("Zaid")
         assertThat(customers[1].totalAmount.amount).isEqualTo(350.0)
+    }
+
+    @Test
+    fun `rejected payment keeps draft visible with an error`() = runTest {
+        val dispatchers = AppCoroutineDispatchers(
+            io = testCoroutineDispatcher.dispatcher,
+            computation = testCoroutineDispatcher.dispatcher,
+            main = testCoroutineDispatcher.dispatcher,
+        )
+        val currency = Currency(symbol = "SAR", name = "SAR")
+        whenever(getCurrencyUseCase.invoke()).thenReturn(flowOf(currency))
+        whenever(getAllTransactionsUseCase.invoke()).thenReturn(flowOf(emptyList()))
+        whenever(getAllCustomerPaymentsUseCase.invoke()).thenReturn(flowOf(emptyList()))
+
+        val account: Account = mock()
+        whenever(account.id).thenReturn("account")
+        whenever(getAllAccountsUseCase.invoke()).thenReturn(flowOf(listOf(account)))
+        whenever(settingsRepository.getDefaultAccount()).thenReturn(flowOf("account"))
+        whenever(numberFormatRepository.parseToDouble("10")).thenReturn(10.0)
+        whenever(addCustomerPaymentUseCase.invoke(org.mockito.kotlin.any()))
+            .thenReturn(Resource.Success(false))
+
+        val viewModel = CustomerLedgerViewModel(
+            getCurrencyUseCase = getCurrencyUseCase,
+            getFormattedAmountUseCase = getFormattedAmountUseCase,
+            getAllTransactionsUseCase = getAllTransactionsUseCase,
+            getAllCustomerPaymentsUseCase = getAllCustomerPaymentsUseCase,
+            addCustomerPaymentUseCase = addCustomerPaymentUseCase,
+            deleteCustomerPaymentUseCase = deleteCustomerPaymentUseCase,
+            getAllAccountsUseCase = getAllAccountsUseCase,
+            settingsRepository = settingsRepository,
+            numberFormatRepository = numberFormatRepository,
+            appCoroutineDispatchers = dispatchers,
+            appComposeNavigator = appComposeNavigator,
+            shareRepository = shareRepository,
+        )
+        val invoice = CustomerInvoiceItem(
+            transaction = TransactionUiItem(
+                id = "invoice",
+                notes = null,
+                categoryName = "Sand",
+                transactionType = TransactionType.DEBT,
+                categoryIcon = mock(),
+                date = "",
+                fromAccountName = "Cash",
+                fromAccountIcon = mock(),
+            ),
+            paidAmount = Amount(0.0),
+            remainingAmount = Amount(10.0),
+            paymentStatus = CustomerPaymentStatus.UNPAID,
+            payments = emptyList(),
+        )
+
+        viewModel.processAction(CustomerLedgerAction.StartPayment("customer", invoice))
+        viewModel.processAction(CustomerLedgerAction.UpdatePaymentAmount("10"))
+        viewModel.processAction(CustomerLedgerAction.SavePayment)
+        advanceUntilIdle()
+
+        assertThat(viewModel.state.value.paymentDraft).isNotNull()
+        assertThat(viewModel.state.value.paymentDraft?.error).isTrue()
     }
 }

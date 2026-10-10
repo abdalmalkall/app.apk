@@ -7,6 +7,8 @@ data class DriveBackupMetadata(
     val schemaVersion: Int,
     val createdAtEpochMs: Long,
     val appId: String,
+    val backupId: String = "",
+    val databaseFileName: String = "",
 ) {
     fun toJson(): String = Gson().toJson(this)
 

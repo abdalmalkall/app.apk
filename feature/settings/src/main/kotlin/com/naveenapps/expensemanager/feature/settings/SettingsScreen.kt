@@ -1,6 +1,7 @@
 package com.naveenapps.expensemanager.feature.settings
 
 import android.app.Activity
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
@@ -49,11 +50,13 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -72,6 +75,9 @@ import com.naveenapps.expensemanager.core.repository.ShareRepository
 import com.naveenapps.expensemanager.feature.language.LanguageDialogView
 import com.naveenapps.expensemanager.feature.theme.ThemeDialogView
 import org.koin.compose.viewmodel.koinViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @Composable
 fun SettingsScreen(
@@ -82,19 +88,47 @@ fun SettingsScreen(
 
     val state by viewModel.state.collectAsState()
     var pendingBackupAction by remember { mutableStateOf<SettingEvent?>(null) }
+    val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
+
+    fun showBackupFailure(result: Resource<Boolean>) {
+        if (result is Resource.Error) {
+            Toast.makeText(context, context.getString(R.string.backup_operation_failed), Toast.LENGTH_LONG).show()
+        }
+    }
+
+    fun runBackupAction(action: SettingEvent) {
+        coroutineScope.launch {
+            val result = withContext(Dispatchers.IO) {
+                when (action) {
+                    SettingEvent.Backup -> backupRepository.backupData(null)
+                    SettingEvent.Restore -> backupRepository.restoreData(null)
+                    SettingEvent.RateUs -> return@withContext Resource.Success(true)
+                }
+            }
+            showBackupFailure(result)
+        }
+    }
+
     val googleSignInLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.StartActivityForResult(),
     ) { result ->
-        if (result.resultCode == Activity.RESULT_OK &&
-            backupRepository.handleGoogleDriveSignInResult(result.data) is Resource.Success
-        ) {
-            when (pendingBackupAction) {
-                SettingEvent.Backup -> backupRepository.backupData(null)
-                SettingEvent.Restore -> backupRepository.restoreData(null)
-                null -> Unit
-            }
-        }
+        val action = pendingBackupAction
         pendingBackupAction = null
+        if (result.resultCode == Activity.RESULT_OK && action != null) {
+            coroutineScope.launch {
+                val signInResult = withContext(Dispatchers.IO) {
+                    backupRepository.handleGoogleDriveSignInResult(result.data)
+                }
+                if (signInResult is Resource.Success) {
+                    runBackupAction(action)
+                } else {
+                    showBackupFailure(signInResult)
+                }
+            }
+        } else if (action != null) {
+            Toast.makeText(context, context.getString(R.string.google_drive_sign_in_failed), Toast.LENGTH_LONG).show()
+        }
     }
 
     ObserveAsEvents(viewModel.event) {
@@ -105,19 +139,21 @@ fun SettingsScreen(
 
             SettingEvent.Backup -> {
                 if (backupRepository.isGoogleDriveSignedIn()) {
-                    backupRepository.backupData(null)
+                    runBackupAction(SettingEvent.Backup)
                 } else {
                     pendingBackupAction = SettingEvent.Backup
                     backupRepository.requestGoogleDriveSignIn()?.let(googleSignInLauncher::launch)
+                        ?: Toast.makeText(context, context.getString(R.string.google_drive_sign_in_failed), Toast.LENGTH_LONG).show()
                 }
             }
 
             SettingEvent.Restore -> {
                 if (backupRepository.isGoogleDriveSignedIn()) {
-                    backupRepository.restoreData(null)
+                    runBackupAction(SettingEvent.Restore)
                 } else {
                     pendingBackupAction = SettingEvent.Restore
                     backupRepository.requestGoogleDriveSignIn()?.let(googleSignInLauncher::launch)
+                        ?: Toast.makeText(context, context.getString(R.string.google_drive_sign_in_failed), Toast.LENGTH_LONG).show()
                 }
             }
         }

@@ -1,7 +1,10 @@
 package com.naveenapps.expensemanager.core.data.repository
 
+import android.app.Activity
 import android.content.Context
+import android.content.ContextWrapper
 import android.content.Intent
+import android.database.sqlite.SQLiteDatabase
 import android.util.Log
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -17,6 +20,21 @@ import com.naveenapps.expensemanager.core.model.Resource
 import com.naveenapps.expensemanager.core.repository.BackupRepository
 import de.raphaelebner.roomdatabasebackup.core.RoomBackup
 import java.io.File
+import java.util.UUID
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+
+internal fun findActivity(context: Context): Activity? {
+    var current: Context? = context
+    while (current != null) {
+        when (current) {
+            is Activity -> return current
+            is ContextWrapper -> current = current.baseContext
+            else -> return null
+        }
+    }
+    return null
+}
 
 class BackupRepositoryImpl(
     private val context: Context,
@@ -25,7 +43,7 @@ class BackupRepositoryImpl(
 ) : BackupRepository {
 
     private val googleSignInClient: GoogleSignInClient? by lazy {
-        val activity = context as? android.app.Activity ?: return@lazy null
+        val activity = findActivity(context) ?: return@lazy null
         GoogleSignIn.getClient(
             activity,
             GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -36,9 +54,9 @@ class BackupRepositoryImpl(
         )
     }
 
-    override fun backupData(uri: String?): Resource<Boolean> {
+    override suspend fun backupData(uri: String?): Resource<Boolean> {
         if (!uri.isNullOrBlank() && uri.startsWith("content://")) {
-            return runLocalBackupFallback()
+            return withContext(Dispatchers.Main.immediate) { runLocalBackupFallback() }
         }
 
         val account = GoogleSignIn.getLastSignedInAccount(context)
@@ -47,7 +65,7 @@ class BackupRepositoryImpl(
         }
 
         return try {
-            uploadDatabaseToDrive(account)
+            withContext(Dispatchers.IO) { uploadDatabaseToDrive(account) }
             Resource.Success(true)
         } catch (exception: Exception) {
             Log.e(TAG, "Drive backup failed", exception)
@@ -55,9 +73,9 @@ class BackupRepositoryImpl(
         }
     }
 
-    override fun restoreData(uri: String?): Resource<Boolean> {
+    override suspend fun restoreData(uri: String?): Resource<Boolean> {
         if (!uri.isNullOrBlank() && uri.startsWith("content://")) {
-            return runLocalRestoreFallback()
+            return withContext(Dispatchers.Main.immediate) { runLocalRestoreFallback() }
         }
 
         val account = GoogleSignIn.getLastSignedInAccount(context)
@@ -66,7 +84,7 @@ class BackupRepositoryImpl(
         }
 
         return try {
-            restoreDatabaseFromDrive(account)
+            withContext(Dispatchers.IO) { restoreDatabaseFromDrive(account) }
             Resource.Success(true)
         } catch (exception: Exception) {
             Log.e(TAG, "Drive restore failed", exception)
@@ -133,15 +151,22 @@ class BackupRepositoryImpl(
         val resourceClient = Drive.getDriveResourceClient(context, account)
         val appFolder = Tasks.await(resourceClient.appFolder)
         val dbFile = databaseFile()
+        database.openHelper.writableDatabase.query("PRAGMA wal_checkpoint(FULL)").close()
+        check(dbFile.isFile) { "The local database file was not found." }
+        val backupId = UUID.randomUUID().toString()
+        val databaseFileName = "expense_manager_database_$backupId.db"
         val metadata = DriveBackupMetadata(
             schemaVersion = 10,
             createdAtEpochMs = System.currentTimeMillis(),
             appId = context.packageName,
+            backupId = backupId,
+            databaseFileName = databaseFileName,
         )
 
         val metadataFileBytes = metadata.toJson().toByteArray(Charsets.UTF_8)
-        uploadFileToDrive(resourceClient, appFolder, METADATA_FILE_NAME, metadataFileBytes)
-        uploadFileToDrive(resourceClient, appFolder, DATABASE_BACKUP_FILE_NAME, dbFile.readBytes())
+        // Publish metadata last; restore treats it as the commit record for this backup.
+        uploadFileToDrive(resourceClient, appFolder, databaseFileName, dbFile.readBytes())
+        uploadFileToDrive(resourceClient, appFolder, "$METADATA_FILE_PREFIX$backupId.json", metadataFileBytes)
     }
 
     private fun restoreDatabaseFromDrive(account: GoogleSignInAccount) {
@@ -149,28 +174,93 @@ class BackupRepositoryImpl(
         val appFolder = Tasks.await(resourceClient.appFolder)
         val metadataBuffer = Tasks.await(resourceClient.listChildren(appFolder))
         try {
-            val metadata = findMetadataByTitle(metadataBuffer, METADATA_FILE_NAME)
+            val metadata = readLatestBackupMetadata(resourceClient, metadataBuffer)
                 ?: throw IllegalStateException("Google Drive backup metadata was not found.")
-
-            val metadataFile = metadata.driveId.asDriveFile()
-            val metadataContents = Tasks.await(resourceClient.openFile(metadataFile, DriveFile.MODE_READ_ONLY))
-            val metadataJson = metadataContents.inputStream.bufferedReader().use { it.readText() }
-            val parsed = DriveBackupMetadata.fromJson(metadataJson)
+            val parsed = metadata
+            if (parsed.backupVersion != BACKUP_FORMAT_VERSION || parsed.appId != context.packageName) {
+                throw IllegalStateException("This backup was created by an incompatible application version.")
+            }
             if (parsed.schemaVersion != DATABASE_SCHEMA_VERSION) {
                 throw IllegalStateException(
                     "Backup schema mismatch. Expected $DATABASE_SCHEMA_VERSION but found ${parsed.schemaVersion}.",
                 )
             }
 
-            val databaseMetadata = findMetadataByTitle(metadataBuffer, DATABASE_BACKUP_FILE_NAME)
+            val databaseName = parsed.databaseFileName.ifBlank { DATABASE_BACKUP_FILE_NAME }
+            val databaseMetadata = findMetadataByTitle(metadataBuffer, databaseName)
                 ?: throw IllegalStateException("Google Drive backup database was not found.")
 
             val databaseFile = databaseMetadata.driveId.asDriveFile()
             val contents = Tasks.await(resourceClient.openFile(databaseFile, DriveFile.MODE_READ_ONLY))
-            val bytes = contents.inputStream.readBytes()
-            databaseFile().writeBytes(bytes)
+            val restoreFile = File(context.cacheDir, "drive-restore-${UUID.randomUUID()}.db")
+            contents.inputStream.use { input -> restoreFile.outputStream().use(input::copyTo) }
+            try {
+                validateDatabaseFile(restoreFile)
+                replaceDatabaseWithRollback(restoreFile)
+            } finally {
+                restoreFile.delete()
+            }
         } finally {
             metadataBuffer.release()
+        }
+    }
+
+    private fun readLatestBackupMetadata(
+        resourceClient: DriveResourceClient,
+        metadataBuffer: com.google.android.gms.drive.MetadataBuffer,
+    ): DriveBackupMetadata? {
+        var latest: DriveBackupMetadata? = null
+        for (index in 0 until metadataBuffer.count) {
+            val entry = metadataBuffer.get(index)
+            if (entry.title != METADATA_FILE_NAME && !entry.title.startsWith(METADATA_FILE_PREFIX)) continue
+            val contents = Tasks.await(resourceClient.openFile(entry.driveId.asDriveFile(), DriveFile.MODE_READ_ONLY))
+            val json = contents.inputStream.bufferedReader().use { it.readText() }
+            val metadata = runCatching { DriveBackupMetadata.fromJson(json) }.getOrNull() ?: continue
+            if (latest == null || metadata.createdAtEpochMs > latest.createdAtEpochMs) latest = metadata
+        }
+        return latest
+    }
+
+    private fun validateDatabaseFile(file: File) {
+        check(file.isFile && file.length() > 0L) { "The backup file is empty or incomplete." }
+        val restoredDatabase = SQLiteDatabase.openDatabase(file.absolutePath, null, SQLiteDatabase.OPEN_READONLY)
+        try {
+            check(restoredDatabase.version == DATABASE_SCHEMA_VERSION) {
+                "Backup database version ${restoredDatabase.version} is not supported."
+            }
+            restoredDatabase.rawQuery("SELECT identity_hash FROM room_master_table LIMIT 1", null).use { cursor ->
+                check(cursor.moveToFirst()) { "The selected file is not a valid Expense Manager database." }
+            }
+        } finally {
+            restoredDatabase.close()
+        }
+    }
+
+    private fun replaceDatabaseWithRollback(restoredFile: File) {
+        val liveFile = databaseFile()
+        val rollbackFile = File(context.cacheDir, "pre-restore-${UUID.randomUUID()}.db")
+        database.openHelper.writableDatabase.query("PRAGMA wal_checkpoint(FULL)").close()
+        database.close()
+        try {
+            check(liveFile.isFile) { "The current database file was not found for the safety backup." }
+            liveFile.copyTo(rollbackFile, overwrite = true)
+            val stagedFile = File(liveFile.parentFile, "${liveFile.name}.restore")
+            restoredFile.copyTo(stagedFile, overwrite = true)
+            File(liveFile.path + "-wal").delete()
+            File(liveFile.path + "-shm").delete()
+            check(stagedFile.renameTo(liveFile)) { "Could not install the restored database." }
+            database.openHelper.writableDatabase
+            database.invalidationTracker.refreshVersionsAsync()
+        } catch (exception: Exception) {
+            if (rollbackFile.isFile) {
+                File(liveFile.path + "-wal").delete()
+                File(liveFile.path + "-shm").delete()
+                rollbackFile.copyTo(liveFile, overwrite = true)
+                database.openHelper.writableDatabase
+            }
+            throw exception
+        } finally {
+            rollbackFile.delete()
         }
     }
 
@@ -208,5 +298,7 @@ class BackupRepositoryImpl(
         private const val DATABASE_SCHEMA_VERSION = 10
         private const val DATABASE_BACKUP_FILE_NAME = "expense_manager_database_backup.db"
         private const val METADATA_FILE_NAME = "expense_manager_backup_metadata.json"
+        private const val METADATA_FILE_PREFIX = "expense_manager_backup_metadata_"
+        private const val BACKUP_FORMAT_VERSION = 1
     }
 }

@@ -33,6 +33,8 @@
     <string name="backup_message">أنشئ نسخة احتياطية من بياناتك واستعدها على أي جهاز.</string>
     <string name="restore">استعادة</string>
     <string name="restore_message">استعد بياناتك لاسترجاعها إلى الأجهزة.</string>
+    <string name="backup_operation_failed">فشلت عملية النسخ الاحتياطي. تحقق من الاتصال وحاول مرة أخرى.</string>
+    <string name="google_drive_sign_in_failed">فشل تسجيل الدخول إلى Google Drive. حاول مرة أخرى.</string>
     <string name="defaults">الإعدادات الافتراضية</string>
     <string name="others">إعدادات أخرى</string>
 

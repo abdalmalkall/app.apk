@@ -33,6 +33,8 @@
     <string name="backup_message">Create your data backup and restore them at any devices.</string>
     <string name="restore">Restore</string>
     <string name="restore_message">Restore your data to retrieve your data back into devices.</string>
+    <string name="backup_operation_failed">Backup operation failed. Check your connection and try again.</string>
+    <string name="google_drive_sign_in_failed">Google Drive sign-in failed. Please try again.</string>
     <string name="defaults">Defaults</string>
     <string name="others">Other Settings</string>
 

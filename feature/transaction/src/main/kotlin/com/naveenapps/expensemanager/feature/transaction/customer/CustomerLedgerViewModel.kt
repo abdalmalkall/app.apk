@@ -215,8 +215,10 @@ class CustomerLedgerViewModel(
                 amount = amount,
                 paidOn = Date(),
             )
-            when (addCustomerPaymentUseCase.invoke(payment)) {
-                is Resource.Success -> _state.update { it.copy(paymentDraft = null) }
+            when (val result = addCustomerPaymentUseCase.invoke(payment)) {
+                is Resource.Success -> _state.update {
+                    it.copy(paymentDraft = if (result.data) null else draft.copy(error = true))
+                }
                 is Resource.Error -> _state.update { it.copy(paymentDraft = draft.copy(error = true)) }
             }
         }
