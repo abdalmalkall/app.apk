@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.naveenapps.expensemanager.core.data.repository.CustomerRepositoryImplTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-10-11T15:39:23.209Z" hostname="abod-VivoBook-ASUSLaptop-X515JA-X515JA" time="0.644">
+  <properties/>
+  <testcase name="duplicate names and negative credit limits are rejected" classname="com.naveenapps.expensemanager.core.data.repository.CustomerRepositoryImplTest" time="0.421"/>
+  <testcase name="customer can be created and updated without losing profile fields" classname="com.naveenapps.expensemanager.core.data.repository.CustomerRepositoryImplTest" time="0.223"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

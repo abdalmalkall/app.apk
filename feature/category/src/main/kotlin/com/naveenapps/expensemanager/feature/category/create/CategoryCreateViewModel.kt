@@ -63,6 +63,8 @@ class CategoryCreateViewModel(
     val state = _state.asStateFlow()
 
     private var category: Category? = null
+    private val newCategoryId = UUID.randomUUID().toString()
+    private var isMutationInProgress = false
 
     // Every file created by an image pick/capture during this editing session, so an unsaved
     // session (user backs out, or picks a second photo before saving the first) doesn't leave
@@ -109,11 +111,14 @@ class CategoryCreateViewModel(
     }
 
     private fun deleteCategory() {
+        if (isMutationInProgress || category == null) return
+        isMutationInProgress = true
         viewModelScope.launch {
             category?.let { category ->
-                when (deleteCategoryUseCase.invoke(category)) {
-                    is Resource.Error -> Unit
+                when (val response = deleteCategoryUseCase.invoke(category)) {
+                    is Resource.Error -> { isMutationInProgress = false }
                     is Resource.Success -> {
+                        if (!response.data) { isMutationInProgress = false; return@launch }
                         category.storedIcon.customImagePath?.let {
                             imageStorageRepository.deleteCategoryImage(it)
                         }
@@ -126,6 +131,7 @@ class CategoryCreateViewModel(
     }
 
     private fun saveOrUpdateCategory() {
+        if (isMutationInProgress) return
         val name: String = _state.value.name.value
         val color: String = _state.value.color.value
         val icon: String = _state.value.icon.value
@@ -138,7 +144,7 @@ class CategoryCreateViewModel(
         }
 
         val category = Category(
-            id = category?.id ?: UUID.randomUUID().toString(),
+            id = category?.id ?: newCategoryId,
             name = name,
             type = type,
             storedIcon = StoredIcon(
@@ -146,7 +152,7 @@ class CategoryCreateViewModel(
                 backgroundColor = color,
                 customImagePath = customImagePath,
             ),
-            createdOn = Calendar.getInstance().time,
+            createdOn = category?.createdOn ?: Calendar.getInstance().time,
             updatedOn = Calendar.getInstance().time,
             // Preserve the default-category marker across edits. Without this, saving any
             // change (even just icon/color) to a built-in category would silently strip its
@@ -154,6 +160,7 @@ class CategoryCreateViewModel(
             titleResId = this.category?.titleResId,
         )
 
+        isMutationInProgress = true
         viewModelScope.launch {
             val previouslyPersistedImagePath = this@CategoryCreateViewModel.category?.storedIcon?.customImagePath
             val response = if (this@CategoryCreateViewModel.category != null) {
@@ -162,8 +169,9 @@ class CategoryCreateViewModel(
                 addCategoryUseCase(category)
             }
             when (response) {
-                is Resource.Error -> Unit
+                is Resource.Error -> { isMutationInProgress = false }
                 is Resource.Success -> {
+                    if (!response.data) { isMutationInProgress = false; return@launch }
                     // The old persisted image is only safe to delete now that the new value has
                     // actually been written — deleting it earlier (e.g. the moment a replacement
                     // photo was picked) would leave a dangling reference if the user backed out

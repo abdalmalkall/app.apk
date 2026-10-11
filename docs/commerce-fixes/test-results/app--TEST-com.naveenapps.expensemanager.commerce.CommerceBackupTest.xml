@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.naveenapps.expensemanager.commerce.CommerceBackupTest" tests="16" skipped="0" failures="0" errors="0" timestamp="2026-10-11T15:53:15.514Z" hostname="abod-VivoBook-ASUSLaptop-X515JA-X515JA" time="12.529">
+  <properties/>
+  <testcase name="versionOneLedgerRestoresWithoutReplacingLegacyOrFiles" classname="com.naveenapps.expensemanager.commerce.CommerceBackupTest" time="8.8"/>
+  <testcase name="ambiguousLegacyDebtIsPreservedForReviewWithoutInventingCustomer" classname="com.naveenapps.expensemanager.commerce.CommerceBackupTest" time="0.334"/>
+  <testcase name="startupJournalRecoveryReturnsPreviousBookAndFiles" classname="com.naveenapps.expensemanager.commerce.CommerceBackupTest" time="0.191"/>
+  <testcase name="pendingLegacyCorrectionBlocksNewFinancialWorkAndBadBooksCannotBeRestored" classname="com.naveenapps.expensemanager.commerce.CommerceBackupTest" time="0.246"/>
+  <testcase name="multipleRoundedReturnsCanRoundTripWithoutCashOrInventoryDrift" classname="com.naveenapps.expensemanager.commerce.CommerceBackupTest" time="0.205"/>
+  <testcase name="restoreFailureRollsBackDatabaseFilesAndLegacyRows" classname="com.naveenapps.expensemanager.commerce.CommerceBackupTest" time="0.304"/>
+  <testcase name="persistentPreferencesRoundTripAndMalformedProtobufIsRejected" classname="com.naveenapps.expensemanager.commerce.CommerceBackupTest" time="0.377"/>
+  <testcase name="missingReferencedAttachmentIsRejected" classname="com.naveenapps.expensemanager.commerce.CommerceBackupTest" time="0.208"/>
+  <testcase name="correctionRefusesInvoicesWithNewCollectionsWithoutPartialMutation" classname="com.naveenapps.expensemanager.commerce.CommerceBackupTest" time="0.154"/>
+  <testcase name="duplicatedIdentifiersNumbersAndReceiptSequencesAreRejected" classname="com.naveenapps.expensemanager.commerce.CommerceBackupTest" time="0.232"/>
+  <testcase name="correctionQuarantinesPreservesOriginalAndDoesNotRepeat" classname="com.naveenapps.expensemanager.commerce.CommerceBackupTest" time="0.212"/>
+  <testcase name="malformedFinancialVariantsNeverReplaceLiveData" classname="com.naveenapps.expensemanager.commerce.CommerceBackupTest" time="0.56"/>
+  <testcase name="fullBackupRestoresCommittedWalOldAndNewDataAndPortableAttachmentAndLogo" classname="com.naveenapps.expensemanager.commerce.CommerceBackupTest" time="0.31"/>
+  <testcase name="schemaOneUpgradeKeepsExistingInvoicesAndReceipts" classname="com.naveenapps.expensemanager.commerce.CommerceBackupTest" time="0.115"/>
+  <testcase name="corruptedMissingAndTraversalFilesAreRejectedBeforeAnyChange" classname="com.naveenapps.expensemanager.commerce.CommerceBackupTest" time="0.162"/>
+  <testcase name="committedWalRowsAreCapturedWhileTheWriterConnectionStaysOpen" classname="com.naveenapps.expensemanager.commerce.CommerceBackupTest" time="0.111"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -75,6 +75,7 @@ fun TransactionItem(
     toAccountIcon: String? = null,
     toAccountColor: String? = null,
     transactionType: TransactionType = TransactionType.EXPENSE,
+    supplierName: String? = null,
     onEdit: (() -> Unit)? = null,
     onDelete: (() -> Unit)? = null,
     onClick: (() -> Unit)? = null,
@@ -241,9 +242,14 @@ fun TransactionItem(
                     TransactionType.EXPENSE -> "−" to colorResource(
                         id = com.naveenapps.expensemanager.core.common.R.color.red_500,
                     )
-                    TransactionType.INCOME, TransactionType.DEBT -> "+" to colorResource(
+                    TransactionType.INCOME -> "+" to colorResource(
                         id = com.naveenapps.expensemanager.core.common.R.color.green_500,
                     )
+                    TransactionType.DEBT -> if (supplierName == null) {
+                        "+" to colorResource(id = com.naveenapps.expensemanager.core.common.R.color.green_500)
+                    } else {
+                        "−" to colorResource(id = com.naveenapps.expensemanager.core.common.R.color.red_500)
+                    }
                     else -> "" to Color.Unspecified
                 }
 

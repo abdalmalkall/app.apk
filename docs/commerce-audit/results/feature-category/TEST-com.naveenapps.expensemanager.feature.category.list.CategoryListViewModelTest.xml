@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.naveenapps.expensemanager.feature.category.list.CategoryListViewModelTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-10-11T14:45:55.727Z" hostname="abod-VivoBook-ASUSLaptop-X515JA-X515JA" time="0.484">
+  <properties/>
+  <testcase name="checkClosePageNavigation" classname="com.naveenapps.expensemanager.feature.category.list.CategoryListViewModelTest" time="0.076"/>
+  <testcase name="checkOpenCreateNavigationAndCommands" classname="com.naveenapps.expensemanager.feature.category.list.CategoryListViewModelTest" time="0.292"/>
+  <testcase name="categoryEmpty" classname="com.naveenapps.expensemanager.feature.category.list.CategoryListViewModelTest" time="0.037"/>
+  <testcase name="categorySuccess" classname="com.naveenapps.expensemanager.feature.category.list.CategoryListViewModelTest" time="0.062"/>
+  <testcase name="checkOpenCreateNavigation" classname="com.naveenapps.expensemanager.feature.category.list.CategoryListViewModelTest" time="0.01"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

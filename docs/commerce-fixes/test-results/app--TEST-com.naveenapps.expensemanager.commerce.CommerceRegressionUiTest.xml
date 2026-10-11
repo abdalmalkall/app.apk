@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.naveenapps.expensemanager.commerce.CommerceRegressionUiTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-10-11T15:53:39.582Z" hostname="abod-VivoBook-ASUSLaptop-X515JA-X515JA" time="6.895">
+  <properties/>
+  <testcase name="safetyPanelInvokesRealSelectedFilenameCallbacks" classname="com.naveenapps.expensemanager.commerce.CommerceRegressionUiTest" time="5.71"/>
+  <testcase name="firstBarcodeDownloadCreatesDocumentAndLaunchesPicker" classname="com.naveenapps.expensemanager.commerce.CommerceRegressionUiTest" time="1.185"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.naveenapps.expensemanager.core.data.repository.BackupPackageTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-10-10T09:59:45.511Z" hostname="abod-VivoBook-ASUSLaptop-X515JA-X515JA" time="5.453">
+  <properties/>
+  <testcase name="restore rejects a modified encrypted package" classname="com.naveenapps.expensemanager.core.data.repository.BackupPackageTest" time="1.415"/>
+  <testcase name="decrypt rejects an incorrect passphrase and removes partial staging" classname="com.naveenapps.expensemanager.core.data.repository.BackupPackageTest" time="1.347"/>
+  <testcase name="encrypted package validates manifest and restores file tree" classname="com.naveenapps.expensemanager.core.data.repository.BackupPackageTest" time="1.344"/>
+  <testcase name="package creation rejects traversal paths" classname="com.naveenapps.expensemanager.core.data.repository.BackupPackageTest" time="0.021"/>
+  <testcase name="restore rejects incompatible database schema" classname="com.naveenapps.expensemanager.core.data.repository.BackupPackageTest" time="1.326"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

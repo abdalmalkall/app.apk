@@ -1,0 +1,2 @@
+da30dc5ffc2d9a22731dac70d1bba6f0cd40d9d2800f7678030cf1253cbf4a78  app/build/outputs/apk/release/app-release.apk
+23a90ebfebb72091f46fbe615be7fc7a3f4a6d40be17cfe710315bb5526f8c7a  app/build/outputs/apk/debug/app-debug.apk

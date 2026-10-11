@@ -61,7 +61,7 @@ class ShareRepositoryImpl(
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         }
 
-        context.startActivity(Intent.createChooser(shareIntent, "Send invoice"))
+        context.startActivity(Intent.createChooser(shareIntent, "Send invoice").addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
     }
 
     override fun shareCustomerStatement(
@@ -85,7 +85,7 @@ class ShareRepositoryImpl(
             putExtra(Intent.EXTRA_TEXT, body)
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         }
-        context.startActivity(Intent.createChooser(shareIntent, "Share customer statement"))
+        context.startActivity(Intent.createChooser(shareIntent, "Share customer statement").addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
     }
 
     override fun print(file: File?) {

@@ -83,11 +83,16 @@ class TransactionListViewModel(
         appComposeNavigator.navigate(ExpenseManagerScreens.CustomerLedger)
     }
 
+    private fun openSupplierLedger() {
+        appComposeNavigator.navigate(ExpenseManagerScreens.SupplierLedger)
+    }
+
     fun processAction(action: TransactionListAction) {
         when (action) {
             TransactionListAction.ClosePage -> closePage()
             TransactionListAction.OpenCreateTransaction -> openCreateScreen()
             TransactionListAction.OpenCustomerLedger -> openCustomerLedger()
+            TransactionListAction.OpenSupplierLedger -> openSupplierLedger()
             is TransactionListAction.OpenEdiTransaction -> openCreateScreen(action.transactionId)
         }
     }
@@ -108,7 +113,7 @@ fun List<Transaction>.toTransactionSum() =
                 0.0
             }
 
-            TransactionType.DEBT -> it.amount.amount
+            TransactionType.DEBT -> if (it.supplierId == null) it.amount.amount else -it.amount.amount
         }
     }
 

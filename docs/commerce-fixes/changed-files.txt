@@ -1,0 +1,46 @@
+DELETED app/src/main/res/values-id/strings.xml
+README.md
+app/build.gradle.kts
+app/src/main/assets/commerce-legacy-schemas/10.json
+app/src/main/assets/commerce-legacy-schemas/11.json
+app/src/main/assets/commerce-legacy-schemas/12.json
+app/src/main/assets/commerce-legacy-schemas/13.json
+app/src/main/assets/commerce-legacy-schemas/2.json
+app/src/main/assets/commerce-legacy-schemas/3.json
+app/src/main/assets/commerce-legacy-schemas/4.json
+app/src/main/assets/commerce-legacy-schemas/5.json
+app/src/main/assets/commerce-legacy-schemas/6.json
+app/src/main/assets/commerce-legacy-schemas/7.json
+app/src/main/assets/commerce-legacy-schemas/8.json
+app/src/main/assets/commerce-legacy-schemas/9.json
+app/src/main/kotlin/com/naveenapps/expensemanager/commerce/ArabicPdfWriter.kt
+app/src/main/kotlin/com/naveenapps/expensemanager/commerce/CommerceApp.kt
+app/src/main/kotlin/com/naveenapps/expensemanager/commerce/CommerceBackup.kt
+app/src/main/kotlin/com/naveenapps/expensemanager/commerce/CommerceDialogs.kt
+app/src/main/kotlin/com/naveenapps/expensemanager/commerce/CommerceDocuments.kt
+app/src/main/kotlin/com/naveenapps/expensemanager/commerce/CommerceInvoiceForm.kt
+app/src/main/kotlin/com/naveenapps/expensemanager/commerce/CommerceLegacySchema.kt
+app/src/main/kotlin/com/naveenapps/expensemanager/commerce/CommerceModels.kt
+app/src/main/kotlin/com/naveenapps/expensemanager/commerce/CommercePages.kt
+app/src/main/kotlin/com/naveenapps/expensemanager/commerce/CommercePdfFile.kt
+app/src/main/kotlin/com/naveenapps/expensemanager/commerce/CommercePrintAdapter.kt
+app/src/main/kotlin/com/naveenapps/expensemanager/commerce/CommerceStore.kt
+app/src/main/kotlin/com/naveenapps/expensemanager/commerce/CommerceValidation.kt
+app/src/main/kotlin/com/naveenapps/expensemanager/initializer/KoinInitializer.kt
+app/src/main/res/values-in/strings.xml
+app/src/main/res/values-night/themes.xml
+app/src/main/res/values/themes.xml
+app/src/main/res/xml/backup_rules.xml
+app/src/main/res/xml/data_extraction_rules.xml
+app/src/test/kotlin/com/naveenapps/expensemanager/commerce/CommerceBackupTest.kt
+app/src/test/kotlin/com/naveenapps/expensemanager/commerce/CommercePrintTest.kt
+app/src/test/kotlin/com/naveenapps/expensemanager/commerce/CommerceRegressionTest.kt
+app/src/test/kotlin/com/naveenapps/expensemanager/commerce/CommerceRegressionUiTest.kt
+app/src/test/kotlin/com/naveenapps/expensemanager/commerce/CommerceStoreTest.kt
+docs/COMMERCE_AUDIT_AR.md
+docs/COMMERCE_REPORT_AR.md
+docs/commerce-audit/COMMERCE_AUDIT_BEFORE_FIXES_AR.md
+docs/commerce-fixes/* (أدلة التحقق)
+gradle/libs.versions.toml
+docs/commerce-fixes/test-results/* (XML لجميع مجموعات الاختبار)
+docs/commerce-fixes/source-sha256.txt

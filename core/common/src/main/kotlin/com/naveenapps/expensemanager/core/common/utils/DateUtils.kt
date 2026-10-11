@@ -32,25 +32,17 @@ import kotlin.time.Instant
 // MonthAndYearFormat is the one exception that's used for *both* roles (see MonthAndYearKeyFormat
 // below for the round-tripped one, used for Budget.selectedMonth).
 
-private val YearDataFormat by lazy {
-    SimpleDateFormat("yyyy", Locale.US)
+// SimpleDateFormat is mutable and not thread-safe. A fresh formatter also observes a
+// runtime change of locale/time zone instead of retaining the first process settings.
+private fun formatter(pattern: String, locale: Locale) = SimpleDateFormat(pattern, locale).apply {
+    isLenient = false
 }
 
-private val HourAndMinutesIn24HoursFormat by lazy {
-    SimpleDateFormat("HH:mm", Locale.US)
-}
-
-private val HourAndMinutesIn12HoursFormat by lazy {
-    SimpleDateFormat("hh:mm a", Locale.getDefault())
-}
-
-private val MonthFormat by lazy {
-    SimpleDateFormat("MM", Locale.US)
-}
-
-private val MonthAndYearFormat by lazy {
-    SimpleDateFormat("MMMM yyyy", Locale.getDefault())
-}
+private val YearDataFormat get() = formatter("yyyy", Locale.US)
+private val HourAndMinutesIn24HoursFormat get() = formatter("HH:mm", Locale.US)
+private val HourAndMinutesIn12HoursFormat get() = formatter("hh:mm a", Locale.getDefault())
+private val MonthFormat get() = formatter("MM", Locale.US)
+private val MonthAndYearFormat get() = formatter("MMMM yyyy", Locale.getDefault())
 
 /**
  * Same pattern as [MonthAndYearFormat] but always English, used only for values that get
@@ -58,33 +50,13 @@ private val MonthAndYearFormat by lazy {
  * compared against). Never use this to show text to the user — use [Date.toMonthAndYear] for
  * that instead.
  */
-private val MonthAndYearKeyFormat by lazy {
-    SimpleDateFormat("MMMM yyyy", Locale.ENGLISH)
-}
-
-private val DateMonthAndYearFormat by lazy {
-    SimpleDateFormat("dd/MM/yyyy", Locale.US)
-}
-
-private val DateFormat by lazy {
-    SimpleDateFormat("dd", Locale.US)
-}
-
-private val DateAndMonthFormat by lazy {
-    SimpleDateFormat("dd/MM", Locale.US)
-}
-
-private val ElabratedMonthDataFormat by lazy {
-    SimpleDateFormat("MMMM dd, yyyy", Locale.getDefault())
-}
-
-private val DayFormat by lazy {
-    SimpleDateFormat("EEEE", Locale.getDefault())
-}
-
-private val ShortMontAndYearFormat by lazy {
-    SimpleDateFormat("MM-yyyy", Locale.US)
-}
+private val MonthAndYearKeyFormat get() = formatter("MMMM yyyy", Locale.ENGLISH)
+private val DateMonthAndYearFormat get() = formatter("dd/MM/yyyy", Locale.US)
+private val DateFormat get() = formatter("dd", Locale.US)
+private val DateAndMonthFormat get() = formatter("dd/MM", Locale.US)
+private val ElabratedMonthDataFormat get() = formatter("MMMM dd, yyyy", Locale.getDefault())
+private val DayFormat get() = formatter("EEEE", Locale.getDefault())
+private val ShortMontAndYearFormat get() = formatter("MM-yyyy", Locale.US)
 
 
 @OptIn(ExperimentalTime::class)
@@ -99,11 +71,11 @@ fun getTodayRange(timeZone: TimeZone = TimeZone.currentSystemDefault()): List<Lo
 }
 
 @OptIn(ExperimentalTime::class)
-fun getThisWeekRange(timeZone: TimeZone = TimeZone.currentSystemDefault()): List<Long> {
-    val clock = kotlin.time.Clock.System.now()
+fun getThisWeekRange(timeZone: TimeZone = TimeZone.currentSystemDefault(), nowMillis: Long = System.currentTimeMillis()): List<Long> {
+    val clock = Instant.fromEpochMilliseconds(nowMillis)
     val todayDateTime = clock.toLocalDateTime(timeZone)
     val startOfTheWeekDay =
-        todayDateTime.date.minus(todayDateTime.dayOfWeek.isoDayNumber, DateTimeUnit.DAY)
+        todayDateTime.date.minus(todayDateTime.dayOfWeek.isoDayNumber % 7, DateTimeUnit.DAY)
     val endTimeOfTheWeek = startOfTheWeekDay.plus(1, DateTimeUnit.WEEK)
     return listOf(
         startOfTheWeekDay.atStartOfDayIn(timeZone).toEpochMilliseconds(),
@@ -165,7 +137,7 @@ fun Long.toExactStartOfTheDay(): Date {
 fun Date.getStartOfTheMonth(): Long {
     val dateTime =
         Instant.fromEpochMilliseconds(this.time).toLocalDateTime(TimeZone.currentSystemDefault())
-    return dateTime.date.minus(dateTime.dayOfMonth, DateTimeUnit.DAY)
+    return dateTime.date.minus(dateTime.dayOfMonth - 1, DateTimeUnit.DAY)
         .atStartOfDayIn(TimeZone.currentSystemDefault())
         .toEpochMilliseconds()
 }
@@ -174,7 +146,7 @@ fun Date.getStartOfTheMonth(): Long {
 fun Date.getEndOfTheMonth(): Long {
     val dateTime =
         Instant.fromEpochMilliseconds(this.time).toLocalDateTime(TimeZone.currentSystemDefault())
-    val startOfTheWeekDay = dateTime.date.minus(dateTime.dayOfMonth, DateTimeUnit.DAY)
+    val startOfTheWeekDay = dateTime.date.minus(dateTime.dayOfMonth - 1, DateTimeUnit.DAY)
         .atStartOfDayIn(TimeZone.currentSystemDefault())
     return startOfTheWeekDay.plus(1, DateTimeUnit.MONTH, TimeZone.currentSystemDefault())
         .toEpochMilliseconds()
@@ -185,7 +157,7 @@ fun Date.getEndOfTheMonth(): Long {
 fun Date.getStartOfTheYear(): Long {
     val dateTime =
         Instant.fromEpochMilliseconds(this.time).toLocalDateTime(TimeZone.currentSystemDefault())
-    return dateTime.date.minus(dateTime.dayOfYear, DateTimeUnit.DAY)
+    return dateTime.date.minus(dateTime.dayOfYear - 1, DateTimeUnit.DAY)
         .atStartOfDayIn(TimeZone.currentSystemDefault())
         .toEpochMilliseconds()
 }
@@ -195,7 +167,7 @@ fun Date.getStartOfTheYear(): Long {
 fun Date.getEndOfTheYear(): Long {
     val dateTime =
         Instant.fromEpochMilliseconds(this.time).toLocalDateTime(TimeZone.currentSystemDefault())
-    val startOfTheYear = dateTime.date.minus(dateTime.dayOfYear, DateTimeUnit.DAY)
+    val startOfTheYear = dateTime.date.minus(dateTime.dayOfYear - 1, DateTimeUnit.DAY)
         .atStartOfDayIn(TimeZone.currentSystemDefault())
     return startOfTheYear.plus(1, DateTimeUnit.YEAR, TimeZone.currentSystemDefault())
         .toEpochMilliseconds()

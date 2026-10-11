@@ -21,7 +21,7 @@ class CustomerPaymentRepositoryImpl(
 
     override suspend fun addPayment(payment: CustomerPayment): Resource<Boolean> = withContext(dispatchers.io) {
         runCatching {
-            customerPaymentDao.addPayment(payment.toEntityModel()) > 0L
+            customerPaymentDao.addPayment(payment.toEntityModel()) >= 0L
         }.fold(
             onSuccess = { Resource.Success(it) },
             onFailure = { Resource.Error(it as? Exception ?: Exception(it)) },

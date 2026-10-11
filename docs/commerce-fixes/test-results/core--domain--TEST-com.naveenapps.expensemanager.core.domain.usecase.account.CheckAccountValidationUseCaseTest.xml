@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.naveenapps.expensemanager.core.domain.usecase.account.CheckAccountValidationUseCaseTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-10-11T15:38:12.333Z" hostname="abod-VivoBook-ASUSLaptop-X515JA-X515JA" time="0.012">
+  <properties/>
+  <testcase name="whenStoredIconNameNotAvailableShouldResultError" classname="com.naveenapps.expensemanager.core.domain.usecase.account.CheckAccountValidationUseCaseTest" time="0.002"/>
+  <testcase name="whenProperAccountShouldReturnSuccess" classname="com.naveenapps.expensemanager.core.domain.usecase.account.CheckAccountValidationUseCaseTest" time="0.001"/>
+  <testcase name="whenStoredIconBGColorNotAvailableShouldResultError" classname="com.naveenapps.expensemanager.core.domain.usecase.account.CheckAccountValidationUseCaseTest" time="0.001"/>
+  <testcase name="whenAccountNameIsNotAvailableShouldResultError" classname="com.naveenapps.expensemanager.core.domain.usecase.account.CheckAccountValidationUseCaseTest" time="0.001"/>
+  <testcase name="whenAccountIdIsNotAvailableShouldResultError" classname="com.naveenapps.expensemanager.core.domain.usecase.account.CheckAccountValidationUseCaseTest" time="0.005"/>
+  <testcase name="whenStoredIconBGColorNotStartsWithHashShouldResultError" classname="com.naveenapps.expensemanager.core.domain.usecase.account.CheckAccountValidationUseCaseTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

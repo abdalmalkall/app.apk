@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.naveenapps.expensemanager.core.data.repository.SettingsRepositoryImplTest" tests="21" skipped="0" failures="0" errors="0" timestamp="2026-10-11T15:39:33.034Z" hostname="abod-VivoBook-ASUSLaptop-X515JA-X515JA" time="1.364">
+  <properties/>
+  <testcase name="when setTransactionTypes with account id should return the success" classname="com.naveenapps.expensemanager.core.data.repository.SettingsRepositoryImplTest" time="0.29"/>
+  <testcase name="when getDefaultIncomeCategory after saving the item should return the saved value" classname="com.naveenapps.expensemanager.core.data.repository.SettingsRepositoryImplTest" time="0.119"/>
+  <testcase name="when setDefaultAccount with account id should return the success" classname="com.naveenapps.expensemanager.core.data.repository.SettingsRepositoryImplTest" time="0.032"/>
+  <testcase name="when getDefaultExpenseCategory after saving the item should return the saved value" classname="com.naveenapps.expensemanager.core.data.repository.SettingsRepositoryImplTest" time="0.043"/>
+  <testcase name="when getTransactionTypes after saving the item should return the saved value" classname="com.naveenapps.expensemanager.core.data.repository.SettingsRepositoryImplTest" time="0.119"/>
+  <testcase name="when isPreloaded after saving the item should return the saved value" classname="com.naveenapps.expensemanager.core.data.repository.SettingsRepositoryImplTest" time="0.042"/>
+  <testcase name="when setCategories with account id should return the success" classname="com.naveenapps.expensemanager.core.data.repository.SettingsRepositoryImplTest" time="0.035"/>
+  <testcase name="when setAccounts with account id should return the success" classname="com.naveenapps.expensemanager.core.data.repository.SettingsRepositoryImplTest" time="0.047"/>
+  <testcase name="when getTransactionTypes for first time should return null" classname="com.naveenapps.expensemanager.core.data.repository.SettingsRepositoryImplTest" time="0.045"/>
+  <testcase name="when getDefaultIncomeCategory for first time should return null" classname="com.naveenapps.expensemanager.core.data.repository.SettingsRepositoryImplTest" time="0.042"/>
+  <testcase name="when getAccounts for first time should return null" classname="com.naveenapps.expensemanager.core.data.repository.SettingsRepositoryImplTest" time="0.05"/>
+  <testcase name="when getDefaultAccount for first time should return null" classname="com.naveenapps.expensemanager.core.data.repository.SettingsRepositoryImplTest" time="0.05"/>
+  <testcase name="when setDefaultExpenseCategory with category id should return the success" classname="com.naveenapps.expensemanager.core.data.repository.SettingsRepositoryImplTest" time="0.044"/>
+  <testcase name="when getDefaultAccount after saving the item should return the saved value" classname="com.naveenapps.expensemanager.core.data.repository.SettingsRepositoryImplTest" time="0.048"/>
+  <testcase name="when setPreloaded with account id should return the success" classname="com.naveenapps.expensemanager.core.data.repository.SettingsRepositoryImplTest" time="0.042"/>
+  <testcase name="when setDefaultIncomeCategory with category id should return the success" classname="com.naveenapps.expensemanager.core.data.repository.SettingsRepositoryImplTest" time="0.042"/>
+  <testcase name="when getCategories after saving the item should return the saved value" classname="com.naveenapps.expensemanager.core.data.repository.SettingsRepositoryImplTest" time="0.048"/>
+  <testcase name="when isPreloaded for first time should return false" classname="com.naveenapps.expensemanager.core.data.repository.SettingsRepositoryImplTest" time="0.043"/>
+  <testcase name="when getAccounts after saving the item should return the saved value" classname="com.naveenapps.expensemanager.core.data.repository.SettingsRepositoryImplTest" time="0.046"/>
+  <testcase name="when getDefaultExpenseCategory for first time should return null" classname="com.naveenapps.expensemanager.core.data.repository.SettingsRepositoryImplTest" time="0.065"/>
+  <testcase name="when getCategories for first time should return null" classname="com.naveenapps.expensemanager.core.data.repository.SettingsRepositoryImplTest" time="0.069"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

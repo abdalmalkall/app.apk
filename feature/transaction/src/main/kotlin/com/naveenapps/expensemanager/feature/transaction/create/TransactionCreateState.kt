@@ -39,6 +39,9 @@ data class TransactionCreateState(
     val showTimeSelection: Boolean,
     val attachments: List<String> = emptyList(),
     val showAttachmentPicker: Boolean = false,
+    val supplierPurchaseMode: Boolean = false,
+    val supplierId: String? = null,
+    val supplierName: String = "",
 )
 
 enum class AccountSelection {

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.naveenapps.expensemanager.feature.transaction.supplier.SupplierLedgerViewModelTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-10-10T09:59:38.966Z" hostname="abod-VivoBook-ASUSLaptop-X515JA-X515JA" time="0.202">
+  <properties/>
+  <testcase name="registered supplier can be searched by phone without purchases" classname="com.naveenapps.expensemanager.feature.transaction.supplier.SupplierLedgerViewModelTest" time="0.143"/>
+  <testcase name="saving supplier payment twice submits once to selected account" classname="com.naveenapps.expensemanager.feature.transaction.supplier.SupplierLedgerViewModelTest" time="0.039"/>
+  <testcase name="purchase and partial payments produce genuine statement balances" classname="com.naveenapps.expensemanager.feature.transaction.supplier.SupplierLedgerViewModelTest" time="0.019"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

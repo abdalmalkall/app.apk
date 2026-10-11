@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.naveenapps.expensemanager.feature.category.create.CategoryCreateViewModelTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-10-11T15:38:12.357Z" hostname="abod-VivoBook-ASUSLaptop-X515JA-X515JA" time="13.277">
+  <properties/>
+  <testcase name="when user doesn't have a category it shouldn't update state" classname="com.naveenapps.expensemanager.feature.category.create.CategoryCreateViewModelTest" time="10.659"/>
+  <testcase name="when user try to save with proper value it shouldn't allow to save" classname="com.naveenapps.expensemanager.feature.category.create.CategoryCreateViewModelTest" time="2.459"/>
+  <testcase name="when user have a category it should update state" classname="com.naveenapps.expensemanager.feature.category.create.CategoryCreateViewModelTest" time="0.086"/>
+  <testcase name="when user try to save without proper value it shouldn't allow to save" classname="com.naveenapps.expensemanager.feature.category.create.CategoryCreateViewModelTest" time="0.027"/>
+  <testcase name="when user try to edit and save with proper value it shouldn't allow to save" classname="com.naveenapps.expensemanager.feature.category.create.CategoryCreateViewModelTest" time="0.036"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of the JDK. Please add Mockito as an agent to your build as described in Mockito's documentation: https://javadoc.io/doc/org.mockito/mockito-core/latest/org.mockito/org/mockito/Mockito.html#0.3
+WARNING: A Java agent has been loaded dynamically (/home/abod/.gradle/caches/modules-2/files-2.1/net.bytebuddy/byte-buddy-agent/1.17.7/fbf3d6d649ed37fc9e9c59480a05be0a26e3c2da/byte-buddy-agent-1.17.7.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+]]></system-err>
+</testsuite>

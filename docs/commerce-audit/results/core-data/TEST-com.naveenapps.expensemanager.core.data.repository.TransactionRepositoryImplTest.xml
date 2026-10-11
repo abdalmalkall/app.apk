@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.naveenapps.expensemanager.core.data.repository.TransactionRepositoryImplTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-10-10T09:59:58.139Z" hostname="abod-VivoBook-ASUSLaptop-X515JA-X515JA" time="0.35">
+  <properties/>
+  <testcase name="deleteTransactionSuccessAndCheck" classname="com.naveenapps.expensemanager.core.data.repository.TransactionRepositoryImplTest" time="0.046"/>
+  <testcase name="transactionInsertFailureCase" classname="com.naveenapps.expensemanager.core.data.repository.TransactionRepositoryImplTest" time="0.041"/>
+  <testcase name="expenseTransactionInsertSuccessAndCheckTransactionValues" classname="com.naveenapps.expensemanager.core.data.repository.TransactionRepositoryImplTest" time="0.041"/>
+  <testcase name="transferTransactionInsertSuccessAndCheckTransactionValues" classname="com.naveenapps.expensemanager.core.data.repository.TransactionRepositoryImplTest" time="0.036"/>
+  <testcase name="transactionInsertSuccessCase" classname="com.naveenapps.expensemanager.core.data.repository.TransactionRepositoryImplTest" time="0.036"/>
+  <testcase name="findTransactionForUnknownId" classname="com.naveenapps.expensemanager.core.data.repository.TransactionRepositoryImplTest" time="0.033"/>
+  <testcase name="updateTransaction" classname="com.naveenapps.expensemanager.core.data.repository.TransactionRepositoryImplTest" time="0.039"/>
+  <testcase name="incomeTransactionInsertSuccessAndCheckTransactionValues" classname="com.naveenapps.expensemanager.core.data.repository.TransactionRepositoryImplTest" time="0.035"/>
+  <testcase name="getAllTransactions" classname="com.naveenapps.expensemanager.core.data.repository.TransactionRepositoryImplTest" time="0.043"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

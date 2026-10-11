@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.naveenapps.expensemanager.feature.transaction.list.TransactionListBalanceTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-10-11T15:38:35.753Z" hostname="abod-VivoBook-ASUSLaptop-X515JA-X515JA" time="0.002">
+  <properties/>
+  <testcase name="customer debt is receivable while supplier debt is payable" classname="com.naveenapps.expensemanager.feature.transaction.list.TransactionListBalanceTest" time="0.002"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

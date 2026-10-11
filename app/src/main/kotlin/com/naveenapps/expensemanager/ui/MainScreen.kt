@@ -1,9 +1,6 @@
 package com.naveenapps.expensemanager.ui
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.navigation.compose.rememberNavController
-import com.naveenapps.designsystem.theme.NaveenAppsTheme
 import com.naveenapps.expensemanager.core.navigation.AppComposeNavigator
 import com.naveenapps.expensemanager.core.navigation.ExpenseManagerScreens
 import com.naveenapps.expensemanager.core.repository.ActivityComponentProvider
@@ -15,17 +12,5 @@ fun MainScreen(
     isDarkTheme: Boolean,
     landingScreen: ExpenseManagerScreens,
 ) {
-    NaveenAppsTheme(isDarkTheme = isDarkTheme) {
-        val navHostController = rememberNavController()
-
-        LaunchedEffect(Unit) {
-            composeNavigator.handleNavigationCommands(navHostController)
-        }
-
-        HomePageNavHostContainer(
-            componentProvider,
-            navHostController,
-            landingScreen
-        )
-    }
+    com.naveenapps.expensemanager.commerce.CommerceApp()
 }

@@ -32,7 +32,8 @@ class MainViewModel(
     private val _onboardingStatus = MutableStateFlow<Boolean?>(null)
     val onboardingStatus = _onboardingStatus.asStateFlow()
 
-    private val _isAppLockEnabled = MutableStateFlow(false)
+    // Unknown settings must not briefly expose the ledger before DataStore has loaded.
+    private val _isAppLockEnabled = MutableStateFlow<Boolean?>(null)
     val isAppLockEnabled = _isAppLockEnabled.asStateFlow()
 
     private val _isAuthenticated = MutableStateFlow(false)
@@ -48,11 +49,16 @@ class MainViewModel(
         }
 
         settingsRepository.isAppLockEnabled().onEach {
+            if (it && _isAppLockEnabled.value != true) _isAuthenticated.value = false
             _isAppLockEnabled.value = it
         }.launchIn(viewModelScope)
     }
 
     fun onAuthenticationSuccess() {
         _isAuthenticated.value = true
+    }
+
+    fun onAppBackgrounded() {
+        if (_isAppLockEnabled.value != false) _isAuthenticated.value = false
     }
 }

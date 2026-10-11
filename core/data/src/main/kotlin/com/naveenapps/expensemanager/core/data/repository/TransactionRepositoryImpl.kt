@@ -17,6 +17,8 @@ import com.naveenapps.expensemanager.core.model.TransactionType
 import com.naveenapps.expensemanager.core.model.isIncome
 import com.naveenapps.expensemanager.core.model.isTransfer
 import com.naveenapps.expensemanager.core.repository.TransactionRepository
+import androidx.room.withTransaction
+import com.naveenapps.expensemanager.core.database.ExpenseManagerDatabase
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
@@ -28,6 +30,7 @@ class TransactionRepositoryImpl(
     private val customerDao: CustomerDao,
     private val supplierDao: SupplierDao,
     private val dispatchers: AppCoroutineDispatchers,
+    private val database: ExpenseManagerDatabase? = null,
 ) : TransactionRepository {
 
     override fun getAllTransaction(): Flow<List<Transaction>?> =
@@ -53,7 +56,7 @@ class TransactionRepositoryImpl(
     override suspend fun addTransaction(transaction: Transaction): Resource<Boolean> =
         withContext(dispatchers.io) {
             return@withContext try {
-                val response = transactionDao.insertTransaction(
+                val response = financialTransaction { transactionDao.insertTransaction(
                     transaction.toEntityModel()
                         .withCustomer(customerDao, transaction)
                         .withSupplier(supplierDao, transaction),
@@ -64,7 +67,7 @@ class TransactionRepositoryImpl(
                     },
                     transaction.type.isTransfer(),
                     transaction.attachments,
-                )
+                ) }
                 Resource.Success(response != -1L)
             } catch (exception: Exception) {
                 Resource.Error(exception)
@@ -74,11 +77,11 @@ class TransactionRepositoryImpl(
     override suspend fun updateTransaction(transaction: Transaction): Resource<Boolean> =
         withContext(dispatchers.io) {
             return@withContext try {
+                financialTransaction {
                 val transactionEntity = transaction.toEntityModel()
                 val entityWithCustomer = transactionEntity
                     .withCustomer(customerDao, transaction)
                     .withSupplier(supplierDao, transaction)
-                transactionDao.removePreviousEnteredAmount(transactionEntity)
                 transactionDao.updateTransaction(
                     entityWithCustomer,
                     when (transaction.type) {
@@ -89,6 +92,7 @@ class TransactionRepositoryImpl(
                     transaction.type.isTransfer(),
                     transaction.attachments,
                 )
+                }
                 Resource.Success(true)
             } catch (exception: Exception) {
                 Resource.Error(exception)
@@ -99,13 +103,15 @@ class TransactionRepositoryImpl(
         withContext(dispatchers.io) {
             return@withContext try {
                 val transactionEntity = transaction.toEntityModel()
-                transactionDao.removePreviousEnteredAmount(transactionEntity)
-                val response = transactionDao.delete(transactionEntity)
-                Resource.Success(response != -1)
+                val response = transactionDao.deleteTransactionAndUpdateAccount(transactionEntity)
+                Resource.Success(response > 0)
             } catch (exception: Exception) {
                 Resource.Error(exception)
             }
         }
+
+    private suspend fun <T> financialTransaction(block: suspend () -> T): T =
+        database?.withTransaction { block() } ?: block()
 
     private fun convertTransactionAndCategory(
         transactionWithCategory: List<TransactionRelation>?,
@@ -163,17 +169,11 @@ class TransactionRepositoryImpl(
     ): TransactionEntity {
         val name = transaction.customerName?.trim().orEmpty()
         if (name.isBlank() || transaction.type != TransactionType.DEBT) return this
-        val normalizedName = name.lowercase()
+        val normalizedName = name.lowercase(java.util.Locale.ROOT)
         val now = transaction.updatedOn
-        val existing = customerDao.findByNormalizedName(normalizedName)
+        val existing = transaction.customerId?.let { customerDao.findById(it) }
+            ?: customerDao.findByNormalizedName(normalizedName)
         val customerId = if (existing != null) {
-            customerDao.update(
-                existing.copy(
-                    name = name,
-                    phone = transaction.customerPhone?.trim()?.takeIf(String::isNotEmpty),
-                    updatedOn = now,
-                ),
-            )
             existing.id
         } else {
             val newId = java.util.UUID.randomUUID().toString()
@@ -189,7 +189,7 @@ class TransactionRepositoryImpl(
             )
             customerDao.findByNormalizedName(normalizedName)?.id ?: newId
         }
-        return copy(customerId = customerId, customerName = name)
+        return copy(customerId = customerId, customerName = existing?.name ?: name)
     }
 
     private suspend fun TransactionEntity.withSupplier(
@@ -198,18 +198,11 @@ class TransactionRepositoryImpl(
     ): TransactionEntity {
         val name = transaction.supplierName?.trim().orEmpty()
         if (name.isBlank()) return copy(supplierId = null, supplierName = null)
-        val normalizedName = name.lowercase()
+        val normalizedName = name.lowercase(java.util.Locale.ROOT)
         val now = transaction.updatedOn
         val existing = transaction.supplierId?.let { supplierDao.findById(it) }
             ?: supplierDao.findByNormalizedName(normalizedName)
         val supplierId = if (existing != null) {
-            supplierDao.update(
-                existing.copy(
-                    name = name,
-                    normalizedName = normalizedName,
-                    updatedOn = now,
-                ),
-            )
             existing.id
         } else {
             val newId = java.util.UUID.randomUUID().toString()
@@ -224,7 +217,7 @@ class TransactionRepositoryImpl(
             )
             supplierDao.findByNormalizedName(normalizedName)?.id ?: newId
         }
-        return copy(supplierId = supplierId, supplierName = name)
+        return copy(supplierId = supplierId, supplierName = existing?.name ?: name)
     }
 
     override fun getAllFilteredTransaction(

@@ -1,0 +1,387 @@
+{
+  "tests": 273,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "suites": [
+    {
+      "file": "app/build/test-results/testDebugUnitTest/TEST-com.naveenapps.expensemanager.commerce.CommerceBackupTest.xml",
+      "suite": "com.naveenapps.expensemanager.commerce.CommerceBackupTest",
+      "tests": 16,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "app/build/test-results/testDebugUnitTest/TEST-com.naveenapps.expensemanager.commerce.CommerceDocumentsTest.xml",
+      "suite": "com.naveenapps.expensemanager.commerce.CommerceDocumentsTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "app/build/test-results/testDebugUnitTest/TEST-com.naveenapps.expensemanager.commerce.CommercePrintTest.xml",
+      "suite": "com.naveenapps.expensemanager.commerce.CommercePrintTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "app/build/test-results/testDebugUnitTest/TEST-com.naveenapps.expensemanager.commerce.CommerceRegressionTest.xml",
+      "suite": "com.naveenapps.expensemanager.commerce.CommerceRegressionTest",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "app/build/test-results/testDebugUnitTest/TEST-com.naveenapps.expensemanager.commerce.CommerceRegressionUiTest.xml",
+      "suite": "com.naveenapps.expensemanager.commerce.CommerceRegressionUiTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "app/build/test-results/testDebugUnitTest/TEST-com.naveenapps.expensemanager.commerce.CommerceStoreTest.xml",
+      "suite": "com.naveenapps.expensemanager.commerce.CommerceStoreTest",
+      "tests": 15,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "app/build/test-results/testDebugUnitTest/TEST-com.naveenapps.expensemanager.commerce.CommerceUiTest.xml",
+      "suite": "com.naveenapps.expensemanager.commerce.CommerceUiTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "core/data/build/test-results/testDebugUnitTest/TEST-com.naveenapps.expensemanager.core.data.repository.AccountRepositoryImplTest.xml",
+      "suite": "com.naveenapps.expensemanager.core.data.repository.AccountRepositoryImplTest",
+      "tests": 10,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "core/data/build/test-results/testDebugUnitTest/TEST-com.naveenapps.expensemanager.core.data.repository.BackupCryptoTest.xml",
+      "suite": "com.naveenapps.expensemanager.core.data.repository.BackupCryptoTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "core/data/build/test-results/testDebugUnitTest/TEST-com.naveenapps.expensemanager.core.data.repository.BackupPackageTest.xml",
+      "suite": "com.naveenapps.expensemanager.core.data.repository.BackupPackageTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "core/data/build/test-results/testDebugUnitTest/TEST-com.naveenapps.expensemanager.core.data.repository.BudgetRepositoryImplTest.xml",
+      "suite": "com.naveenapps.expensemanager.core.data.repository.BudgetRepositoryImplTest",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "core/data/build/test-results/testDebugUnitTest/TEST-com.naveenapps.expensemanager.core.data.repository.CategoryRepositoryImplTest.xml",
+      "suite": "com.naveenapps.expensemanager.core.data.repository.CategoryRepositoryImplTest",
+      "tests": 11,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "core/data/build/test-results/testDebugUnitTest/TEST-com.naveenapps.expensemanager.core.data.repository.CurrencyRepositoryImplTest.xml",
+      "suite": "com.naveenapps.expensemanager.core.data.repository.CurrencyRepositoryImplTest",
+      "tests": 10,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "core/data/build/test-results/testDebugUnitTest/TEST-com.naveenapps.expensemanager.core.data.repository.CustomerRepositoryImplTest.xml",
+      "suite": "com.naveenapps.expensemanager.core.data.repository.CustomerRepositoryImplTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "core/data/build/test-results/testDebugUnitTest/TEST-com.naveenapps.expensemanager.core.data.repository.DateRangeFilterRepositoryImplTest.xml",
+      "suite": "com.naveenapps.expensemanager.core.data.repository.DateRangeFilterRepositoryImplTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "core/data/build/test-results/testDebugUnitTest/TEST-com.naveenapps.expensemanager.core.data.repository.DriveBackupMetadataTest.xml",
+      "suite": "com.naveenapps.expensemanager.core.data.repository.DriveBackupMetadataTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "core/data/build/test-results/testDebugUnitTest/TEST-com.naveenapps.expensemanager.core.data.repository.LedgerAccountingTest.xml",
+      "suite": "com.naveenapps.expensemanager.core.data.repository.LedgerAccountingTest",
+      "tests": 13,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "core/data/build/test-results/testDebugUnitTest/TEST-com.naveenapps.expensemanager.core.data.repository.LedgerMigrationTest.xml",
+      "suite": "com.naveenapps.expensemanager.core.data.repository.LedgerMigrationTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "core/data/build/test-results/testDebugUnitTest/TEST-com.naveenapps.expensemanager.core.data.repository.SettingsRepositoryImplTest.xml",
+      "suite": "com.naveenapps.expensemanager.core.data.repository.SettingsRepositoryImplTest",
+      "tests": 21,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "core/data/build/test-results/testDebugUnitTest/TEST-com.naveenapps.expensemanager.core.data.repository.SupplierPaymentDaoTest.xml",
+      "suite": "com.naveenapps.expensemanager.core.data.repository.SupplierPaymentDaoTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "core/data/build/test-results/testDebugUnitTest/TEST-com.naveenapps.expensemanager.core.data.repository.ThemeRepositoryImplTest.xml",
+      "suite": "com.naveenapps.expensemanager.core.data.repository.ThemeRepositoryImplTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "core/data/build/test-results/testDebugUnitTest/TEST-com.naveenapps.expensemanager.core.data.repository.TransactionRepositoryImplTest.xml",
+      "suite": "com.naveenapps.expensemanager.core.data.repository.TransactionRepositoryImplTest",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "core/data/build/test-results/testDebugUnitTest/TEST-com.naveenapps.expensemanager.core.data.repository.VersionCheckerRepositoryImplTest.xml",
+      "suite": "com.naveenapps.expensemanager.core.data.repository.VersionCheckerRepositoryImplTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "core/domain/build/test-results/testDebugUnitTest/TEST-com.naveenapps.expensemanager.core.domain.usecase.account.AddAccountUseCaseTest.xml",
+      "suite": "com.naveenapps.expensemanager.core.domain.usecase.account.AddAccountUseCaseTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "core/domain/build/test-results/testDebugUnitTest/TEST-com.naveenapps.expensemanager.core.domain.usecase.account.CheckAccountValidationUseCaseTest.xml",
+      "suite": "com.naveenapps.expensemanager.core.domain.usecase.account.CheckAccountValidationUseCaseTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "core/domain/build/test-results/testDebugUnitTest/TEST-com.naveenapps.expensemanager.core.domain.usecase.account.DeleteAccountUseCaseTest.xml",
+      "suite": "com.naveenapps.expensemanager.core.domain.usecase.account.DeleteAccountUseCaseTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "core/domain/build/test-results/testDebugUnitTest/TEST-com.naveenapps.expensemanager.core.domain.usecase.account.FindAccountByIdUseCaseTest.xml",
+      "suite": "com.naveenapps.expensemanager.core.domain.usecase.account.FindAccountByIdUseCaseTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "core/domain/build/test-results/testDebugUnitTest/TEST-com.naveenapps.expensemanager.core.domain.usecase.account.UpdateAccountUseCaseTest.xml",
+      "suite": "com.naveenapps.expensemanager.core.domain.usecase.account.UpdateAccountUseCaseTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "core/domain/build/test-results/testDebugUnitTest/TEST-com.naveenapps.expensemanager.core.domain.usecase.budget.AddBudgetUseCaseTest.xml",
+      "suite": "com.naveenapps.expensemanager.core.domain.usecase.budget.AddBudgetUseCaseTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "core/domain/build/test-results/testDebugUnitTest/TEST-com.naveenapps.expensemanager.core.domain.usecase.budget.CheckBudgetValidateUseCaseTest.xml",
+      "suite": "com.naveenapps.expensemanager.core.domain.usecase.budget.CheckBudgetValidateUseCaseTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "core/domain/build/test-results/testDebugUnitTest/TEST-com.naveenapps.expensemanager.core.domain.usecase.budget.FindBudgetByIdUseCaseTest.xml",
+      "suite": "com.naveenapps.expensemanager.core.domain.usecase.budget.FindBudgetByIdUseCaseTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "core/domain/build/test-results/testDebugUnitTest/TEST-com.naveenapps.expensemanager.core.domain.usecase.budget.GetBudgetDetailUseCaseTest.xml",
+      "suite": "com.naveenapps.expensemanager.core.domain.usecase.budget.GetBudgetDetailUseCaseTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "core/domain/build/test-results/testDebugUnitTest/TEST-com.naveenapps.expensemanager.core.domain.usecase.budget.GetBudgetTransactionsUseCaseTest.xml",
+      "suite": "com.naveenapps.expensemanager.core.domain.usecase.budget.GetBudgetTransactionsUseCaseTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "core/domain/build/test-results/testDebugUnitTest/TEST-com.naveenapps.expensemanager.core.domain.usecase.budget.UpdateBudgetUseCaseTest.xml",
+      "suite": "com.naveenapps.expensemanager.core.domain.usecase.budget.UpdateBudgetUseCaseTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "core/domain/build/test-results/testDebugUnitTest/TEST-com.naveenapps.expensemanager.core.domain.usecase.settings.currency.SaveCurrencyUseCaseTest.xml",
+      "suite": "com.naveenapps.expensemanager.core.domain.usecase.settings.currency.SaveCurrencyUseCaseTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "core/domain/build/test-results/testDebugUnitTest/TEST-com.naveenapps.expensemanager.core.domain.usecase.settings.daterange.GetDateRangeUseCaseTest.xml",
+      "suite": "com.naveenapps.expensemanager.core.domain.usecase.settings.daterange.GetDateRangeUseCaseTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "feature/account/build/test-results/testDebugUnitTest/TEST-com.naveenapps.expensemanager.feature.account.create.AccountCreateViewModelTest.xml",
+      "suite": "com.naveenapps.expensemanager.feature.account.create.AccountCreateViewModelTest",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "feature/account/build/test-results/testDebugUnitTest/TEST-com.naveenapps.expensemanager.feature.account.list.AccountListViewModelTest.xml",
+      "suite": "com.naveenapps.expensemanager.feature.account.list.AccountListViewModelTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "feature/account/build/test-results/testDebugUnitTest/TEST-com.naveenapps.expensemanager.feature.account.selection.AccountSelectionViewModelTest.xml",
+      "suite": "com.naveenapps.expensemanager.feature.account.selection.AccountSelectionViewModelTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "feature/category/build/test-results/testDebugUnitTest/TEST-com.naveenapps.expensemanager.feature.category.create.CategoryCreateViewModelTest.xml",
+      "suite": "com.naveenapps.expensemanager.feature.category.create.CategoryCreateViewModelTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "feature/category/build/test-results/testDebugUnitTest/TEST-com.naveenapps.expensemanager.feature.category.list.CategoryListViewModelTest.xml",
+      "suite": "com.naveenapps.expensemanager.feature.category.list.CategoryListViewModelTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "feature/category/build/test-results/testDebugUnitTest/TEST-com.naveenapps.expensemanager.feature.category.selection.CategorySelectionViewModelTest.xml",
+      "suite": "com.naveenapps.expensemanager.feature.category.selection.CategorySelectionViewModelTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "feature/transaction/build/test-results/testDebugUnitTest/TEST-com.naveenapps.expensemanager.feature.transaction.create.TransactionCreateViewModelTest.xml",
+      "suite": "com.naveenapps.expensemanager.feature.transaction.create.TransactionCreateViewModelTest",
+      "tests": 18,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "feature/transaction/build/test-results/testDebugUnitTest/TEST-com.naveenapps.expensemanager.feature.transaction.customer.CustomerLedgerViewModelTest.xml",
+      "suite": "com.naveenapps.expensemanager.feature.transaction.customer.CustomerLedgerViewModelTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "feature/transaction/build/test-results/testDebugUnitTest/TEST-com.naveenapps.expensemanager.feature.transaction.list.TransactionListBalanceTest.xml",
+      "suite": "com.naveenapps.expensemanager.feature.transaction.list.TransactionListBalanceTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "feature/transaction/build/test-results/testDebugUnitTest/TEST-com.naveenapps.expensemanager.feature.transaction.supplier.SupplierLedgerViewModelTest.xml",
+      "suite": "com.naveenapps.expensemanager.feature.transaction.supplier.SupplierLedgerViewModelTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  ],
+  "lint": {
+    "UnusedAttribute": 2,
+    "AndroidGradlePluginVersion": 5,
+    "GradleDependency": 41,
+    "NewerVersionAvailable": 24,
+    "ModifierParameter": 3,
+    "UnusedResources": 30,
+    "UseKtx": 5,
+    "UseTomlInstead": 2
+  },
+  "apk_sha256": "13017ea92e440622b79a2e2f8e01107a9d4d1e5eb03021de195acf8aa8e1c8a7"
+}

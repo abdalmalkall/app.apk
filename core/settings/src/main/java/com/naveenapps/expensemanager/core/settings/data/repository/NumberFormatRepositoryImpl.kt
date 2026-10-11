@@ -9,7 +9,8 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import java.text.NumberFormat
-import java.text.ParseException
+import java.text.DecimalFormat
+import java.text.ParsePosition
 import java.util.Locale
 import java.util.concurrent.ConcurrentHashMap
 
@@ -19,6 +20,7 @@ class NumberFormatRepositoryImpl(
     coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
 ) : NumberFormatRepository {
 
+    @Volatile
     private var numberFormatType: NumberFormatType = NumberFormatType.WITHOUT_ANY_SEPARATOR
 
     init {
@@ -48,20 +50,22 @@ class NumberFormatRepositoryImpl(
     }
 
     /**
-     * Converts localized string into a plain string with '.' as decimal
-     * Example: "1.234,5" (DE) → "1234.5"
+     * Removes grouping while retaining the locale's decimal separator for editing.
+     * Example: "1.234,5" (DE) → "1234,5"
      */
     override fun formatForEditing(localizedValue: String): String {
         val parsed = parseToDouble(localizedValue)
-        return parsed?.toString() ?: localizedValue
+        return parsed?.let(::formatForEditing) ?: localizedValue
     }
 
     /**
-     * Converts localized string into a plain string with '.' as decimal
-     * Example: "1.234,5" (DE) → "1234.5"
+     * Formats an editable value without grouping or display rounding.
      */
     override fun formatForEditing(value: Double): String {
-        return value.toString()
+        return ApplicationNumberFormatter.getNumberFormatWithoutGrouping(locale).apply {
+            minimumFractionDigits = 0
+            maximumFractionDigits = 340
+        }.format(value)
     }
 
     /**
@@ -70,10 +74,26 @@ class NumberFormatRepositoryImpl(
      */
     override fun parseToDouble(localizedValue: String): Double? {
         val formatter = getFormatter()
-        return try {
-            formatter.parse(localizedValue)?.toDouble()
-        } catch (e: ParseException) {
-            null
+        val decimalFormatter = formatter as? DecimalFormat ?: return null
+        val symbols = decimalFormatter.decimalFormatSymbols
+        val text = localizedValue.trim().let {
+            // The number pad emits '.', including on Arabic devices. Without grouping
+            // this is unambiguous and can be normalized to the local decimal separator.
+            if (!formatter.isGroupingUsed && symbols.decimalSeparator != '.') {
+                it.replace('.', symbols.decimalSeparator)
+            } else it
+        }
+        val decimal = Regex.escape(symbols.decimalSeparator.toString())
+        val grouping = Regex.escape(symbols.groupingSeparator.toString())
+        val digit = "\\p{Nd}"
+        val integer = if (formatter.isGroupingUsed) {
+            "(?:$digit+|$digit{1,3}(?:$grouping$digit{3})+)"
+        } else "$digit+"
+        val sign = "(?:-|${Regex.escape(decimalFormatter.negativePrefix)})?"
+        if (!text.matches(Regex("$sign$integer(?:$decimal$digit+)?"))) return null
+        val position = ParsePosition(0)
+        return formatter.parse(text, position)?.toDouble()?.takeIf {
+            position.index == text.length && position.errorIndex < 0 && it.isFinite()
         }
     }
 }
@@ -88,19 +108,19 @@ object ApplicationNumberFormatter {
         return normalNumberFormatCache.computeIfAbsent(locale) {
             NumberFormat.getNumberInstance(locale).apply {
                 isGroupingUsed = true
-                maximumFractionDigits = 1
+                maximumFractionDigits = 3
                 minimumFractionDigits = 0
             }
-        }
+        }.clone() as NumberFormat
     }
 
     fun getNumberFormatWithoutGrouping(locale: Locale): NumberFormat {
         return defaultNumberFormatCache.computeIfAbsent(locale) {
             NumberFormat.getNumberInstance(locale).apply {
                 isGroupingUsed = false
-                maximumFractionDigits = 1
+                maximumFractionDigits = 3
                 minimumFractionDigits = 1
             }
-        }
+        }.clone() as NumberFormat
     }
 }

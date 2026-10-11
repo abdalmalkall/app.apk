@@ -3,13 +3,10 @@
     <include
         domain="database"
         path="." />
-    <exclude
-        domain="sharedpref"
-        path="." />
-    <exclude
-        domain="file"
-        path="." />
-    <exclude
-        domain="external"
-        path="." />
+        <include domain="file" path="datastore/" />
+        <include domain="file" path="category_images/" />
+        <include domain="file" path="account_images/" />
+        <include domain="file" path="transaction_attachments/" />
+        <include domain="file" path="commerce-backups/" />
+        <include domain="file" path="commerce-restore-journal.json" />
 </full-backup-content>

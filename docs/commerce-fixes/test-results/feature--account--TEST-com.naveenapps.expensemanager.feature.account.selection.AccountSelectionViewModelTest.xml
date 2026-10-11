@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.naveenapps.expensemanager.feature.account.selection.AccountSelectionViewModelTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-10-11T15:38:25.657Z" hostname="abod-VivoBook-ASUSLaptop-X515JA-X515JA" time="0.447">
+  <properties/>
+  <testcase name="whenAccountsAvailableState" classname="com.naveenapps.expensemanager.feature.account.selection.AccountSelectionViewModelTest" time="0.068"/>
+  <testcase name="whenClearAllShouldRemoveAllSelectedAccounts" classname="com.naveenapps.expensemanager.feature.account.selection.AccountSelectionViewModelTest" time="0.059"/>
+  <testcase name="whenSelectedAccountsAvailableState" classname="com.naveenapps.expensemanager.feature.account.selection.AccountSelectionViewModelTest" time="0.068"/>
+  <testcase name="whenSelectingEmptyAccountsAtBeginningShouldNotReflect" classname="com.naveenapps.expensemanager.feature.account.selection.AccountSelectionViewModelTest" time="0.048"/>
+  <testcase name="whenSelectingAccountsAtBeginningShouldReflect" classname="com.naveenapps.expensemanager.feature.account.selection.AccountSelectionViewModelTest" time="0.088"/>
+  <testcase name="whenDeSelectingTheAccountShouldReflectInSelectedAccounts" classname="com.naveenapps.expensemanager.feature.account.selection.AccountSelectionViewModelTest" time="0.103"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

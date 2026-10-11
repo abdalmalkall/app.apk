@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.naveenapps.expensemanager.feature.transaction.customer.CustomerLedgerViewModelTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-10-11T15:38:31.379Z" hostname="abod-VivoBook-ASUSLaptop-X515JA-X515JA" time="4.372">
+  <properties/>
+  <testcase name="repeated save action submits one payment with a stable id" classname="com.naveenapps.expensemanager.feature.transaction.customer.CustomerLedgerViewModelTest" time="4.307"/>
+  <testcase name="rejected payment keeps draft visible with an error" classname="com.naveenapps.expensemanager.feature.transaction.customer.CustomerLedgerViewModelTest" time="0.014"/>
+  <testcase name="groups debt transactions by customer and totals them" classname="com.naveenapps.expensemanager.feature.transaction.customer.CustomerLedgerViewModelTest" time="0.041"/>
+  <testcase name="registered customer with no invoices appears with zero balances" classname="com.naveenapps.expensemanager.feature.transaction.customer.CustomerLedgerViewModelTest" time="0.01"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.naveenapps.expensemanager.core.domain.usecase.account.UpdateAccountUseCaseTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-10-10T09:59:34.902Z" hostname="abod-VivoBook-ASUSLaptop-X515JA-X515JA" time="0.056">
+  <properties/>
+  <testcase name="whenAccountIsInValidShouldReturnError" classname="com.naveenapps.expensemanager.core.domain.usecase.account.UpdateAccountUseCaseTest" time="0.012"/>
+  <testcase name="whenAccountNameIsInValidShouldReturnError" classname="com.naveenapps.expensemanager.core.domain.usecase.account.UpdateAccountUseCaseTest" time="0.012"/>
+  <testcase name="whenAccountIsValidShouldUpdateSuccessfully" classname="com.naveenapps.expensemanager.core.domain.usecase.account.UpdateAccountUseCaseTest" time="0.007"/>
+  <testcase name="whenAccountStoredIconBGColorIsInValidColorShouldReturnError" classname="com.naveenapps.expensemanager.core.domain.usecase.account.UpdateAccountUseCaseTest" time="0.006"/>
+  <testcase name="whenAccountStoredIconBGColorIsInValidShouldReturnError" classname="com.naveenapps.expensemanager.core.domain.usecase.account.UpdateAccountUseCaseTest" time="0.007"/>
+  <testcase name="whenAccountStoredIconNameIsInValidShouldReturnError" classname="com.naveenapps.expensemanager.core.domain.usecase.account.UpdateAccountUseCaseTest" time="0.008"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

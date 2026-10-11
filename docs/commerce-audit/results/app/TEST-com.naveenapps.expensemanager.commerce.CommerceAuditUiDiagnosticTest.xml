@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.naveenapps.expensemanager.commerce.CommerceAuditUiDiagnosticTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-10-11T14:51:36.241Z" hostname="abod-VivoBook-ASUSLaptop-X515JA-X515JA" time="6.413">
+  <properties/>
+  <testcase name="safetyPanelInvokesRealSelectedFilenameCallbacks" classname="com.naveenapps.expensemanager.commerce.CommerceAuditUiDiagnosticTest" time="5.638"/>
+  <testcase name="reproducesFirstBarcodeDownloadClickOnlySavingBarcode" classname="com.naveenapps.expensemanager.commerce.CommerceAuditUiDiagnosticTest" time="0.775"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

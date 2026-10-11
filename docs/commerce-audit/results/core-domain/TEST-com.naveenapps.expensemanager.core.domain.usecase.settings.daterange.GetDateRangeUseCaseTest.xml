@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.naveenapps.expensemanager.core.domain.usecase.settings.daterange.GetDateRangeUseCaseTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-10-10T09:59:37.364Z" hostname="abod-VivoBook-ASUSLaptop-X515JA-X515JA" time="0.218">
+  <properties/>
+  <testcase name="whenUserRequestTodayDateTimeRange" classname="com.naveenapps.expensemanager.core.domain.usecase.settings.daterange.GetDateRangeUseCaseTest" time="0.218"/>
+  <system-out><![CDATA[kotlinx.coroutines.flow.FlowKt__ZipKt$combine$$inlined$unsafeFlow$1@16279a5d]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

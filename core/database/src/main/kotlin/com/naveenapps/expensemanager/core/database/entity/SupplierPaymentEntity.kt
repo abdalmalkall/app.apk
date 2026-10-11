@@ -54,4 +54,6 @@ data class SupplierPaymentEntity(
     val notes: String = "",
     @ColumnInfo(name = "paid_on")
     val paidOn: Date,
+    @ColumnInfo(name = "amount_decimal", defaultValue = "NULL")
+    val amountDecimal: String? = null,
 )

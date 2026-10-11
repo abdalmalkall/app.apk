@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.naveenapps.expensemanager.feature.account.list.AccountListViewModelTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-10-11T14:45:56.367Z" hostname="abod-VivoBook-ASUSLaptop-X515JA-X515JA" time="0.548">
+  <properties/>
+  <testcase name="accountSuccessAndTypeSwitch" classname="com.naveenapps.expensemanager.feature.account.list.AccountListViewModelTest" time="0.112"/>
+  <testcase name="checkClosePageNavigation" classname="com.naveenapps.expensemanager.feature.account.list.AccountListViewModelTest" time="0.019"/>
+  <testcase name="checkOpenCreateNavigationAndCommands" classname="com.naveenapps.expensemanager.feature.account.list.AccountListViewModelTest" time="0.309"/>
+  <testcase name="accountSuccess" classname="com.naveenapps.expensemanager.feature.account.list.AccountListViewModelTest" time="0.03"/>
+  <testcase name="accountEmpty" classname="com.naveenapps.expensemanager.feature.account.list.AccountListViewModelTest" time="0.033"/>
+  <testcase name="checkOpenCreateNavigation" classname="com.naveenapps.expensemanager.feature.account.list.AccountListViewModelTest" time="0.039"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

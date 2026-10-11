@@ -9,6 +9,7 @@ import com.naveenapps.expensemanager.core.domain.usecase.category.GetAllCategory
 import com.naveenapps.expensemanager.core.domain.usecase.settings.currency.GetCurrencyUseCase
 import com.naveenapps.expensemanager.core.domain.usecase.settings.currency.GetDefaultCurrencyUseCase
 import com.naveenapps.expensemanager.core.domain.usecase.settings.currency.GetFormattedAmountUseCase
+import com.naveenapps.expensemanager.core.domain.usecase.supplier.GetAllSuppliersUseCase
 import com.naveenapps.expensemanager.core.domain.usecase.transaction.AddTransactionUseCase
 import com.naveenapps.expensemanager.core.domain.usecase.transaction.DeleteTransactionUseCase
 import com.naveenapps.expensemanager.core.domain.usecase.transaction.FindTransactionByIdUseCase
@@ -20,7 +21,6 @@ import com.naveenapps.expensemanager.core.model.AccountUiModel
 import com.naveenapps.expensemanager.core.model.Amount
 import com.naveenapps.expensemanager.core.model.Category
 import com.naveenapps.expensemanager.core.model.CategoryType
-import com.naveenapps.expensemanager.core.model.RAML_SWEILEH_CATEGORY_ID
 import com.naveenapps.expensemanager.core.model.Currency
 import com.naveenapps.expensemanager.core.model.Resource
 import com.naveenapps.expensemanager.core.model.StoredIcon
@@ -58,6 +58,8 @@ class TransactionCreateViewModel(
     getCurrencyUseCase: GetCurrencyUseCase,
     getAllAccountsUseCase: GetAllAccountsUseCase,
     getAllCategoryUseCase: GetAllCategoryUseCase,
+    private val getAllSuppliersUseCase: GetAllSuppliersUseCase,
+    private val getAllCustomersUseCase: com.naveenapps.expensemanager.core.domain.usecase.customer.GetAllCustomersUseCase? = null,
     getDefaultCurrencyUseCase: GetDefaultCurrencyUseCase,
     private val getFormattedAmountUseCase: GetFormattedAmountUseCase,
     private val findTransactionByIdUseCase: FindTransactionByIdUseCase,
@@ -72,6 +74,9 @@ class TransactionCreateViewModel(
 ) : ViewModel() {
 
     private val sessionCreatedAttachmentPaths = mutableListOf<String>()
+    private val newTransactionId = UUID.randomUUID().toString()
+    private var isSaveInProgress = false
+    private var contextCustomerId: String? = null
 
     private val _event = Channel<TransactionCreateEvent>()
     val event = _event.receiveAsFlow()
@@ -139,6 +144,8 @@ class TransactionCreateViewModel(
         observeAccountsAndCurrency(getCurrencyUseCase, getAllAccountsUseCase)
         observeCategories(getAllCategoryUseCase)
         loadTransactionWhenReady(savedStateHandle)
+        loadSupplierContext(savedStateHandle)
+        loadCustomerContext(savedStateHandle)
     }
 
     // region Observers
@@ -160,8 +167,8 @@ class TransactionCreateViewModel(
                 it.copy(
                     currency = currency,
                     accounts = mappedAccounts,
-                    selectedFromAccount = selectedAccount,
-                    selectedToAccount = selectedAccount,
+                    selectedFromAccount = mappedAccounts.find { account -> account.id == it.selectedFromAccount.id } ?: selectedAccount,
+                    selectedToAccount = mappedAccounts.find { account -> account.id == it.selectedToAccount.id } ?: selectedAccount,
                 )
             }
             syncState.update { it.copy(isAccountSyncCompleted = true) }
@@ -176,8 +183,7 @@ class TransactionCreateViewModel(
             settingsRepository.getDefaultExpenseCategory()
         ) { type, categories, defaultIncomeCategory, defaultExpenseCategory ->
             val filteredCategories = categories.filter { category ->
-                category.id == RAML_SWEILEH_CATEGORY_ID &&
-                    if (type.isIncome()) category.type.isIncome() else category.type.isExpense()
+                if (type.isIncome()) category.type.isIncome() else category.type.isExpense()
             }
             val preferredCategoryId = when (type) {
                 TransactionType.INCOME -> defaultIncomeCategory
@@ -191,7 +197,8 @@ class TransactionCreateViewModel(
                 it.copy(
                     transactionType = type,
                     categories = filteredCategories,
-                    selectedCategory = matchedCategory ?: filteredCategories.firstOrNull()
+                    selectedCategory = filteredCategories.find { category -> category.id == it.selectedCategory.id }
+                    ?: matchedCategory ?: filteredCategories.firstOrNull()
                     ?: defaultCategory,
                 )
             }
@@ -204,6 +211,29 @@ class TransactionCreateViewModel(
         viewModelScope.launch {
             syncState.first { it.isAccountSyncCompleted && it.isCategorySyncCompleted }
             loadEditingTransaction(transactionId)
+        }
+    }
+
+    private fun loadCustomerContext(savedStateHandle: SavedStateHandle) {
+        val customerId = savedStateHandle.get<String>(ExpenseManagerArgsNames.CUSTOMER_ID) ?: return
+        contextCustomerId = customerId
+        viewModelScope.launch {
+            syncState.first { it.isAccountSyncCompleted && it.isCategorySyncCompleted }
+            val customer = getAllCustomersUseCase?.invoke()?.firstOrNull()?.firstOrNull { it.id == customerId } ?: return@launch
+            changeTransactionType(TransactionType.DEBT)
+            _state.update { current -> current.copy(
+                customerName = current.customerName.copy(value = customer.name),
+                customerPhone = current.customerPhone.copy(value = customer.phone.orEmpty()),
+            ) }
+        }
+    }
+
+    private fun loadSupplierContext(savedStateHandle: SavedStateHandle) {
+        val supplierId = savedStateHandle.get<String>(ExpenseManagerArgsNames.SUPPLIER_ID) ?: return
+        _state.update { it.copy(supplierPurchaseMode = true, supplierId = supplierId) }
+        viewModelScope.launch {
+            val supplier = getAllSuppliersUseCase.invoke().firstOrNull()?.firstOrNull { it.id == supplierId }
+            _state.update { current -> current.copy(supplierName = supplier?.name.orEmpty()) }
         }
     }
 
@@ -228,6 +258,9 @@ class TransactionCreateViewModel(
                         transactionType = transaction.type,
                         customerName = current.customerName.copy(value = transaction.customerName.orEmpty()),
                         customerPhone = current.customerPhone.copy(value = transaction.customerPhone.orEmpty()),
+                        supplierPurchaseMode = transaction.supplierId != null,
+                        supplierId = transaction.supplierId,
+                        supplierName = transaction.supplierName.orEmpty(),
                         quantity = current.quantity.copy(value = transaction.quantity?.let(numberFormatRepository::formatForEditing).orEmpty()),
                         unit = current.unit.copy(value = transaction.unit.orEmpty()),
                         unitPrice = current.unitPrice.copy(value = transaction.unitPrice?.let(numberFormatRepository::formatForEditing).orEmpty()),
@@ -267,20 +300,24 @@ class TransactionCreateViewModel(
     private fun save() {
         val currentState = _state.value
         val amountText = currentState.amount.value
-        val amountValue = calculateInvoiceTotal(currentState)
-            ?: numberFormatRepository.parseToDouble(amountText)
+        val amountValue = calculateInvoiceTotal(currentState) ?: if (
+            currentState.transactionType == TransactionType.DEBT || currentState.supplierPurchaseMode
+        ) com.naveenapps.expensemanager.core.model.LedgerMoney.input(amountText)?.toDouble()
+        else numberFormatRepository.parseToDouble(amountText)
 
-        if (amountValue == null || amountValue <= 0.0) {
+        if (amountValue == null || !amountValue.isFinite() || amountValue <= 0.0) {
             _state.update { it.copy(amount = it.amount.copy(valueError = true)) }
             return
         }
 
         if (currentState.transactionType == TransactionType.DEBT &&
+            !currentState.supplierPurchaseMode &&
             currentState.customerName.value.trim().isBlank()
         ) {
             _state.update { it.copy(customerName = it.customerName.copy(valueError = true)) }
             return
         }
+        if (currentState.supplierPurchaseMode && currentState.supplierName.isBlank()) return
 
         if (currentState.transactionType.isTransfer() &&
             currentState.selectedFromAccount.id == currentState.selectedToAccount.id
@@ -295,21 +332,39 @@ class TransactionCreateViewModel(
         amountValue: Double
     ): Transaction {
         return Transaction(
-            id = editingTransaction?.id ?: UUID.randomUUID().toString(),
+            id = editingTransaction?.id ?: newTransactionId,
             notes = state.notes.value,
             categoryId = state.selectedCategory.id,
             fromAccountId = state.selectedFromAccount.id,
             toAccountId = if (state.transactionType.isTransfer()) state.selectedToAccount.id else null,
             type = state.transactionType,
-            customerName = if (state.transactionType == TransactionType.DEBT) state.customerName.value.trim() else null,
-            customerPhone = if (state.transactionType == TransactionType.DEBT) state.customerPhone.value.trim().takeIf(String::isNotEmpty) else null,
+            customerName = if (state.transactionType == TransactionType.DEBT && !state.supplierPurchaseMode) {
+                state.customerName.value.trim()
+            } else {
+                null
+            },
+            customerPhone = if (state.transactionType == TransactionType.DEBT && !state.supplierPurchaseMode) {
+                state.customerPhone.value.trim().takeIf(String::isNotEmpty)
+            } else {
+                null
+            },
             amount = Amount(amountValue),
             imagePath = "",
             createdOn = state.dateTime,
             updatedOn = Calendar.getInstance().time,
             attachments = state.attachments,
-            customerId = if (state.transactionType == TransactionType.DEBT) editingTransaction?.customerId else null,
-            invoiceNumber = if (state.transactionType == TransactionType.DEBT) editingTransaction?.invoiceNumber else null,
+            customerId = if (state.transactionType == TransactionType.DEBT && !state.supplierPurchaseMode) {
+                editingTransaction?.customerId ?: contextCustomerId
+            } else {
+                null
+            },
+            invoiceNumber = if (state.supplierPurchaseMode) {
+                editingTransaction?.invoiceNumber ?: "PUR-${editingTransaction?.id ?: newTransactionId}"
+            } else if (state.transactionType == TransactionType.DEBT) {
+                editingTransaction?.invoiceNumber
+            } else {
+                null
+            },
             quantity = if (state.transactionType == TransactionType.DEBT) {
                 numberFormatRepository.parseToDouble(state.quantity.value)?.takeIf { it > 0.0 }
             } else {
@@ -329,14 +384,20 @@ class TransactionCreateViewModel(
             deliveryNotes = if (state.transactionType == TransactionType.DEBT) state.deliveryNotes.value.trim().takeIf(String::isNotEmpty) else null,
             driverName = if (state.transactionType == TransactionType.DEBT) state.driverName.value.trim().takeIf(String::isNotEmpty) else null,
             vehicleNumber = if (state.transactionType == TransactionType.DEBT) state.vehicleNumber.value.trim().takeIf(String::isNotEmpty) else null,
+            supplierId = if (state.supplierPurchaseMode) state.supplierId else null,
+            supplierName = if (state.supplierPurchaseMode) state.supplierName else null,
         )
     }
 
     private fun calculateInvoiceTotal(state: TransactionCreateState): Double? {
         if (state.transactionType != TransactionType.DEBT) return null
-        val quantity = numberFormatRepository.parseToDouble(state.quantity.value) ?: return null
-        val unitPrice = numberFormatRepository.parseToDouble(state.unitPrice.value) ?: return null
-        return (quantity * unitPrice).takeIf { quantity > 0.0 && unitPrice > 0.0 }
+        val quantity = com.naveenapps.expensemanager.core.model.LedgerMoney.input(state.quantity.value)?.toDouble() ?: return null
+        val unitPrice = com.naveenapps.expensemanager.core.model.LedgerMoney.input(state.unitPrice.value)?.toDouble() ?: return null
+        return if (quantity > 0.0 && unitPrice > 0.0) {
+            com.naveenapps.expensemanager.core.model.LedgerMoney.decimal(quantity)
+                .multiply(com.naveenapps.expensemanager.core.model.LedgerMoney.decimal(unitPrice))
+                .setScale(3, java.math.RoundingMode.HALF_UP).toDouble()
+        } else null
     }
 
     private fun updateInvoiceField(field: InvoiceField, value: String) {
@@ -358,6 +419,8 @@ class TransactionCreateViewModel(
     }
 
     private fun persistTransaction(transaction: Transaction) {
+        if (isSaveInProgress) return
+        isSaveInProgress = true
         val isNewTransaction = editingTransaction == null
         val previouslyPersistedAttachments = editingTransaction?.attachments ?: emptyList()
         viewModelScope.launch {
@@ -366,7 +429,7 @@ class TransactionCreateViewModel(
             } else {
                 addTransactionUseCase.invoke(transaction)
             }
-            if (response is Resource.Success) {
+            if (response is Resource.Success && response.data) {
                 (previouslyPersistedAttachments - transaction.attachments.toSet()).forEach {
                     imageStorageRepository.deleteTransactionAttachment(it)
                 }
@@ -376,6 +439,8 @@ class TransactionCreateViewModel(
                     onNewTransactionCreated()
                 }
                 closePage()
+            } else {
+                isSaveInProgress = false
             }
         }
     }
@@ -397,7 +462,8 @@ class TransactionCreateViewModel(
     private fun deleteTransaction() {
         val transaction = editingTransaction ?: return
         viewModelScope.launch {
-            if (deleteTransactionUseCase.invoke(transaction) is Resource.Success) {
+            val response = deleteTransactionUseCase.invoke(transaction)
+            if (response is Resource.Success && response.data) {
                 transaction.attachments.forEach {
                     imageStorageRepository.deleteTransactionAttachment(it)
                 }

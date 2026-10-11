@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.naveenapps.expensemanager.commerce.CommerceDocumentsTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-10-11T15:53:28.206Z" hostname="abod-VivoBook-ASUSLaptop-X515JA-X515JA" time="9.794">
+  <properties/>
+  <testcase name="excelAndCsvContainActualArabicDataAndEscapeFormulaInjection" classname="com.naveenapps.expensemanager.commerce.CommerceDocumentsTest" time="4.91"/>
+  <testcase name="arabicPdfAndThermalFormatsGenerateRealPdfWithMultiplePages" classname="com.naveenapps.expensemanager.commerce.CommerceDocumentsTest" time="4.275"/>
+  <testcase name="allRequestedBarcodeFormatsDecodeGeneratedImages" classname="com.naveenapps.expensemanager.commerce.CommerceDocumentsTest" time="0.609"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

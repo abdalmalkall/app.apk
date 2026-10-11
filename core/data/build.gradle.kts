@@ -7,6 +7,7 @@ plugins {
 
 android {
     namespace = "com.naveenapps.expensemanager.core.data"
+    sourceSets.getByName("test").resources.srcDir("../database/schemas")
 }
 
 dependencies {

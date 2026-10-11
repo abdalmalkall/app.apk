@@ -9,6 +9,7 @@ fun CustomerPayment.toEntityModel(): CustomerPaymentEntity = CustomerPaymentEnti
     invoiceTransactionId = invoiceTransactionId,
     accountId = accountId,
     amount = amount,
+    amountDecimal = amountDecimal,
     notes = notes,
     paidOn = paidOn,
 )
@@ -19,6 +20,7 @@ fun CustomerPaymentEntity.toDomainModel(): CustomerPayment = CustomerPayment(
     invoiceTransactionId = invoiceTransactionId,
     accountId = accountId,
     amount = amount,
+    amountDecimal = amountDecimal,
     notes = notes,
     paidOn = paidOn,
 )

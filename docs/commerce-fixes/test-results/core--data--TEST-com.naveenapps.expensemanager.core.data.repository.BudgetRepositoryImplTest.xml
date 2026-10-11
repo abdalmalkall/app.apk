@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.naveenapps.expensemanager.core.data.repository.BudgetRepositoryImplTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-10-11T15:39:14.510Z" hostname="abod-VivoBook-ASUSLaptop-X515JA-X515JA" time="1.069">
+  <properties/>
+  <testcase name="checkGetAllBudgetFlowAfterInsertCase" classname="com.naveenapps.expensemanager.core.data.repository.BudgetRepositoryImplTest" time="0.225"/>
+  <testcase name="checkFindBudgetErrorCase" classname="com.naveenapps.expensemanager.core.data.repository.BudgetRepositoryImplTest" time="0.111"/>
+  <testcase name="checkDeleteSuccessCase" classname="com.naveenapps.expensemanager.core.data.repository.BudgetRepositoryImplTest" time="0.118"/>
+  <testcase name="checkDeleteBudgetErrorCase" classname="com.naveenapps.expensemanager.core.data.repository.BudgetRepositoryImplTest" time="0.102"/>
+  <testcase name="checkGetAllBudgetSuccessCase" classname="com.naveenapps.expensemanager.core.data.repository.BudgetRepositoryImplTest" time="0.118"/>
+  <testcase name="checkFindByIdSuccessCase" classname="com.naveenapps.expensemanager.core.data.repository.BudgetRepositoryImplTest" time="0.128"/>
+  <testcase name="checkDatabaseObject" classname="com.naveenapps.expensemanager.core.data.repository.BudgetRepositoryImplTest" time="0.066"/>
+  <testcase name="whenFindTheBudgetAsFlow" classname="com.naveenapps.expensemanager.core.data.repository.BudgetRepositoryImplTest" time="0.123"/>
+  <testcase name="checkInsertSuccessCase" classname="com.naveenapps.expensemanager.core.data.repository.BudgetRepositoryImplTest" time="0.075"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

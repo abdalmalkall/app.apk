@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.naveenapps.expensemanager.core.data.repository.LedgerMigrationTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-10-11T15:39:32.523Z" hostname="abod-VivoBook-ASUSLaptop-X515JA-X515JA" time="0.475">
+  <properties/>
+  <testcase name="upgradeFrom12PreservesAllFinancialRowsAndAddsExactDecimals" classname="com.naveenapps.expensemanager.core.data.repository.LedgerMigrationTest" time="0.373"/>
+  <testcase name="upgradeFrom11PreservesAllFinancialRowsAndAddsProfiles" classname="com.naveenapps.expensemanager.core.data.repository.LedgerMigrationTest" time="0.102"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

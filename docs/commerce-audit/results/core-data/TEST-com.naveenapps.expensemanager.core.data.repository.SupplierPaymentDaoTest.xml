@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.naveenapps.expensemanager.core.data.repository.SupplierPaymentDaoTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-10-10T09:59:57.825Z" hostname="abod-VivoBook-ASUSLaptop-X515JA-X515JA" time="0.051">
+  <properties/>
+  <testcase name="partialPaymentsUpdateAccountOnceAndRejectOverpayment" classname="com.naveenapps.expensemanager.core.data.repository.SupplierPaymentDaoTest" time="0.051"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

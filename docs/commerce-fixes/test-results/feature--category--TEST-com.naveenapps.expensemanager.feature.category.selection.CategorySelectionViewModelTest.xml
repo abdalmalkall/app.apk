@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.naveenapps.expensemanager.feature.category.selection.CategorySelectionViewModelTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-10-11T15:38:26.422Z" hostname="abod-VivoBook-ASUSLaptop-X515JA-X515JA" time="0.202">
+  <properties/>
+  <testcase name="whenSelectingListOfCategoryShouldReplacedExisting" classname="com.naveenapps.expensemanager.feature.category.selection.CategorySelectionViewModelTest" time="0.074"/>
+  <testcase name="whenCategoryAvailableItShouldReflectOnSelectedCategories" classname="com.naveenapps.expensemanager.feature.category.selection.CategorySelectionViewModelTest" time="0.05"/>
+  <testcase name="whenClearSelectedCategoryItShouldReflectOnSelectedCategoriesSize" classname="com.naveenapps.expensemanager.feature.category.selection.CategorySelectionViewModelTest" time="0.026"/>
+  <testcase name="whenChangingSelectionOfTheCategoryItShouldReflectOnSelectedCategoriesSize" classname="com.naveenapps.expensemanager.feature.category.selection.CategorySelectionViewModelTest" time="0.029"/>
+  <testcase name="whenSelectingEmptyListOfCategoryShouldNotReplacedExisting" classname="com.naveenapps.expensemanager.feature.category.selection.CategorySelectionViewModelTest" time="0.021"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

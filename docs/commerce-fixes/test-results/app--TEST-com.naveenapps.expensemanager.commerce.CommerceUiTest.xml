@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.naveenapps.expensemanager.commerce.CommerceUiTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-10-11T15:53:47.442Z" hostname="abod-VivoBook-ASUSLaptop-X515JA-X515JA" time="3.957">
+  <properties/>
+  <testcase name="invoiceFormSavesPartialSaleAndCollectionDialogSettlesDebt" classname="com.naveenapps.expensemanager.commerce.CommerceUiTest" time="1.794"/>
+  <testcase name="hardwareEnterAddsTheBarcodeProductBeforeACollidingSku" classname="com.naveenapps.expensemanager.commerce.CommerceUiTest" time="0.7"/>
+  <testcase name="applicationNavigationRendersArabicPagesWithoutOldExpenseInterface" classname="com.naveenapps.expensemanager.commerce.CommerceUiTest" time="1.463"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

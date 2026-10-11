@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.naveenapps.expensemanager.core.data.repository.DriveBackupMetadataTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-10-11T15:39:24.909Z" hostname="abod-VivoBook-ASUSLaptop-X515JA-X515JA" time="4.993">
+  <properties/>
+  <testcase name="findActivity unwraps compose context wrappers" classname="com.naveenapps.expensemanager.core.data.repository.DriveBackupMetadataTest" time="4.919"/>
+  <testcase name="metadata round trips with app and schema details" classname="com.naveenapps.expensemanager.core.data.repository.DriveBackupMetadataTest" time="0.074"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

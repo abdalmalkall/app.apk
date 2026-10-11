@@ -20,6 +20,12 @@ data class CustomerEntity(
     val normalizedName: String,
     @ColumnInfo(name = "phone")
     val phone: String? = null,
+    @ColumnInfo(name = "address", defaultValue = "NULL")
+    val address: String? = null,
+    @ColumnInfo(name = "notes", defaultValue = "NULL")
+    val notes: String? = null,
+    @ColumnInfo(name = "credit_limit_milliunits", defaultValue = "0")
+    val creditLimitMilliunits: Long = 0L,
     @ColumnInfo(name = "created_on")
     val createdOn: Date,
     @ColumnInfo(name = "updated_on")

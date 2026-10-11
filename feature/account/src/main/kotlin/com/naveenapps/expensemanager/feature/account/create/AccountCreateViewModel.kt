@@ -48,6 +48,8 @@ class AccountCreateViewModel(
 ) : ViewModel() {
 
     private val sessionCreatedImagePaths = mutableListOf<String>()
+    private val newAccountId = UUID.randomUUID().toString()
+    private var isMutationInProgress = false
 
     private var _state = MutableStateFlow(
         AccountCreateState(
@@ -95,8 +97,7 @@ class AccountCreateViewModel(
     init {
         getCurrencyUseCase.invoke().onEach { currency ->
 
-            val totalAmount =
-                getTotalAmount(getCreditAmount().toString(), _state.value.amount.value)
+            val totalAmount = getCreditAmount() + (numberFormatRepository.parseToDouble(_state.value.amount.value) ?: 0.0)
 
             _state.update {
                 it.copy(
@@ -131,8 +132,7 @@ class AccountCreateViewModel(
 
         this.account?.let { accountItem ->
 
-            val totalAmount =
-                getTotalAmount(getCreditAmount().toString(), _state.value.amount.value)
+            val totalAmount = accountItem.amount + if (accountItem.type == AccountType.CREDIT) accountItem.creditLimit else 0.0
 
             _state.update {
                 it.copy(
@@ -177,11 +177,14 @@ class AccountCreateViewModel(
     }
 
     private fun deleteAccount() {
+        if (isMutationInProgress || account == null) return
+        isMutationInProgress = true
         viewModelScope.launch {
             account?.let { account ->
-                when (deleteAccountUseCase.invoke(account)) {
-                    is Resource.Error -> Unit
+                when (val response = deleteAccountUseCase.invoke(account)) {
+                    is Resource.Error -> { isMutationInProgress = false }
                     is Resource.Success -> {
+                        if (!response.data) { isMutationInProgress = false; return@launch }
                         account.storedIcon.customImagePath?.let {
                             imageStorageRepository.deleteAccountImage(it)
                         }
@@ -194,6 +197,7 @@ class AccountCreateViewModel(
     }
 
     private fun saveOrUpdateAccount() {
+        if (isMutationInProgress) return
         val name: String = state.value.name.value
         val currentBalance: String = state.value.amount.value
         val creditLimit: String = state.value.creditLimit.value
@@ -210,15 +214,15 @@ class AccountCreateViewModel(
         }
 
         if (currentBalance.isBlank() || numberFormatRepository.parseToDouble(currentBalance) == null) {
-            _state.update { it.copy(name = it.amount.copy(valueError = true)) }
+            _state.update { it.copy(amount = it.amount.copy(valueError = true)) }
             isError = true
         }
 
         if (accountType == AccountType.CREDIT && (creditLimit.isBlank() || numberFormatRepository.parseToDouble(
                 creditLimit
-            ) == null)
+            )?.let { it >= 0.0 } != true)
         ) {
-            _state.update { it.copy(name = it.creditLimit.copy(valueError = true)) }
+            _state.update { it.copy(creditLimit = it.creditLimit.copy(valueError = true)) }
             isError = true
         }
 
@@ -227,7 +231,7 @@ class AccountCreateViewModel(
         }
 
         val account = Account(
-            id = account?.id ?: UUID.randomUUID().toString(),
+            id = account?.id ?: newAccountId,
             name = name,
             type = accountType,
             storedIcon = StoredIcon(
@@ -241,11 +245,15 @@ class AccountCreateViewModel(
             } else {
                 0.0
             },
-            createdOn = Calendar.getInstance().time,
+            createdOn = account?.createdOn ?: Calendar.getInstance().time,
             updatedOn = Calendar.getInstance().time,
-            sequence = account?.sequence ?: Int.MAX_VALUE
+            sequence = account?.sequence ?: Int.MAX_VALUE,
+            amountDecimal = account?.takeIf {
+                currentBalance == numberFormatRepository.formatForEditing(it.amount)
+            }?.amountDecimal,
         )
 
+        isMutationInProgress = true
         viewModelScope.launch {
             val previouslyPersistedImagePath =
                 this@AccountCreateViewModel.account?.storedIcon?.customImagePath
@@ -255,8 +263,9 @@ class AccountCreateViewModel(
                 addAccountUseCase(account)
             }
             when (response) {
-                is Resource.Error -> Unit
+                is Resource.Error -> { isMutationInProgress = false }
                 is Resource.Success -> {
+                    if (!response.data) { isMutationInProgress = false; return@launch }
                     if (previouslyPersistedImagePath != null &&
                         previouslyPersistedImagePath != customImagePath
                     ) {

@@ -99,4 +99,6 @@ data class TransactionEntity(
     var supplierId: String? = null,
     @ColumnInfo(name = "supplier_name", defaultValue = "NULL")
     var supplierName: String? = null,
+    @ColumnInfo(name = "amount_decimal", defaultValue = "NULL")
+    val amountDecimal: String? = null,
 )

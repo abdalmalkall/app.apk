@@ -5,6 +5,7 @@ import com.naveenapps.expensemanager.core.data.repository.AnalyticsRepositoryImp
 import com.naveenapps.expensemanager.core.data.repository.BudgetRepositoryImpl
 import com.naveenapps.expensemanager.core.data.repository.CategoryRepositoryImpl
 import com.naveenapps.expensemanager.core.data.repository.CustomerPaymentRepositoryImpl
+import com.naveenapps.expensemanager.core.data.repository.CustomerRepositoryImpl
 import com.naveenapps.expensemanager.core.data.repository.SupplierRepositoryImpl
 import com.naveenapps.expensemanager.core.data.repository.SupplierPaymentRepositoryImpl
 import com.naveenapps.expensemanager.core.data.repository.CountryRepositoryImpl
@@ -30,6 +31,7 @@ import com.naveenapps.expensemanager.core.repository.AnalyticsRepository
 import com.naveenapps.expensemanager.core.repository.BudgetRepository
 import com.naveenapps.expensemanager.core.repository.CategoryRepository
 import com.naveenapps.expensemanager.core.repository.CustomerPaymentRepository
+import com.naveenapps.expensemanager.core.repository.CustomerRepository
 import com.naveenapps.expensemanager.core.repository.SupplierRepository
 import com.naveenapps.expensemanager.core.repository.SupplierPaymentRepository
 import com.naveenapps.expensemanager.core.repository.CountryRepository
@@ -156,6 +158,7 @@ val RepositoryModule = module {
             categoryDao = get(),
             customerDao = get(),
             supplierDao = get(),
+            database = get(),
             dispatchers = get()
         )
     }
@@ -168,6 +171,12 @@ val RepositoryModule = module {
     single<CustomerPaymentRepository> {
         CustomerPaymentRepositoryImpl(
             customerPaymentDao = get(),
+            dispatchers = get(),
+        )
+    }
+    single<CustomerRepository> {
+        CustomerRepositoryImpl(
+            customerDao = get(),
             dispatchers = get(),
         )
     }

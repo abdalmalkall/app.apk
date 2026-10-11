@@ -1,4 +1,7 @@
+import java.security.KeyStore
+import java.security.cert.X509Certificate
 import com.github.triplet.gradle.androidpublisher.ReleaseStatus
+import com.google.firebase.crashlytics.buildtools.gradle.CrashlyticsExtension
 import com.google.firebase.appdistribution.gradle.firebaseAppDistribution
 import java.io.FileInputStream
 import java.util.Locale
@@ -66,6 +69,16 @@ if (credentials.exists() && keystore.exists()) {
     }
 } else {
     println("----- Credentials not available -----")
+}
+
+val externalReleaseStore = providers.environmentVariable("EXPENSE_RELEASE_STORE_FILE").orNull
+if (android.signingConfigs.findByName("release") == null && externalReleaseStore != null) {
+    android.signingConfigs.create("release") {
+        storeFile = file(externalReleaseStore)
+        storePassword = providers.environmentVariable("EXPENSE_RELEASE_STORE_PASSWORD").orNull
+        keyAlias = providers.environmentVariable("EXPENSE_RELEASE_KEY_ALIAS").orNull
+        keyPassword = providers.environmentVariable("EXPENSE_RELEASE_KEY_PASSWORD").orNull
+    }
 }
 
 val playStorePublisher = getPlayStorePublisherFile()
@@ -147,8 +160,8 @@ android {
 
     defaultConfig {
         applicationId = "com.naveenapps.expensemanager"
-        versionCode = 4
-        versionName = "0.4"
+        versionCode = 1_005_001
+        versionName = "1.5.1"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -164,6 +177,7 @@ android {
             isDebuggable = false
         }
         release {
+            configure<CrashlyticsExtension> { mappingFileUploadEnabled = false }
             isShrinkResources = true
             isMinifyEnabled = true
             proguardFiles(
@@ -171,16 +185,12 @@ android {
                 "proguard-rules.pro"
             )
 
-            val keyStore = runCatching { signingConfigs.getByName("release") }.getOrNull()
-                ?: signingConfigs.getByName("debug")
-
-            signingConfig = keyStore
+            signingConfig = signingConfigs.findByName("release")
         }
     }
 
-    lint {
-        baseline = file("lint-baseline.xml")
-    }
+    testOptions.unitTests.isIncludeAndroidResources = true
+
 
     testOptions {
         managedDevices {
@@ -250,10 +260,16 @@ dependencies {
     implementation(libs.google.oss.licenses)
 
     implementation(libs.app.update.ktx)
+    implementation(libs.room.runtime)
+    implementation(libs.datastore.preferences.proto)
     implementation(libs.androidx.biometric)
     implementation(libs.androidx.glance.appwidget)
     implementation(libs.androidx.glance.material3)
 
+    implementation("com.journeyapps:zxing-android-embedded:4.3.0")
+    implementation("com.google.zxing:core:3.5.3")
+    implementation(libs.jxl)
+    testImplementation(libs.robolectric)
     testImplementation(project(":core:testing"))
     androidTestImplementation(project(":core:testing"))
 }
@@ -264,4 +280,24 @@ fun String.toCapital(): String {
             Locale.getDefault()
         ) else it.toString()
     }
+}
+
+// Never produce a publishing artifact with the debug-key fallback.
+val verifyReleaseSigning = tasks.register("verifyReleaseSigning") {
+    doLast {
+        val config = android.signingConfigs.findByName("release")
+            ?: throw GradleException("Release requires the original publishing keystore and secure credentials; no debug fallback is permitted.")
+        val keyFile = config.storeFile
+        require(keyFile?.isFile == true && !config.storePassword.isNullOrBlank() && !config.keyAlias.isNullOrBlank() && !config.keyPassword.isNullOrBlank()) {
+            "Original Release signing configuration is incomplete."
+        }
+        val keyStore = KeyStore.getInstance(config.storeType ?: "JKS")
+        keyFile!!.inputStream().use { keyStore.load(it, config.storePassword!!.toCharArray()) }
+        val certificate = keyStore.getCertificate(config.keyAlias) as? X509Certificate
+            ?: throw GradleException("Release certificate is missing.")
+        require(!certificate.subjectX500Principal.name.contains("CN=Android Debug", true)) { "Android Debug certificates cannot sign Release." }
+    }
+}
+tasks.configureEach {
+    if (name in setOf("packageRelease", "packageReleaseBundle", "bundleRelease", "assembleRelease")) dependsOn(verifyReleaseSigning)
 }

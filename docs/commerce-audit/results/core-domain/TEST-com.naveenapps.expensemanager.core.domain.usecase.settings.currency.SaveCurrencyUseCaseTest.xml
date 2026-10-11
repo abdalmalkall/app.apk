@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.naveenapps.expensemanager.core.domain.usecase.settings.currency.SaveCurrencyUseCaseTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-10-10T09:59:37.261Z" hostname="abod-VivoBook-ASUSLaptop-X515JA-X515JA" time="0.029">
+  <properties/>
+  <testcase name="currencySymbolIsInvalidReturnError" classname="com.naveenapps.expensemanager.core.domain.usecase.settings.currency.SaveCurrencyUseCaseTest" time="0.014"/>
+  <testcase name="currencyNameIsInvalidReturnError" classname="com.naveenapps.expensemanager.core.domain.usecase.settings.currency.SaveCurrencyUseCaseTest" time="0.005"/>
+  <testcase name="whenValidCurrencyReturnSuccess" classname="com.naveenapps.expensemanager.core.domain.usecase.settings.currency.SaveCurrencyUseCaseTest" time="0.009"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

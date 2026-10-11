@@ -20,6 +20,12 @@ data class SupplierEntity(
     val normalizedName: String,
     @ColumnInfo(name = "phone")
     val phone: String? = null,
+    @ColumnInfo(name = "address", defaultValue = "NULL")
+    val address: String? = null,
+    @ColumnInfo(name = "company_name", defaultValue = "NULL")
+    val companyName: String? = null,
+    @ColumnInfo(name = "notes", defaultValue = "NULL")
+    val notes: String? = null,
     @ColumnInfo(name = "created_on")
     val createdOn: Date,
     @ColumnInfo(name = "updated_on")

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.naveenapps.expensemanager.core.domain.usecase.account.DeleteAccountUseCaseTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-10-10T09:59:34.753Z" hostname="abod-VivoBook-ASUSLaptop-X515JA-X515JA" time="0.082">
+  <properties/>
+  <testcase name="whenAccountIsInValidShouldReturnError" classname="com.naveenapps.expensemanager.core.domain.usecase.account.DeleteAccountUseCaseTest" time="0.017"/>
+  <testcase name="whenAccountNameIsInValidShouldReturnError" classname="com.naveenapps.expensemanager.core.domain.usecase.account.DeleteAccountUseCaseTest" time="0.015"/>
+  <testcase name="whenAccountIsValidShouldDeleteSuccessfully" classname="com.naveenapps.expensemanager.core.domain.usecase.account.DeleteAccountUseCaseTest" time="0.008"/>
+  <testcase name="whenAccountStoredIconBGColorIsInValidColorShouldReturnError" classname="com.naveenapps.expensemanager.core.domain.usecase.account.DeleteAccountUseCaseTest" time="0.013"/>
+  <testcase name="whenAccountStoredIconBGColorIsInValidShouldReturnError" classname="com.naveenapps.expensemanager.core.domain.usecase.account.DeleteAccountUseCaseTest" time="0.011"/>
+  <testcase name="whenAccountStoredIconNameIsInValidShouldReturnError" classname="com.naveenapps.expensemanager.core.domain.usecase.account.DeleteAccountUseCaseTest" time="0.012"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

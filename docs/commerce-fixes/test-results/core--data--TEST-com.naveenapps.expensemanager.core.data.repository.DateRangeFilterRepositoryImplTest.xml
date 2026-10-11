@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.naveenapps.expensemanager.core.data.repository.DateRangeFilterRepositoryImplTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-10-11T15:39:23.896Z" hostname="abod-VivoBook-ASUSLaptop-X515JA-X515JA" time="0.974">
+  <properties/>
+  <testcase name="getDateRangeTimeFrameShouldReturnTimeFrame" classname="com.naveenapps.expensemanager.core.data.repository.DateRangeFilterRepositoryImplTest" time="0.178"/>
+  <testcase name="getAllDateRangesShouldAllTypesAndNames" classname="com.naveenapps.expensemanager.core.data.repository.DateRangeFilterRepositoryImplTest" time="0.397"/>
+  <testcase name="getDateRangeValueShouldUpdateOnEachUpdate" classname="com.naveenapps.expensemanager.core.data.repository.DateRangeFilterRepositoryImplTest" time="0.18"/>
+  <testcase name="getDateRangeValueShouldReturnDefault" classname="com.naveenapps.expensemanager.core.data.repository.DateRangeFilterRepositoryImplTest" time="0.093"/>
+  <testcase name="getDateRangeGroupShouldReturnTheType" classname="com.naveenapps.expensemanager.core.data.repository.DateRangeFilterRepositoryImplTest" time="0.125"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

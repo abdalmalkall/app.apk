@@ -10,4 +10,5 @@ data class SupplierPayment(
     val amount: Double,
     val notes: String = "",
     val paidOn: Date,
+    val amountDecimal: String? = null,
 )

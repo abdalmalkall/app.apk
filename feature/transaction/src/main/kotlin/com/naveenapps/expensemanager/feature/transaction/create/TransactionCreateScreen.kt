@@ -29,6 +29,7 @@ import androidx.compose.material.icons.outlined.Calculate
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.EditCalendar
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilterChip
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -338,13 +339,32 @@ private fun TransactionCreateContent(
                 Column(
                     modifier = Modifier.padding(16.dp)
                 ) {
-                    TransactionTypeSelectionView(
-                        modifier = Modifier.fillMaxWidth(),
-                        selectedTransactionType = state.transactionType,
-                        onTransactionTypeChange = {
-                            onAction.invoke(TransactionCreateAction.ChangeTransactionType(it))
-                        },
-                    )
+                    if (state.supplierPurchaseMode) {
+                        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                            FilterChip(
+                                selected = state.transactionType == TransactionType.EXPENSE,
+                                onClick = { onAction(TransactionCreateAction.ChangeTransactionType(TransactionType.EXPENSE)) },
+                                label = { Text(stringResource(R.string.cash_purchase)) },
+                            )
+                            FilterChip(
+                                selected = state.transactionType == TransactionType.DEBT,
+                                onClick = { onAction(TransactionCreateAction.ChangeTransactionType(TransactionType.DEBT)) },
+                                label = { Text(stringResource(R.string.credit_purchase)) },
+                            )
+                        }
+                        Text(
+                            text = "${stringResource(R.string.supplier_name)}: ${state.supplierName}",
+                            style = MaterialTheme.typography.bodyMedium,
+                        )
+                    } else {
+                        TransactionTypeSelectionView(
+                            modifier = Modifier.fillMaxWidth(),
+                            selectedTransactionType = state.transactionType,
+                            onTransactionTypeChange = {
+                                onAction.invoke(TransactionCreateAction.ChangeTransactionType(it))
+                            },
+                        )
+                    }
                 }
             }
         }
@@ -402,6 +422,15 @@ private fun TransactionCreateContent(
                     }
 
                     if (state.transactionType == TransactionType.DEBT) {
+                        if (state.supplierPurchaseMode) {
+                            OutlinedTextField(
+                                modifier = Modifier.fillMaxWidth(),
+                                value = state.supplierName,
+                                onValueChange = {},
+                                readOnly = true,
+                                label = { Text(stringResource(R.string.supplier_name)) },
+                            )
+                        } else {
                         OutlinedTextField(
                             modifier = Modifier.fillMaxWidth(),
                             value = state.customerName.value,
@@ -442,6 +471,7 @@ private fun TransactionCreateContent(
                             label = { Text(text = stringResource(R.string.customer_phone)) },
                             onValueChange = { state.customerPhone.onValueChange?.invoke(it) },
                         )
+                        }
 
                         Row(
                             modifier = Modifier.fillMaxWidth(),

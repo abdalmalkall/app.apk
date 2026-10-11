@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.naveenapps.expensemanager.feature.account.create.AccountCreateViewModelTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-10-11T14:45:47.074Z" hostname="abod-VivoBook-ASUSLaptop-X515JA-X515JA" time="9.277">
+  <properties/>
+  <testcase name="when the credit limit change it should reflect in the state" classname="com.naveenapps.expensemanager.feature.account.create.AccountCreateViewModelTest" time="8.975"/>
+  <testcase name="when the name change it should reflect in the state" classname="com.naveenapps.expensemanager.feature.account.create.AccountCreateViewModelTest" time="0.038"/>
+  <testcase name="when currency is available it should be reflected in the state" classname="com.naveenapps.expensemanager.feature.account.create.AccountCreateViewModelTest" time="0.03"/>
+  <testcase name="when we select a color it should reflect in the state" classname="com.naveenapps.expensemanager.feature.account.create.AccountCreateViewModelTest" time="0.032"/>
+  <testcase name="when the amount and credit limit change it should reflect in the amount and amount background" classname="com.naveenapps.expensemanager.feature.account.create.AccountCreateViewModelTest" time="0.05"/>
+  <testcase name="when the amount change it should reflect in the state" classname="com.naveenapps.expensemanager.feature.account.create.AccountCreateViewModelTest" time="0.017"/>
+  <testcase name="when calling the close page action then it should call the pop backstack" classname="com.naveenapps.expensemanager.feature.account.create.AccountCreateViewModelTest" time="0.033"/>
+  <testcase name="when account is available and call delete action it should delete and pop backstack page" classname="com.naveenapps.expensemanager.feature.account.create.AccountCreateViewModelTest" time="0.063"/>
+  <testcase name="when we select a icon it should reflect in the state" classname="com.naveenapps.expensemanager.feature.account.create.AccountCreateViewModelTest" time="0.025"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of the JDK. Please add Mockito as an agent to your build as described in Mockito's documentation: https://javadoc.io/doc/org.mockito/mockito-core/latest/org.mockito/org/mockito/Mockito.html#0.3
+WARNING: A Java agent has been loaded dynamically (/home/abod/.gradle/caches/modules-2/files-2.1/net.bytebuddy/byte-buddy-agent/1.17.7/fbf3d6d649ed37fc9e9c59480a05be0a26e3c2da/byte-buddy-agent-1.17.7.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+]]></system-err>
+</testsuite>

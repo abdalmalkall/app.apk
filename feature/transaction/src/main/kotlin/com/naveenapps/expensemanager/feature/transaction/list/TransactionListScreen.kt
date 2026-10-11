@@ -16,6 +16,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.AccountBalanceWallet
+import androidx.compose.material.icons.filled.Store
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.HorizontalDivider
@@ -89,6 +90,14 @@ private fun TransactionListScreenContent(
                     onAction(TransactionListAction.ClosePage)
                 },
                 actions = {
+                    IconButton(
+                        onClick = { onAction(TransactionListAction.OpenSupplierLedger) },
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Store,
+                            contentDescription = stringResource(R.string.suppliers),
+                        )
+                    }
                     IconButton(
                         onClick = { onAction(TransactionListAction.OpenCustomerLedger) },
                     ) {
@@ -244,6 +253,7 @@ private fun TransactionGroupCard(
                     date = item.date,
                     notes = item.notes,
                     transactionType = item.transactionType,
+                    supplierName = item.supplierName,
                     fromAccountName = item.fromAccountName,
                     fromAccountIcon = item.fromAccountIcon.name,
                     fromAccountColor = item.fromAccountIcon.backgroundColor,

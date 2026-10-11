@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.naveenapps.expensemanager.core.data.repository.ThemeRepositoryImplTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-10-10T09:59:57.883Z" hostname="abod-VivoBook-ASUSLaptop-X515JA-X515JA" time="0.227">
+  <properties/>
+  <testcase name="getAllThemeShouldReturnFourThemeForQAndAbove" classname="com.naveenapps.expensemanager.core.data.repository.ThemeRepositoryImplTest" time="0.076"/>
+  <testcase name="saveThemeShouldReturnTrue" classname="com.naveenapps.expensemanager.core.data.repository.ThemeRepositoryImplTest" time="0.032"/>
+  <testcase name="getAllThemeShouldReturnThreeThemeForQBelow" classname="com.naveenapps.expensemanager.core.data.repository.ThemeRepositoryImplTest" time="0.02"/>
+  <testcase name="getSelectedThemeShouldReturnDefaultTheme" classname="com.naveenapps.expensemanager.core.data.repository.ThemeRepositoryImplTest" time="0.032"/>
+  <testcase name="checkApplyTheme" classname="com.naveenapps.expensemanager.core.data.repository.ThemeRepositoryImplTest" time="0.034"/>
+  <testcase name="applyThemeShouldReuseTheSavedThemeInsteadOfForcingDark" classname="com.naveenapps.expensemanager.core.data.repository.ThemeRepositoryImplTest" time="0.032"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

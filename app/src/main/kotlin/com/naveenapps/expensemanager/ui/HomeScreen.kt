@@ -51,6 +51,7 @@ import com.naveenapps.expensemanager.feature.settings.SettingsScreen
 import com.naveenapps.expensemanager.feature.settings.advanced.AdvancedSettingsScreen
 import com.naveenapps.expensemanager.feature.transaction.create.TransactionCreateScreen
 import com.naveenapps.expensemanager.feature.transaction.customer.CustomerLedgerScreen
+import com.naveenapps.expensemanager.feature.transaction.supplier.SupplierLedgerScreen
 import com.naveenapps.expensemanager.feature.transaction.list.TransactionListScreen
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -94,6 +95,9 @@ fun NavGraphBuilder.expenseManagerNavigation(
     }
     composable<ExpenseManagerScreens.CustomerLedger> {
         CustomerLedgerScreen()
+    }
+    composable<ExpenseManagerScreens.SupplierLedger> {
+        SupplierLedgerScreen()
     }
     composable<ExpenseManagerScreens.TransactionCreate> {
         TransactionCreateScreen(shareRepository = componentProvider.getShareRepository())

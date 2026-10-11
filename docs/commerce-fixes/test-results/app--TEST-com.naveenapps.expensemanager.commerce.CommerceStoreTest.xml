@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.naveenapps.expensemanager.commerce.CommerceStoreTest" tests="15" skipped="0" failures="0" errors="0" timestamp="2026-10-11T15:53:46.513Z" hostname="abod-VivoBook-ASUSLaptop-X515JA-X515JA" time="0.883">
+  <properties/>
+  <testcase name="invoiceRevisionIsAtomicRetainsOriginalAndOnlyChangesCashByDifference" classname="com.naveenapps.expensemanager.commerce.CommerceStoreTest" time="0.077"/>
+  <testcase name="productAllocationsReconcileAfterReturnsAndExcludeTaxFromProfit" classname="com.naveenapps.expensemanager.commerce.CommerceStoreTest" time="0.059"/>
+  <testcase name="stockReturnsUseOriginalTrackingAndFreeInvoicesCanBeCancelled" classname="com.naveenapps.expensemanager.commerce.CommerceStoreTest" time="0.045"/>
+  <testcase name="preciseArabicInputAndRoundingAtMilliunitBoundary" classname="com.naveenapps.expensemanager.commerce.CommerceStoreTest" time="0.037"/>
+  <testcase name="returnUnpaidDebtReducesReceivableWithoutInventingCash" classname="com.naveenapps.expensemanager.commerce.CommerceStoreTest" time="0.052"/>
+  <testcase name="partialSaleAndCollectionsNeverDoubleCountRevenue" classname="com.naveenapps.expensemanager.commerce.CommerceStoreTest" time="0.05"/>
+  <testcase name="pureCreditSaleHasNoCashAndPaymentAllocatesOldestFirst" classname="com.naveenapps.expensemanager.commerce.CommerceStoreTest" time="0.052"/>
+  <testcase name="invalidInvoicesAndOverpaymentsRollbackAllRecordsAndStock" classname="com.naveenapps.expensemanager.commerce.CommerceStoreTest" time="0.05"/>
+  <testcase name="duplicateInvoiceAndConcurrentOverpaymentAreSafe" classname="com.naveenapps.expensemanager.commerce.CommerceStoreTest" time="0.041"/>
+  <testcase name="fullCashInvoiceHasNoDebtAndSurvivesReopening" classname="com.naveenapps.expensemanager.commerce.CommerceStoreTest" time="0.043"/>
+  <testcase name="backupRestoresCompleteLedgerAndRejectsCorruptFileWithoutDataLoss" classname="com.naveenapps.expensemanager.commerce.CommerceStoreTest" time="0.081"/>
+  <testcase name="migrationArchivesLegacyDataPreservesDebtsAndIsIdempotent" classname="com.naveenapps.expensemanager.commerce.CommerceStoreTest" time="0.116"/>
+  <testcase name="partialReturnAndCancellationRefundExactlyAndKeepAudit" classname="com.naveenapps.expensemanager.commerce.CommerceStoreTest" time="0.079"/>
+  <testcase name="multiProductDecimalQuantitiesDiscountAndTaxAreExact" classname="com.naveenapps.expensemanager.commerce.CommerceStoreTest" time="0.05"/>
+  <testcase name="incomeIdempotencyBarcodeUniquenessAndCurrencyProtection" classname="com.naveenapps.expensemanager.commerce.CommerceStoreTest" time="0.049"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

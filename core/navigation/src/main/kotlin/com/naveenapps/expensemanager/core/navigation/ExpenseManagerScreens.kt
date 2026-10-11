@@ -28,6 +28,9 @@ sealed class ExpenseManagerScreens {
     data object CustomerLedger : ExpenseManagerScreens()
 
     @Serializable
+    data object SupplierLedger : ExpenseManagerScreens()
+
+    @Serializable
     data object Settings : ExpenseManagerScreens()
 
     @Serializable
@@ -70,9 +73,11 @@ sealed class ExpenseManagerScreens {
     data class BudgetDetails(val id: String?) : ExpenseManagerScreens()
 
     @Serializable
-    data class TransactionCreate(val id: String?) : ExpenseManagerScreens()
+    data class TransactionCreate(val id: String?, val supplierId: String? = null, val customerId: String? = null) : ExpenseManagerScreens()
 }
 
 object ExpenseManagerArgsNames {
     const val ID: String = "id"
+    const val CUSTOMER_ID: String = "customerId"
+    const val SUPPLIER_ID: String = "supplierId"
 }

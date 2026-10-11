@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.naveenapps.expensemanager.core.data.repository.CategoryRepositoryImplTest" tests="11" skipped="0" failures="0" errors="0" timestamp="2026-10-10T09:59:51.289Z" hostname="abod-VivoBook-ASUSLaptop-X515JA-X515JA" time="0.328">
+  <properties/>
+  <testcase name="checkCategoryChangeFlow" classname="com.naveenapps.expensemanager.core.data.repository.CategoryRepositoryImplTest" time="0.04"/>
+  <testcase name="updateCategorySuccessCase" classname="com.naveenapps.expensemanager.core.data.repository.CategoryRepositoryImplTest" time="0.031"/>
+  <testcase name="checkDeleteSuccessCase" classname="com.naveenapps.expensemanager.core.data.repository.CategoryRepositoryImplTest" time="0.029"/>
+  <testcase name="checkFavoriteCategoriesSuccessCase" classname="com.naveenapps.expensemanager.core.data.repository.CategoryRepositoryImplTest" time="0.029"/>
+  <testcase name="getAllCategoryCase" classname="com.naveenapps.expensemanager.core.data.repository.CategoryRepositoryImplTest" time="0.028"/>
+  <testcase name="checkGetAllCategoriesSuccessCase" classname="com.naveenapps.expensemanager.core.data.repository.CategoryRepositoryImplTest" time="0.026"/>
+  <testcase name="checkFindByIdSuccessCase" classname="com.naveenapps.expensemanager.core.data.repository.CategoryRepositoryImplTest" time="0.024"/>
+  <testcase name="checkDatabaseObject" classname="com.naveenapps.expensemanager.core.data.repository.CategoryRepositoryImplTest" time="0.016"/>
+  <testcase name="checkGetAllCategoryFlowAfterInsertCase" classname="com.naveenapps.expensemanager.core.data.repository.CategoryRepositoryImplTest" time="0.046"/>
+  <testcase name="checkFindCategoryErrorCase" classname="com.naveenapps.expensemanager.core.data.repository.CategoryRepositoryImplTest" time="0.028"/>
+  <testcase name="checkInsertSuccessCase" classname="com.naveenapps.expensemanager.core.data.repository.CategoryRepositoryImplTest" time="0.029"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

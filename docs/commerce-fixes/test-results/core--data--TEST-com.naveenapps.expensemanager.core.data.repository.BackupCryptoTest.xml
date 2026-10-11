@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.naveenapps.expensemanager.core.data.repository.BackupCryptoTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-10-11T15:38:46.041Z" hostname="abod-VivoBook-ASUSLaptop-X515JA-X515JA" time="12.18">
+  <properties/>
+  <testcase name="streaming file encryption round trips" classname="com.naveenapps.expensemanager.core.data.repository.BackupCryptoTest" time="4.37"/>
+  <testcase name="encrypt rejects a short passphrase" classname="com.naveenapps.expensemanager.core.data.repository.BackupCryptoTest" time="0.039"/>
+  <testcase name="encrypted backup round trips and uses a fresh nonce" classname="com.naveenapps.expensemanager.core.data.repository.BackupCryptoTest" time="3.628"/>
+  <testcase name="decrypt rejects an incorrect passphrase" classname="com.naveenapps.expensemanager.core.data.repository.BackupCryptoTest" time="4.143"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

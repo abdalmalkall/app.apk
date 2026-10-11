@@ -4,6 +4,7 @@ import com.naveenapps.expensemanager.feature.transaction.create.TransactionCreat
 import com.naveenapps.expensemanager.feature.transaction.customer.CustomerLedgerViewModel
 import com.naveenapps.expensemanager.feature.transaction.list.TransactionListViewModel
 import com.naveenapps.expensemanager.feature.transaction.numberpad.NumberPadViewModel
+import com.naveenapps.expensemanager.feature.transaction.supplier.SupplierLedgerViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
@@ -14,6 +15,8 @@ val TransactionViewModelModule = module {
             getCurrencyUseCase = get(),
             getAllAccountsUseCase = get(),
             getAllCategoryUseCase = get(),
+            getAllSuppliersUseCase = get(),
+            getAllCustomersUseCase = get(),
             getDefaultCurrencyUseCase = get(),
             getFormattedAmountUseCase = get(),
             findTransactionByIdUseCase = get(),
@@ -42,6 +45,8 @@ val TransactionViewModelModule = module {
             getFormattedAmountUseCase = get(),
             getAllTransactionsUseCase = get(),
             getAllCustomerPaymentsUseCase = get(),
+            getAllCustomersUseCase = get(),
+            saveCustomerUseCase = get(),
             addCustomerPaymentUseCase = get(),
             deleteCustomerPaymentUseCase = get(),
             getAllAccountsUseCase = get(),
@@ -53,5 +58,22 @@ val TransactionViewModelModule = module {
         )
     }
     viewModel { NumberPadViewModel() }
+    viewModel {
+        SupplierLedgerViewModel(
+            getCurrencyUseCase = get(),
+            getFormattedAmountUseCase = get(),
+            getAllTransactionsUseCase = get(),
+            getAllSuppliersUseCase = get(),
+            getAllSupplierPaymentsUseCase = get(),
+            saveSupplierUseCase = get(),
+            addSupplierPaymentUseCase = get(),
+            deleteSupplierPaymentUseCase = get(),
+            getAllAccountsUseCase = get(),
+            settingsRepository = get(),
+            numberFormatRepository = get(),
+            appCoroutineDispatchers = get(),
+            navigator = get(),
+        )
+    }
 }
 

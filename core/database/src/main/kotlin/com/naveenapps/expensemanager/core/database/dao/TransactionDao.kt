@@ -13,12 +13,17 @@ import com.naveenapps.expensemanager.core.database.entity.TransactionRelation
 import com.naveenapps.expensemanager.core.database.entity.InvoiceSequenceEntity
 import com.naveenapps.expensemanager.core.model.TransactionType
 import com.naveenapps.expensemanager.core.model.isTransfer
+import com.naveenapps.expensemanager.core.model.LedgerMoney
+import com.naveenapps.expensemanager.core.database.entity.adjustBalance
 import kotlinx.coroutines.flow.Flow
 import java.util.Date
 import java.util.UUID
 
 @Dao
 interface TransactionDao : BaseDao<TransactionEntity> {
+
+    @Insert(onConflict = OnConflictStrategy.ABORT)
+    override suspend fun insert(value: TransactionEntity): Long
 
     @Query("SELECT * from `transaction` WHERE id=:id")
     fun findById(id: String): TransactionEntity?
@@ -102,6 +107,8 @@ interface TransactionDao : BaseDao<TransactionEntity> {
         isTransfer: Boolean,
         attachmentPaths: List<String> = emptyList(),
     ): Long {
+        validateLedgerInvoice(transactionEntity)
+        if (findById(transactionEntity.id) != null) return -1L
         val entityToInsert = if (
             transactionEntity.type == TransactionType.DEBT &&
             transactionEntity.customerName?.isNotBlank() == true &&
@@ -115,7 +122,7 @@ interface TransactionDao : BaseDao<TransactionEntity> {
         } else {
             transactionEntity
         }
-        val id = insert(entityToInsert)
+        val id = insert(entityToInsert.copy(amountDecimal = LedgerMoney.exact(entityToInsert.amount, entityToInsert.amountDecimal).toPlainString()))
         if (id != -1L) {
             attachmentPaths.forEach { path ->
                 insertTransactionAttachment(
@@ -130,20 +137,16 @@ interface TransactionDao : BaseDao<TransactionEntity> {
             val accountEntity = findAccountById(transactionEntity.fromAccountId)
             if (accountEntity != null) {
                 updateAccount(
-                    accountEntity.copy(
-                        amount = accountEntity.amount + amountToDetect,
-                    ),
+                    accountEntity.adjustBalance(balanceEffect(transactionEntity)),
                 )
             }
-            if (isTransfer && transactionEntity.toAccountId?.isNotBlank() == true) {
+            if (transactionEntity.type.isTransfer() && transactionEntity.toAccountId?.isNotBlank() == true) {
                 val toAccountEntity = findAccountById(
                     transactionEntity.toAccountId!!,
                 )
                 if (toAccountEntity != null) {
                     updateAccount(
-                        toAccountEntity.copy(
-                            amount = toAccountEntity.amount + (amountToDetect * -1),
-                        ),
+                        toAccountEntity.adjustBalance(balanceEffect(transactionEntity).negate()),
                     )
                 }
             }
@@ -151,21 +154,50 @@ interface TransactionDao : BaseDao<TransactionEntity> {
         return id
     }
 
+    @Query("SELECT amount FROM customer_payment WHERE invoice_transaction_id = :id")
+    suspend fun customerPaymentAmounts(id: String): List<Double>
+
+    @Query("SELECT amount FROM supplier_payment WHERE invoice_transaction_id = :id")
+    suspend fun supplierPaymentAmounts(id: String): List<Double>
+
+    fun balanceEffect(invoice: TransactionEntity): java.math.BigDecimal = when (invoice.type) {
+        TransactionType.DEBT -> java.math.BigDecimal.ZERO
+        TransactionType.INCOME -> LedgerMoney.exact(invoice.amount, invoice.amountDecimal)
+        else -> LedgerMoney.exact(invoice.amount, invoice.amountDecimal).negate()
+    }
+
+    fun validateLedgerInvoice(invoice: TransactionEntity, historicalAmount: Boolean = false) {
+        require(invoice.amount.isFinite() && invoice.amount > 0.0) { "Invalid amount" }
+        require(invoice.customerId == null || invoice.supplierId == null) { "Invoice cannot belong to both parties" }
+        if (!historicalAmount && (invoice.type == TransactionType.DEBT || invoice.supplierId != null)) {
+            require(LedgerMoney.validNewAmount(invoice.amount, invoice.amountDecimal)) { "Use a consistent amount with at most three decimal places" }
+        }
+        if (invoice.type == TransactionType.DEBT) require(invoice.customerId != null || invoice.supplierId != null) { "Debt requires a party" }
+        if (invoice.type.isTransfer()) {
+            require(!invoice.toAccountId.isNullOrBlank()) { "Transfer requires a destination account" }
+            require(invoice.toAccountId != invoice.fromAccountId) { "Transfer accounts must differ" }
+        }
+    }
+
+    @Transaction
+    suspend fun deleteTransactionAndUpdateAccount(entity: TransactionEntity): Int {
+        val stored = findById(entity.id) ?: return 0
+        require(customerPaymentAmounts(stored.id).isEmpty() && supplierPaymentAmounts(stored.id).isEmpty()) {
+            "Reverse payments before deleting their invoice"
+        }
+        removePreviousEnteredAmount(stored)
+        return delete(stored)
+    }
+
     suspend fun removePreviousEnteredAmount(transactionEntity: TransactionEntity) {
         val previousTransaction = findById(transactionEntity.id)
 
         if (previousTransaction != null) {
-            val previousAmountToDetect = when (previousTransaction.type) {
-                TransactionType.INCOME -> previousTransaction.amount * -1
-                TransactionType.DEBT -> 0.0
-                else -> previousTransaction.amount
-            }
+            val previousAmountToDetect = balanceEffect(previousTransaction).negate()
             val previousSelectedFromAccount = findAccountById(previousTransaction.fromAccountId)
             if (previousSelectedFromAccount != null) {
                 updateAccount(
-                    previousSelectedFromAccount.copy(
-                        amount = previousSelectedFromAccount.amount + previousAmountToDetect,
-                    ),
+                    previousSelectedFromAccount.adjustBalance(previousAmountToDetect),
                 )
             }
 
@@ -175,9 +207,7 @@ interface TransactionDao : BaseDao<TransactionEntity> {
                 )
                 if (toAccountEntity != null) {
                     updateAccount(
-                        toAccountEntity.copy(
-                            amount = toAccountEntity.amount + (previousAmountToDetect * -1),
-                        ),
+                        toAccountEntity.adjustBalance(previousAmountToDetect.negate()),
                     )
                 }
             }
@@ -191,7 +221,21 @@ interface TransactionDao : BaseDao<TransactionEntity> {
         isTransfer: Boolean,
         attachmentPaths: List<String> = emptyList(),
     ) {
-        update(transactionEntity)
+        val previous = findById(transactionEntity.id) ?: error("Invoice not found")
+        val sameAmount = LedgerMoney.exact(previous.amount, previous.amountDecimal)
+            .compareTo(LedgerMoney.exact(transactionEntity.amount, transactionEntity.amountDecimal)) == 0
+        validateLedgerInvoice(transactionEntity, historicalAmount = sameAmount)
+        val payments = customerPaymentAmounts(previous.id) + supplierPaymentAmounts(previous.id)
+        if (payments.isNotEmpty()) {
+            require(previous.type == transactionEntity.type && previous.customerId == transactionEntity.customerId &&
+                previous.supplierId == transactionEntity.supplierId && sameAmount &&
+                previous.createdOn == transactionEntity.createdOn && previous.invoiceNumber == transactionEntity.invoiceNumber &&
+                previous.fromAccountId == transactionEntity.fromAccountId) {
+                "A paid invoice cannot change its financial identity; reverse its payments first"
+            }
+        }
+        removePreviousEnteredAmount(previous)
+        update(transactionEntity.copy(amountDecimal = LedgerMoney.exact(transactionEntity.amount, transactionEntity.amountDecimal).toPlainString()))
 
         removeTransactionAttachments(transactionEntity.id)
         attachmentPaths.forEach { path ->
@@ -208,20 +252,16 @@ interface TransactionDao : BaseDao<TransactionEntity> {
         val accountEntity = findAccountById(transactionEntity.fromAccountId)
         if (accountEntity != null) {
             updateAccount(
-                accountEntity.copy(
-                    amount = accountEntity.amount + amountToDetect,
-                ),
+                accountEntity.adjustBalance(balanceEffect(transactionEntity)),
             )
         }
-        if (isTransfer && transactionEntity.toAccountId?.isNotBlank() == true) {
+        if (transactionEntity.type.isTransfer() && transactionEntity.toAccountId?.isNotBlank() == true) {
             val toAccountEntity = findAccountById(
                 transactionEntity.toAccountId!!,
             )
             if (toAccountEntity != null) {
                 updateAccount(
-                    toAccountEntity.copy(
-                        amount = toAccountEntity.amount + (amountToDetect * -1),
-                    ),
+                    toAccountEntity.adjustBalance(balanceEffect(transactionEntity).negate()),
                 )
             }
         }

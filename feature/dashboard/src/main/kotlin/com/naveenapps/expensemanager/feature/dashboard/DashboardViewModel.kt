@@ -108,7 +108,14 @@ class DashboardViewModel(
             val expenseValue = transactions?.filter { it.type == TransactionType.EXPENSE }?.sumOf {
                 it.amount.amount
             } ?: 0.0
-            val debtValue = transactions?.filter { it.type == TransactionType.DEBT }?.sumOf {
+            val customerDebtValue = transactions?.filter {
+                it.type == TransactionType.DEBT && it.supplierId == null
+            }?.sumOf {
+                it.amount.amount
+            } ?: 0.0
+            val supplierPayableValue = transactions?.filter {
+                it.type == TransactionType.DEBT && it.supplierId != null
+            }?.sumOf {
                 it.amount.amount
             } ?: 0.0
 
@@ -125,7 +132,7 @@ class DashboardViewModel(
                             currency,
                         ).amountString.orEmpty(),
                         balance = getFormattedAmountUseCase.invoke(
-                            (incomeValue - expenseValue + debtValue),
+                            (incomeValue - expenseValue + customerDebtValue - supplierPayableValue),
                             currency,
                         ).amountString.orEmpty(),
                     ),

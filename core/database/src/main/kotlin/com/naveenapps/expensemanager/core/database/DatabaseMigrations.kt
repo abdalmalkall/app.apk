@@ -229,3 +229,34 @@ internal val MIGRATION_10_11 = object : Migration(10, 11) {
         db.execSQL("CREATE INDEX IF NOT EXISTS `index_transaction_supplier_id` ON `transaction` (`supplier_id`)")
     }
 }
+
+val MIGRATION_11_12 = object : Migration(11, 12) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL("ALTER TABLE `customer` ADD COLUMN `address` TEXT DEFAULT NULL")
+        db.execSQL("ALTER TABLE `customer` ADD COLUMN `notes` TEXT DEFAULT NULL")
+        db.execSQL("ALTER TABLE `customer` ADD COLUMN `credit_limit_milliunits` INTEGER NOT NULL DEFAULT 0")
+        db.execSQL("ALTER TABLE `supplier` ADD COLUMN `address` TEXT DEFAULT NULL")
+        db.execSQL("ALTER TABLE `supplier` ADD COLUMN `company_name` TEXT DEFAULT NULL")
+        db.execSQL("ALTER TABLE `supplier` ADD COLUMN `notes` TEXT DEFAULT NULL")
+    }
+}
+
+/** Retain all historical REAL amounts and add canonical decimal values without rounding. */
+val MIGRATION_12_13 = object : Migration(12, 13) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        for (table in listOf("account", "transaction", "customer_payment", "supplier_payment")) {
+            db.execSQL("ALTER TABLE `$table` ADD COLUMN `amount_decimal` TEXT DEFAULT NULL")
+            val amounts = mutableListOf<Pair<String, String>>()
+            db.query("SELECT id, amount FROM `$table`").use { cursor ->
+                while (cursor.moveToNext()) {
+                    val value = cursor.getDouble(1)
+                    require(value.isFinite()) { "Invalid historical amount in $table" }
+                    amounts += cursor.getString(0) to java.math.BigDecimal.valueOf(value).toPlainString()
+                }
+            }
+            amounts.forEach { (id, amount) ->
+                db.execSQL("UPDATE `$table` SET amount_decimal = ? WHERE id = ?", arrayOf(amount, id))
+            }
+        }
+    }
+}

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.naveenapps.expensemanager.core.data.repository.LedgerAccountingTest" tests="13" skipped="0" failures="0" errors="0" timestamp="2026-10-11T15:39:29.975Z" hostname="abod-VivoBook-ASUSLaptop-X515JA-X515JA" time="2.532">
+  <properties/>
+  <testcase name="supplierProfileCanBeCreatedEditedAndValidatedWithoutChangingCreationDate" classname="com.naveenapps.expensemanager.core.data.repository.LedgerAccountingTest" time="0.241"/>
+  <testcase name="invoiceWithPaymentsCannotBeReassignedReducedOrDeleted" classname="com.naveenapps.expensemanager.core.data.repository.LedgerAccountingTest" time="0.671"/>
+  <testcase name="moneyInputRejectsPartialParsingAndSupportsArabicMilliunits" classname="com.naveenapps.expensemanager.core.data.repository.LedgerAccountingTest" time="0.144"/>
+  <testcase name="statementHasOpeningRunningClosingBalancesAndStableTies" classname="com.naveenapps.expensemanager.core.data.repository.LedgerAccountingTest" time="0.124"/>
+  <testcase name="ahmedExampleAndFullSettlement" classname="com.naveenapps.expensemanager.core.data.repository.LedgerAccountingTest" time="0.285"/>
+  <testcase name="duplicateInvoiceNumberCannotReplaceExistingInvoice" classname="com.naveenapps.expensemanager.core.data.repository.LedgerAccountingTest" time="0.1"/>
+  <testcase name="supplierRetryIsIdempotentAndReversalIsAppliedOnce" classname="com.naveenapps.expensemanager.core.data.repository.LedgerAccountingTest" time="0.123"/>
+  <testcase name="failedEditRollsBackReversalAndInvoice" classname="com.naveenapps.expensemanager.core.data.repository.LedgerAccountingTest" time="0.145"/>
+  <testcase name="canonicalCashBalanceRetainsMilliunitsBeyondDoublePrecision" classname="com.naveenapps.expensemanager.core.data.repository.LedgerAccountingTest" time="0.106"/>
+  <testcase name="threeDecimalsRemainExactAcrossPaymentsAndReversals" classname="com.naveenapps.expensemanager.core.data.repository.LedgerAccountingTest" time="0.139"/>
+  <testcase name="retryIsIdempotentAndChangedPayloadIsRejected" classname="com.naveenapps.expensemanager.core.data.repository.LedgerAccountingTest" time="0.129"/>
+  <testcase name="invalidAndExcessPaymentsLeaveBalanceUnchanged" classname="com.naveenapps.expensemanager.core.data.repository.LedgerAccountingTest" time="0.156"/>
+  <testcase name="mohammedExampleDoesNotCreateAnotherPurchase" classname="com.naveenapps.expensemanager.core.data.repository.LedgerAccountingTest" time="0.163"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

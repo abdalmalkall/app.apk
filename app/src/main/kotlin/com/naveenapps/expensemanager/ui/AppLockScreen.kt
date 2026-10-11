@@ -29,6 +29,7 @@ import com.naveenapps.expensemanager.R
 fun AppLockScreen(
     onUnlockClick: () -> Unit,
     modifier: Modifier = Modifier,
+    error: String = "",
 ) {
     Surface(
         modifier = modifier.fillMaxSize(),
@@ -65,6 +66,8 @@ fun AppLockScreen(
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 textAlign = TextAlign.Center,
             )
+
+            if(error.isNotBlank()) Text(error, color = MaterialTheme.colorScheme.error, textAlign = TextAlign.Center)
 
             Spacer(modifier = Modifier.height(40.dp))
 

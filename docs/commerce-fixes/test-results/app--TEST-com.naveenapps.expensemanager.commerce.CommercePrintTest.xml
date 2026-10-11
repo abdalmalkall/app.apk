@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.naveenapps.expensemanager.commerce.CommercePrintTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-10-11T15:53:38.016Z" hostname="abod-VivoBook-ASUSLaptop-X515JA-X515JA" time="0.564">
+  <properties/>
+  <testcase name="pdfSubsetContainsOnlyTheRequestedPage" classname="com.naveenapps.expensemanager.commerce.CommercePrintTest" time="0.52"/>
+  <testcase name="requestedRangesAreClippedDeduplicatedAndSorted" classname="com.naveenapps.expensemanager.commerce.CommercePrintTest" time="0.044"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

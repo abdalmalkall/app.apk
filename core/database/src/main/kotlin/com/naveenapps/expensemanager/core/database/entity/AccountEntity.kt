@@ -31,4 +31,6 @@ data class AccountEntity(
     val updatedOn: Date,
     @ColumnInfo(name = "custom_image_path", defaultValue = "NULL")
     val customImagePath: String? = null,
+    @ColumnInfo(name = "amount_decimal", defaultValue = "NULL")
+    val amountDecimal: String? = null,
 )

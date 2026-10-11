@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.naveenapps.expensemanager.commerce.CommerceAuditDiagnosticTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-10-11T14:51:31.576Z" hostname="abod-VivoBook-ASUSLaptop-X515JA-X515JA" time="4.584">
+  <properties/>
+  <testcase name="safetyCopyCanActuallyRestorePreviousBookAndReopen" classname="com.naveenapps.expensemanager.commerce.CommerceAuditDiagnosticTest" time="4.123"/>
+  <testcase name="reproducesRestoreAcceptingSaleWithoutInvoice" classname="com.naveenapps.expensemanager.commerce.CommerceAuditDiagnosticTest" time="0.074"/>
+  <testcase name="reproducesRefundBeingAssignedToOriginalMethodAfterBankCollection" classname="com.naveenapps.expensemanager.commerce.CommerceAuditDiagnosticTest" time="0.058"/>
+  <testcase name="incompatibleAndInvalidJsonDoNotReplaceLiveBook" classname="com.naveenapps.expensemanager.commerce.CommerceAuditDiagnosticTest" time="0.052"/>
+  <testcase name="reproducesRestoreAcceptingFractionalMoneyEncodedAsString" classname="com.naveenapps.expensemanager.commerce.CommerceAuditDiagnosticTest" time="0.055"/>
+  <testcase name="historicalCostAndStatementBalanceStayStableAfterEditsAndReturn" classname="com.naveenapps.expensemanager.commerce.CommerceAuditDiagnosticTest" time="0.043"/>
+  <testcase name="reproducesSupplierDebtMigrationAsCustomerSale" classname="com.naveenapps.expensemanager.commerce.CommerceAuditDiagnosticTest" time="0.048"/>
+  <testcase name="repeatedAndConcurrentSavesKeepUniqueNumbersAndReceipts" classname="com.naveenapps.expensemanager.commerce.CommerceAuditDiagnosticTest" time="0.098"/>
+  <testcase name="preMigrationBackupDoesNotContainOldDatabaseRecords" classname="com.naveenapps.expensemanager.commerce.CommerceAuditDiagnosticTest" time="0.033"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

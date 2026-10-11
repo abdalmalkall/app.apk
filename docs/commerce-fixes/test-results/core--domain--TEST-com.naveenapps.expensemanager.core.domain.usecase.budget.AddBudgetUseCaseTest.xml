@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.naveenapps.expensemanager.core.domain.usecase.budget.AddBudgetUseCaseTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-10-11T15:38:12.724Z" hostname="abod-VivoBook-ASUSLaptop-X515JA-X515JA" time="0.423">
+  <properties/>
+  <testcase name="whenBudgetIsInValidShouldReturnError" classname="com.naveenapps.expensemanager.core.domain.usecase.budget.AddBudgetUseCaseTest" time="0.335"/>
+  <testcase name="whenBudgetCategoriesNotAvailableShouldReturnError" classname="com.naveenapps.expensemanager.core.domain.usecase.budget.AddBudgetUseCaseTest" time="0.03"/>
+  <testcase name="whenBudgetIsValidShouldAddSuccessfully" classname="com.naveenapps.expensemanager.core.domain.usecase.budget.AddBudgetUseCaseTest" time="0.031"/>
+  <testcase name="whenBudgetAccountsNotAvailableShouldReturnError" classname="com.naveenapps.expensemanager.core.domain.usecase.budget.AddBudgetUseCaseTest" time="0.025"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

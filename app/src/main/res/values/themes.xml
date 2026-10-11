@@ -4,7 +4,7 @@
     <style name="ExpenseManager.Theme" parent="Theme.Material3.DayNight.NoActionBar" />
 
     <style name="ExpenseManager.Theme.Splash" parent="Theme.SplashScreen">
-        <item name="android:windowLightStatusBar" tools:targetApi="23">true</item>
+        <item name="android:windowLightStatusBar">true</item>
         <item name="android:windowLightNavigationBar" tools:targetApi="27">true</item>
     </style>
 

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.naveenapps.expensemanager.core.data.repository.VersionCheckerRepositoryImplTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-10-11T15:39:35.868Z" hostname="abod-VivoBook-ASUSLaptop-X515JA-X515JA" time="1.456">
+  <properties/>
+  <testcase name="whenAccessingAndroidQAndAboveShouldReturnTheFalse" classname="com.naveenapps.expensemanager.core.data.repository.VersionCheckerRepositoryImplTest" time="1.452"/>
+  <testcase name="whenAccessingAndroidQAndAboveShouldReturnTheTrue" classname="com.naveenapps.expensemanager.core.data.repository.VersionCheckerRepositoryImplTest" time="0.004"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

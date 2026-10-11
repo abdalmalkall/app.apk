@@ -1,5 +1,7 @@
 package com.naveenapps.expensemanager
 
+import android.app.KeyguardManager
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.compose.LocalActivityResultRegistryOwner
@@ -14,6 +16,8 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.Lifecycle
@@ -48,6 +52,13 @@ internal class MainActivity : AppCompatActivity(), AndroidScopeComponent {
 
     private val activityComponentProvider: ActivityComponentProvider by scope.inject()
 
+    private var authenticationError by mutableStateOf("")
+
+    private val credentialLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if(result.resultCode == RESULT_OK) { authenticationError = ""; viewModel.onAuthenticationSuccess() }
+        else authenticationError = "لم يكتمل التحقق من قفل الجهاز؛ حاول مجددًا"
+    }
+
     private val activityResultLauncher = registerForActivityResult(
         ActivityResultContracts.StartIntentSenderForResult(),
     ) { result: ActivityResult ->
@@ -69,7 +80,7 @@ internal class MainActivity : AppCompatActivity(), AndroidScopeComponent {
             lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.onboardingStatus.collectLatest {
                     splashScreen.setKeepOnScreenCondition {
-                        it == null
+                        it == null || viewModel.isAppLockEnabled.value == null
                     }
                 }
             }
@@ -91,13 +102,13 @@ internal class MainActivity : AppCompatActivity(), AndroidScopeComponent {
                 val isAuthenticated by viewModel.isAuthenticated.collectAsState()
                 val isDarkTheme = shouldUseDarkTheme(theme = currentTheme.mode)
 
-                if (onBoardingStatus != null) {
-                    val showLock = onBoardingStatus == true && isAppLockEnabled && !isAuthenticated
+                if (onBoardingStatus != null && isAppLockEnabled != null) {
+                    val showLock = isAppLockEnabled == true && !isAuthenticated
 
                     if (showLock) {
                         NaveenAppsTheme(isDarkTheme = isDarkTheme) {
                             LaunchedEffect(Unit) { showBiometricPrompt() }
-                            AppLockScreen(onUnlockClick = ::showBiometricPrompt)
+                            AppLockScreen(onUnlockClick = ::showBiometricPrompt, error = authenticationError)
                         }
                     } else {
                         MainScreen(
@@ -121,43 +132,48 @@ internal class MainActivity : AppCompatActivity(), AndroidScopeComponent {
         launchAppUpdateCheck()
     }
 
-    private fun showBiometricPrompt() {
-        val authenticators = BiometricManager.Authenticators.BIOMETRIC_STRONG or
-            BiometricManager.Authenticators.DEVICE_CREDENTIAL
+    override fun onStop() {
+        super.onStop()
+        if (!isChangingConfigurations) viewModel.onAppBackgrounded()
+    }
 
-        val canAuthenticate = BiometricManager.from(this).canAuthenticate(authenticators)
-        if (canAuthenticate != BiometricManager.BIOMETRIC_SUCCESS) {
-            // No biometric or device credentials enrolled — bypass the lock
-            viewModel.onAuthenticationSuccess()
+    @Suppress("DEPRECATION")
+    private fun confirmDeviceCredential() {
+        val keyguard = getSystemService(KeyguardManager::class.java)
+        val intent = keyguard?.createConfirmDeviceCredentialIntent(getString(R.string.app_lock_title), getString(R.string.app_lock_description))
+        if(intent != null) credentialLauncher.launch(intent)
+        else authenticationError = "قفل التطبيق مفعّل؛ اضبط رمزًا أو بصمة لقفل الجهاز من إعدادات Android ثم حاول مجددًا"
+    }
+
+    private fun showBiometricPrompt() {
+        if (isFinishing || isDestroyed) return
+        authenticationError = ""
+        // STRONG|CREDENTIAL is unsupported on Android 9/10. Keep strong biometrics
+        // there and launch system credential confirmation separately; never grant access on error.
+        val authenticators = if (Build.VERSION.SDK_INT >= 30) {
+            BiometricManager.Authenticators.BIOMETRIC_STRONG or BiometricManager.Authenticators.DEVICE_CREDENTIAL
+        } else BiometricManager.Authenticators.BIOMETRIC_STRONG
+        if(BiometricManager.from(this).canAuthenticate(authenticators) != BiometricManager.BIOMETRIC_SUCCESS) {
+            confirmDeviceCredential()
             return
         }
-
-        val prompt = BiometricPrompt(
-            /* activity = */ this,
-            /* executor = */ ContextCompat.getMainExecutor(this),
-            /* callback = */ object : BiometricPrompt.AuthenticationCallback() {
-                override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
-                    viewModel.onAuthenticationSuccess()
-                }
-
-                override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
-                    // User canceled or hardware error — lock screen stays visible for retry
-                    Log.d("AppLock", "Auth error $errorCode: $errString")
-                }
-
-                override fun onAuthenticationFailed() {
-                    // Biometric not recognised — lock screen stays visible for retry
-                }
-            },
-        )
-
-        val promptInfo = BiometricPrompt.PromptInfo.Builder()
+        val prompt = BiometricPrompt(this, ContextCompat.getMainExecutor(this), object : BiometricPrompt.AuthenticationCallback() {
+            override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
+                authenticationError = ""
+                viewModel.onAuthenticationSuccess()
+            }
+            override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
+                if(Build.VERSION.SDK_INT < 30 && errorCode == BiometricPrompt.ERROR_NEGATIVE_BUTTON) confirmDeviceCredential()
+                else authenticationError = errString.toString()
+            }
+            override fun onAuthenticationFailed() { authenticationError = "لم تنجح مطابقة البصمة؛ حاول مجددًا" }
+        })
+        val builder = BiometricPrompt.PromptInfo.Builder()
             .setTitle(getString(R.string.app_lock_title))
             .setDescription(getString(R.string.app_lock_description))
             .setAllowedAuthenticators(authenticators)
-            .build()
-
-        prompt.authenticate(promptInfo)
+        if(Build.VERSION.SDK_INT < 30) builder.setNegativeButtonText("استخدام رمز قفل الجهاز")
+        prompt.authenticate(builder.build())
     }
 
     private fun launchAppUpdateCheck() {

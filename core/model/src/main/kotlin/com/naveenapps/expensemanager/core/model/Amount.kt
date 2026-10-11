@@ -7,4 +7,5 @@ data class Amount(
     val amount: Double,
     val amountString: String? = null,
     val currency: Currency? = null,
+    val amountDecimal: String? = null,
 )

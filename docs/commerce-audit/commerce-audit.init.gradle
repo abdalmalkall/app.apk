@@ -1,0 +1,7 @@
+allprojects { p ->
+    p.afterEvaluate {
+        if (p.path == ':app') {
+            p.android.sourceSets.getByName('test').java.srcDir('/tmp/commerce-audit-tests')
+        }
+    }
+}

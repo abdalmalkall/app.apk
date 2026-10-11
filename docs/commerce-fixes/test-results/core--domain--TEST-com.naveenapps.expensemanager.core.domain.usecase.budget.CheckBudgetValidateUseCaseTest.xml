@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.naveenapps.expensemanager.core.domain.usecase.budget.CheckBudgetValidateUseCaseTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-10-11T15:38:13.160Z" hostname="abod-VivoBook-ASUSLaptop-X515JA-X515JA" time="0.02">
+  <properties/>
+  <testcase name="whenBudgetIdIsNotAvailableShouldResultError" classname="com.naveenapps.expensemanager.core.domain.usecase.budget.CheckBudgetValidateUseCaseTest" time="0.004"/>
+  <testcase name="whenProperBudgetShouldReturnSuccess" classname="com.naveenapps.expensemanager.core.domain.usecase.budget.CheckBudgetValidateUseCaseTest" time="0.004"/>
+  <testcase name="whenCategoriesEmptyForShouldReturnError" classname="com.naveenapps.expensemanager.core.domain.usecase.budget.CheckBudgetValidateUseCaseTest" time="0.004"/>
+  <testcase name="whenBudgetsEmptyForShouldReturnError" classname="com.naveenapps.expensemanager.core.domain.usecase.budget.CheckBudgetValidateUseCaseTest" time="0.004"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

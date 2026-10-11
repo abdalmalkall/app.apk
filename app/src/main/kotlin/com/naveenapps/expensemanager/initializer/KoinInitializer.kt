@@ -20,6 +20,8 @@ import org.koin.core.context.startKoin
 
 class KoinInitializer : Initializer<KoinApplication> {
     override fun create(context: Context): KoinApplication {
+        val recovery = com.naveenapps.expensemanager.commerce.CommerceStore(context)
+        try { recovery.recoverPendingRestore() } finally { recovery.close() }
         return startKoin {
             androidLogger()
             androidContext(context)

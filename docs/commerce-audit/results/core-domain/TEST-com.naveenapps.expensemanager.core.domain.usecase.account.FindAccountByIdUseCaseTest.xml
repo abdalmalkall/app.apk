@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.naveenapps.expensemanager.core.domain.usecase.account.FindAccountByIdUseCaseTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-10-10T09:59:34.847Z" hostname="abod-VivoBook-ASUSLaptop-X515JA-X515JA" time="0.04">
+  <properties/>
+  <testcase name="whenAccountIsValidShouldReturnValidAccountSuccessfully" classname="com.naveenapps.expensemanager.core.domain.usecase.account.FindAccountByIdUseCaseTest" time="0.017"/>
+  <testcase name="whenAccountIdIsInEmptyShouldReturnError" classname="com.naveenapps.expensemanager.core.domain.usecase.account.FindAccountByIdUseCaseTest" time="0.012"/>
+  <testcase name="whenAccountIdIsInNullShouldReturnError" classname="com.naveenapps.expensemanager.core.domain.usecase.account.FindAccountByIdUseCaseTest" time="0.011"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

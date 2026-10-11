@@ -162,7 +162,8 @@ class TransactionRepositoryImplTest : BaseCoroutineTest() {
         val transaction = (response as Resource.Success).data
         Truth.assertThat(transaction).isNotNull()
         Truth.assertThat(transaction.type).isEqualTo(addedTransaction.type)
-        Truth.assertThat(transaction.amount).isEqualTo(addedTransaction.amount)
+        Truth.assertThat(transaction.amount.amount).isEqualTo(addedTransaction.amount.amount)
+        Truth.assertThat(java.math.BigDecimal(transaction.amount.amountDecimal).compareTo(java.math.BigDecimal.valueOf(addedTransaction.amount.amount))).isEqualTo(0)
         Truth.assertThat(transaction.fromAccountId).isEqualTo(addedTransaction.fromAccountId)
         Truth.assertThat(transaction.notes).isEqualTo(addedTransaction.notes)
         Truth.assertThat(transaction.fromAccount).isNotNull()
